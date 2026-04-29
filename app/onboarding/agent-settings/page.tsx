@@ -58,7 +58,7 @@ export default function AgentSettingsPage() {
       if (data) {
         setFormData({
           transferEnabled: data.transfer_enabled ?? true,
-          transferRules: data.transfer_rules || [],
+          transferRules: Array.isArray(data.transfer_rules) ? data.transfer_rules : [],
           recordingEnabled: data.recording_enabled ?? false,
           callScreeningEnabled: data.call_screening_enabled ?? true,
           selectedIntegrations: data.integrations ? Object.keys(data.integrations) : [],

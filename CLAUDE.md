@@ -53,16 +53,16 @@ shadcn components here use `@base-ui/react` primitives, **not** Radix UI. Key di
 |------|----------|
 | `lib/supabase/client.ts` | Client Components (`"use client"`) |
 | `lib/supabase/server.ts` | Server Components, Route Handlers, Server Actions |
-| `lib/supabase/proxy.ts` | Middleware only — exports `updateSession()` |
+| `lib/supabase/session.ts` | Middleware only — exports `updateSession()` |
 
 Env vars: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (set in `.env.local`).
 
 ### Auth flows
 
-- **Session refresh**: `middleware.ts` calls `updateSession()` on every request via `getClaims()`. No route protection is configured yet — add redirect logic to `lib/supabase/proxy.ts` when a protected route (e.g. `/dashboard`) is added.
+- **Session refresh**: `middleware.ts` calls `updateSession()` on every request via `getClaims()`. No route protection is configured yet — add redirect logic to `lib/supabase/session.ts` when a protected route (e.g. `/dashboard`) is added.
 - **Sign up**: `supabase.auth.signUp()` with `emailRedirectTo` pointing to `/auth/callback`
 - **Login**: `supabase.auth.signInWithPassword()` → redirect to `/`
-- **Logout**: navigate to `/logout` — it's a Server Component that calls `signOut()` then `redirect('/')`
+- **Logout**: navigate to `/logout` — it's a Route Handler (`app/logout/route.ts`) that calls `signOut()` then redirects to `/`
 - **Password reset**: `resetPasswordForEmail()` with `redirectTo: /auth/callback?next=/reset-password` → callback exchanges code → `/reset-password` calls `updateUser({ password })`
 - **Auth callback** (`app/auth/callback/route.ts`): exchanges `?code=` via `exchangeCodeForSession()`, then redirects to `?next=` (defaults to `/`)
 

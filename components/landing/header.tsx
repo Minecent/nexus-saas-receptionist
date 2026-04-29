@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Button } from '@/components/ui/button'
 import { HeaderUserMenu } from './header-user-menu'
 
 export default async function Header() {
@@ -9,18 +8,21 @@ export default async function Header() {
   const user = data?.claims
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="text-sm font-semibold tracking-tight">
-          Nexus
+    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="text-lg font-bold tracking-tight text-white">
+          NEXUS<span className="text-teal-400">.</span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-muted-foreground sm:flex">
-          <Link href="#features" className="transition-colors hover:text-foreground">
+        <nav className="hidden items-center gap-8 text-sm sm:flex">
+          <Link href="#features" className="text-slate-400 transition-colors hover:text-white">
             Features
           </Link>
-          <Link href="#pricing" className="transition-colors hover:text-foreground">
+          <Link href="#pricing" className="text-slate-400 transition-colors hover:text-white">
             Pricing
+          </Link>
+          <Link href="mailto:contact@nexus.ai" className="text-slate-400 transition-colors hover:text-white">
+            Contact
           </Link>
         </nav>
 
@@ -29,12 +31,18 @@ export default async function Header() {
             <HeaderUserMenu email={user.email as string} />
           ) : (
             <>
-              <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/login" />}>
+              <Link
+                href="/login"
+                className="rounded-lg border border-slate-700 bg-transparent px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
+              >
                 Log in
-              </Button>
-              <Button size="sm" nativeButton={false} render={<Link href="/signup" />}>
-                Get started
-              </Button>
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-lg bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
+              >
+                Get Started
+              </Link>
             </>
           )}
         </div>

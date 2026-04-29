@@ -1,81 +1,81 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { PhoneCall, CalendarCheck, MessageSquare } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="border-b border-border bg-background">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
+    <section className="relative overflow-hidden bg-slate-950">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.12),transparent_60%)]" />
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
         <div className="flex flex-col gap-6">
-          <div className="inline-flex w-fit items-center rounded-full border border-border bg-muted px-3 py-1 text-xs text-muted-foreground">
+          <div className="inline-flex w-fit items-center rounded-full border border-teal-500/30 bg-teal-500/10 px-3 py-1 text-xs font-medium text-teal-400">
             AI-powered front desk for modern businesses
           </div>
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            Your receptionist,{' '}
-            <span className="text-muted-foreground">always on.</span>
+          <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+            AI receptionists that{' '}
+            <span className="text-teal-400">never miss a call</span>
           </h1>
-          <p className="max-w-md text-base leading-relaxed text-muted-foreground">
-            Nexus answers calls, books appointments, and handles customer inquiries 24/7 — so your
-            team can focus on what matters most.
+          <p className="max-w-md text-base leading-relaxed text-slate-400">
+            NEXUS answers every call 24/7, takes perfect messages, books appointments, and handles
+            customer inquiries — so your team can focus on what matters most. Set up in minutes.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button size="lg" nativeButton={false} render={<Link href="/signup" />}>
-              Start free trial
-            </Button>
-            <Button variant="outline" size="lg" nativeButton={false} render={<Link href="#features" />}>
-              See how it works
-            </Button>
+            <Link
+              href="/signup"
+              className="rounded-lg bg-teal-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-teal-600"
+            >
+              Get Started
+            </Link>
+            <Link
+              href="#features"
+              className="rounded-lg border border-slate-700 bg-transparent px-6 py-3 text-base font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
+            >
+              Learn More
+            </Link>
           </div>
-          <p className="text-xs text-muted-foreground">No credit card required · 14-day free trial</p>
         </div>
 
         <div className="flex flex-col gap-3 lg:pl-8">
-          <Card size="sm">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <PhoneCall className="size-4 text-muted-foreground" />
-                <CardTitle>Incoming call — Dr. Patel&apos;s office</CardTitle>
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
+                <PhoneCall className="size-3.5 text-teal-400" />
               </div>
-              <CardDescription>Just now</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                &ldquo;Hi, I&apos;d like to book an appointment for next Tuesday afternoon.&rdquo;
-              </p>
-              <p className="mt-2 text-sm font-medium">
-                Nexus: Tuesday 2 PM is available. Shall I confirm?
-              </p>
-            </CardContent>
-          </Card>
-          <Card size="sm">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <CalendarCheck className="size-4 text-muted-foreground" />
-                <CardTitle>Appointment booked</CardTitle>
+              <span className="text-sm font-medium text-white">Incoming call — Dr. Patel&apos;s office</span>
+              <span className="ml-auto text-xs text-slate-500">Just now</span>
+            </div>
+            <p className="text-sm text-slate-400">
+              &ldquo;Hi, I&apos;d like to book an appointment for next Tuesday afternoon.&rdquo;
+            </p>
+            <p className="mt-1.5 text-sm font-medium text-teal-400">
+              NEXUS: Tuesday 2 PM is available. Shall I confirm?
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
+                <CalendarCheck className="size-3.5 text-teal-400" />
               </div>
-              <CardDescription>2 seconds ago</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Sarah Johnson · Tuesday, May 6 · 2:00 PM · Added to your calendar
-              </p>
-            </CardContent>
-          </Card>
-          <Card size="sm">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <MessageSquare className="size-4 text-muted-foreground" />
-                <CardTitle>Confirmation sent</CardTitle>
+              <span className="text-sm font-medium text-white">Appointment booked</span>
+              <span className="ml-auto text-xs text-slate-500">2s ago</span>
+            </div>
+            <p className="text-sm text-slate-400">
+              Sarah Johnson · Tuesday, May 6 · 2:00 PM · Added to your calendar
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
+                <MessageSquare className="size-3.5 text-teal-400" />
               </div>
-              <CardDescription>Just now</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                SMS confirmation sent to patient · No staff involvement required
-              </p>
-            </CardContent>
-          </Card>
+              <span className="text-sm font-medium text-white">Confirmation sent</span>
+              <span className="ml-auto text-xs text-slate-500">Just now</span>
+            </div>
+            <p className="text-sm text-slate-400">
+              SMS confirmation sent to patient · No staff involvement required
+            </p>
+          </div>
         </div>
       </div>
     </section>

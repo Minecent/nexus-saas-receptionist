@@ -1,5 +1,5 @@
 import { type NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/proxy'
+import { updateSession } from '@/lib/supabase/session'
 import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
@@ -8,7 +8,25 @@ export async function middleware(request: NextRequest) {
   
   // Get the pathname
   const pathname = request.nextUrl.pathname
-  
+
+  // Redirect already-authenticated users away from auth pages
+  if (pathname === '/signup' || pathname === '/login') {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return request.cookies.getAll() },
+          setAll() {},
+        },
+      }
+    )
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      return Response.redirect(new URL('/onboarding', request.url))
+    }
+  }
+
   // Check if accessing onboarding routes
   if (pathname.startsWith('/onboarding')) {
     // Allow access to onboarding index (will redirect based on status)
