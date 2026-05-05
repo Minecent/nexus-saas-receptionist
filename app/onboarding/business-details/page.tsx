@@ -6,6 +6,7 @@ import { OnboardingWrapper } from "@/components/onboarding/onboarding-wrapper";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { syncVapiAssistant } from "@/lib/vapi";
 
 const industries = [
   "Professional Services (Law, Accounting, Consulting)",
@@ -39,6 +40,7 @@ export default function BusinessDetailsPage() {
   const [formData, setFormData] = useState({
     businessName: "",
     businessIndustry: "",
+    businessWebsite: "",
     businessPhone: "",
     businessEmail: "",
     businessAddress: "",
@@ -68,11 +70,14 @@ export default function BusinessDetailsPage() {
         setFormData({
           businessName: data.business_name || "",
           businessIndustry: data.business_industry || "",
+          businessWebsite: data.business_website || "",
           businessPhone: data.business_phone || "",
           businessEmail: data.business_email || "",
           businessAddress: data.business_address || "",
           timezone: data.timezone || "America/New_York",
-          businessHours: data.business_hours || defaultHours,
+          businessHours: (data.business_hours && Object.keys(data.business_hours).length > 0)
+            ? data.business_hours
+            : defaultHours,
         });
       }
     } catch (error) {
@@ -94,6 +99,7 @@ export default function BusinessDetailsPage() {
           user_id: user.id,
           business_name: formData.businessName,
           business_industry: formData.businessIndustry,
+          business_website: formData.businessWebsite,
           business_phone: formData.businessPhone,
           business_email: formData.businessEmail,
           business_address: formData.businessAddress,
@@ -112,6 +118,7 @@ export default function BusinessDetailsPage() {
       // Update onboarding progress
       await updateOnboardingProgress(user.id, 2);
       
+      syncVapiAssistant(user.id)
       router.push("/onboarding/select-voice");
     } catch (error) {
       console.error("Error saving:", error);

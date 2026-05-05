@@ -3,90 +3,85 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingWrapper } from "@/components/onboarding/onboarding-wrapper";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface Plan {
-  id: string;
-  name: string;
-  price: number;
-  period: string;
-  callsIncluded: number;
-  perExtraCall: number;
-  description: string;
-  features: string[];
-  popular?: boolean;
-}
-
-const plans: Plan[] = [
+const plans = [
   {
-    id: "starter",
-    name: "Starter",
-    price: 24.95,
-    period: "month",
-    callsIncluded: 30,
-    perExtraCall: 1.0,
-    description: "Perfect for small businesses just getting started",
+    id: "lite",
+    name: "Lite",
+    price: "$25",
+    period: "/mo",
+    volume: "30 calls / 90 minutes",
+    overage: "No overage — upgrade to continue",
+    badge: null,
+    highlight: false,
+    description: "Solo businesses just getting started",
     features: [
-      "30 calls included per month",
-      "$1.00 per extra call",
-      "24/7 call answering",
-      "Message taking & delivery",
-      "Email summaries",
-      "1-year call history",
-    ],
-  },
-  {
-    id: "premium",
-    name: "Premium",
-    price: 59.95,
-    period: "month",
-    callsIncluded: 90,
-    perExtraCall: 0.75,
-    description: "Best for growing service businesses",
-    popular: true,
-    features: [
-      "90 calls included per month",
-      "$0.75 per extra call",
-      "Everything in Starter",
-      "SMS notifications",
-      "Slack integration",
-      "Advanced routing",
+      "30 calls / 90 minutes",
+      "24/7 AI answering",
+      "Google Calendar booking",
+      "Email & SMS notifications",
+      "Forward calls to your phone",
     ],
   },
   {
     id: "pro",
     name: "Pro",
-    price: 159.95,
-    period: "month",
-    callsIncluded: 300,
-    perExtraCall: 0.5,
-    description: "For high-volume operations",
+    price: "$149",
+    period: "/mo",
+    volume: "150 calls / 450 minutes",
+    overage: "+$1.00 per extra call",
+    badge: "Most Popular",
+    highlight: true,
+    description: "Popular with service businesses",
     features: [
-      "300 calls included per month",
-      "$0.50 per extra call",
-      "Everything in Premium",
-      "Priority support",
+      "Everything in Lite, plus:",
+      "150 calls / 450 minutes",
+      "SMS + email confirmations",
+      "Real-time Slack alerts",
       "Call recordings (30 days)",
-      "Custom workflows",
+      "Advanced call routing",
+      "Priority support",
     ],
   },
   {
-    id: "enterprise",
-    name: "Enterprise",
-    price: 0,
-    period: "custom",
-    callsIncluded: 0,
-    perExtraCall: 0,
-    description: "For large organizations with custom needs",
+    id: "scale",
+    name: "Scale",
+    price: "$349",
+    period: "/mo",
+    volume: "450 calls / 1,350 minutes",
+    overage: "+$0.85 per extra call",
+    badge: null,
+    highlight: false,
+    description: "Multi-location businesses & portfolios",
     features: [
-      "Unlimited calls",
-      "Dedicated account manager",
-      "Custom integrations",
-      "SLA guarantees",
-      "Advanced analytics",
-      "On-premise options",
+      "Everything in Pro, plus:",
+      "450 calls / 1,350 minutes",
+      "Multi-location call routing",
+      "Call recordings (90 days)",
+      "1 custom automation workflow",
+      "Plug straight into Outlook, Salesforce & HubSpot",
+    ],
+  },
+  {
+    id: "custom",
+    name: "Custom Build",
+    price: "Contact us",
+    period: null,
+    volume: "Unlimited",
+    overage: null,
+    badge: "Enterprise",
+    highlight: false,
+    description: "Complex integrations & high-volume ops",
+    features: [
+      "Everything in Scale, plus:",
+      "Unlimited calls (no overages)",
+      "Custom voice persona",
+      "Unlimited custom workflows",
+      "Dedicated success manager",
+      "White-glove setup",
     ],
   },
 ];
@@ -105,20 +100,13 @@ export default function SelectPlanPage() {
   const loadExistingConfig = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-
+      if (!user) { router.push("/login"); return; }
       const { data } = await supabase
         .from("agent_config")
         .select("selected_plan")
         .eq("user_id", user.id)
         .single();
-
-      if (data?.selected_plan) {
-        setSelectedPlan(data.selected_plan);
-      }
+      if (data?.selected_plan) setSelectedPlan(data.selected_plan);
     } catch (error) {
       console.error("Error loading config:", error);
     } finally {
@@ -128,58 +116,32 @@ export default function SelectPlanPage() {
 
   const handleSave = async () => {
     if (!selectedPlan) return;
-    
     setIsSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const selectedPlanData = plans.find(p => p.id === selectedPlan);
-      
+      const plan = plans.find(p => p.id === selectedPlan);
+
       const { error } = await supabase
         .from("agent_config")
         .upsert({
           user_id: user.id,
           selected_plan: selectedPlan,
-          plan_details: selectedPlanData ? {
-            name: selectedPlanData.name,
-            price: selectedPlanData.price,
-            calls_included: selectedPlanData.callsIncluded,
-            per_extra_call: selectedPlanData.perExtraCall,
-          } : {},
+          plan_details: plan ? { name: plan.name, price: plan.price, volume: plan.volume } : {},
           updated_at: new Date().toISOString(),
-        }, {
-          onConflict: "user_id",
-        });
+        }, { onConflict: "user_id" });
 
-      if (error) {
-        console.error("Error saving config:", error);
-        return;
-      }
+      if (error) { console.error("Error saving plan:", error); return; }
 
-      // Also create/update subscription record
-      if (selectedPlan !== "enterprise") {
-        const plan = plans.find(p => p.id === selectedPlan);
-        if (plan) {
-          await supabase
-            .from("subscription")
-            .upsert({
-              user_id: user.id,
-              plan: plan.id,
-              price: plan.price,
-              calls_included: plan.callsIncluded,
-              status: "active",
-              billing_cycle: "monthly",
-            }, {
-              onConflict: "user_id",
-            });
-        }
-      }
-
-      // Update onboarding progress
       await updateOnboardingProgress(user.id, 5);
-      
-      router.push("/onboarding/phone-number");
+
+      // Custom plan skips checkout — contact sales handles billing
+      if (selectedPlan === "custom") {
+        router.push("/onboarding/phone-number");
+      } else {
+        router.push(`/checkout?plan=${selectedPlan}&redirect=/onboarding/phone-number`);
+      }
     } catch (error) {
       console.error("Error saving:", error);
     } finally {
@@ -193,12 +155,8 @@ export default function SelectPlanPage() {
       .select("completed_steps")
       .eq("user_id", userId)
       .single();
-
     const completedSteps = data?.completed_steps || [];
-    if (!completedSteps.includes(step)) {
-      completedSteps.push(step);
-    }
-
+    if (!completedSteps.includes(step)) completedSteps.push(step);
     await supabase
       .from("user_onboarding")
       .upsert({
@@ -206,15 +164,13 @@ export default function SelectPlanPage() {
         current_step: step + 1,
         completed_steps: completedSteps,
         updated_at: new Date().toISOString(),
-      }, {
-        onConflict: "user_id",
-      });
+      }, { onConflict: "user_id" });
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500" />
       </div>
     );
   }
@@ -222,97 +178,91 @@ export default function SelectPlanPage() {
   return (
     <OnboardingWrapper
       currentStep={5}
-      stepTitle="Select Plan"
-      stepDescription="Choose the plan that fits your business needs"
+      stepTitle="Select Your Plan"
+      stepDescription="Choose based on your expected call volume. You can upgrade at any time."
       onNext={handleSave}
       isNextDisabled={isSaving || !selectedPlan}
       nextLabel={isSaving ? "Saving..." : "Continue"}
     >
-      <div className="space-y-6">
-        <p className="text-slate-400 text-sm text-center">
-          All plans include 24/7 call answering, message delivery, and appointment booking. 
-          Choose based on your expected call volume.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {plans.map((plan) => (
-            <Card
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {plans.map((plan) => {
+          const isSelected = selectedPlan === plan.id;
+          return (
+            <button
               key={plan.id}
-              className={`cursor-pointer transition-all relative ${
-                selectedPlan === plan.id
-                  ? "border-teal-500 bg-teal-500/10"
-                  : "border-slate-700 bg-slate-900/30 hover:border-slate-600"
-              } ${plan.popular ? "md:col-span-1" : ""}`}
               onClick={() => setSelectedPlan(plan.id)}
+              className={cn(
+                "relative flex flex-col rounded-2xl border p-5 text-left transition-all",
+                isSelected
+                  ? "border-teal-500 bg-teal-500/5 shadow-lg shadow-teal-500/10"
+                  : plan.highlight
+                  ? "border-teal-500/40 bg-slate-900 hover:border-teal-500/60"
+                  : "border-slate-700 bg-slate-900 hover:border-slate-600"
+              )}
             >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-teal-500 text-slate-900 text-xs font-semibold rounded-full">
-                  MOST POPULAR
+              {/* Selection ring */}
+              {isSelected && (
+                <div className="absolute right-4 top-4 flex size-5 items-center justify-center rounded-full bg-teal-500">
+                  <Check className="size-3 text-white" />
                 </div>
               )}
-              <CardHeader className="pb-2">
-                <CardTitle className="text-white text-lg">{plan.name}</CardTitle>
-                <CardDescription className="text-slate-400 text-sm">
-                  {plan.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {plan.id === "enterprise" ? (
-                  <div className="mb-4">
-                    <div className="text-2xl font-bold text-white">Custom</div>
-                    <div className="text-sm text-slate-500">Contact for pricing</div>
-                  </div>
-                ) : (
-                  <div className="mb-4">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-white">${plan.price}</span>
-                      <span className="text-slate-500">/{plan.period}</span>
-                    </div>
-                    <div className="text-sm text-slate-400 mt-1">
-                      {plan.callsIncluded} calls included
-                    </div>
-                  </div>
-                )}
-                
-                <ul className="space-y-2 mb-4">
-                  {plan.features.slice(0, 4).map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-slate-300">
-                      <span className="text-teal-500">✓</span>
-                      {feature}
-                    </li>
-                  ))}
-                  {plan.features.length > 4 && (
-                    <li className="text-xs text-slate-500">
-                      +{plan.features.length - 4} more features
-                    </li>
-                  )}
-                </ul>
 
-                {plan.id !== "enterprise" && (
-                  <div className="text-xs text-slate-500">
-                    ${plan.perExtraCall}/extra call
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              {/* Badge */}
+              {plan.badge && (
+                <span className={cn(
+                  "mb-3 self-start rounded-full border px-2.5 py-0.5 text-xs font-semibold",
+                  plan.highlight
+                    ? "border-teal-500/40 bg-teal-500/10 text-teal-400"
+                    : "border-slate-700 bg-slate-800 text-slate-400"
+                )}>
+                  {plan.badge}
+                </span>
+              )}
 
-        {selectedPlan && (
-          <div className="mt-6 p-4 bg-teal-500/10 border border-teal-500/30 rounded-lg">
-            <p className="text-teal-400 text-sm font-medium text-center">
-              ✓ Selected: {plans.find(p => p.id === selectedPlan)?.name}
-              {selectedPlan === "enterprise" && " - Contact sales for custom pricing"}
-            </p>
-          </div>
-        )}
+              {/* Name */}
+              <p className="mb-2 text-base font-bold text-white">{plan.name}</p>
 
-        {/* Comparison note */}
-        <div className="text-center text-xs text-slate-500 mt-4">
-          <p>Compare to hiring a full-time receptionist: $3,200+/month</p>
-          <p>All plans are billed monthly. Cancel anytime.</p>
-        </div>
+              {/* Price */}
+              <div className="mb-1 flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-white">{plan.price}</span>
+                {plan.period && <span className="text-xs text-slate-400">{plan.period}</span>}
+              </div>
+
+              <p className={cn("mb-3 text-xs font-semibold", isSelected || plan.highlight ? "text-teal-400" : "text-slate-400")}>
+                {plan.volume}
+              </p>
+
+              {plan.overage && (
+                <p className="mb-3 text-xs text-slate-500">{plan.overage}</p>
+              )}
+
+              <p className="mb-4 text-xs text-slate-500 leading-relaxed">{plan.description}</p>
+
+              {/* Features */}
+              <ul className="flex flex-col gap-1.5">
+                {plan.features.map((f) => (
+                  <li
+                    key={f}
+                    className={cn(
+                      "flex items-start gap-2 text-xs",
+                      f.endsWith(":") ? "mt-1 text-slate-500" : "text-slate-300"
+                    )}
+                  >
+                    {!f.endsWith(":") && (
+                      <Check className="mt-0.5 size-3 shrink-0 text-teal-400" />
+                    )}
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </button>
+          );
+        })}
       </div>
+
+      <p className="mt-4 text-center text-xs text-slate-600">
+        Compare to a full-time receptionist: $3,200+/month &nbsp;&middot;&nbsp; All plans billed monthly &nbsp;&middot;&nbsp; Cancel anytime
+      </p>
     </OnboardingWrapper>
   );
 }

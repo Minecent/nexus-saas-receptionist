@@ -32,6 +32,19 @@ export default function Hero() {
               Learn More
             </Link>
           </div>
+
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+            {[
+              'Keep your existing number',
+              'Live in 24–48 hours',
+              'Cancel anytime',
+            ].map((item) => (
+              <span key={item} className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span className="size-1.5 rounded-full bg-teal-400" />
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="flex flex-col gap-3 lg:pl-8">

@@ -1,0 +1,88 @@
+{
+  "name": "NEXUS — Send to Zapier",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nexus-zapier",
+        "responseMode": "onReceived",
+        "responseData": "noData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [240, 300],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Receive Event",
+      "webhookId": "nexus-zapier-entry-v1"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://gqlphahfvxsngmytxorw.supabase.co/rest/v1/agent_config?user_id=eq.{{ $json.body.user_id }}&select=zapier_webhook_url,zapier_enabled,selected_plan",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey",         "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Authorization",  "value": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY" },
+            { "name": "Accept",         "value": "application/json" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300],
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Fetch Agent Config",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const res = $input.first().json;\n  // Supabase REST returns an array\n  const row = Array.isArray(res) ? res[0] : res;\n\n  if (!row) return [];\n\n  const eligible = ['pro', 'scale', 'custom'];\n  if (!eligible.includes((row.selected_plan || '').toLowerCase())) return [];\n  if (!row.zapier_enabled) return [];\n  if (!row.zapier_webhook_url) return [];\n\n  const body = $('Receive Event').first().json.body;\n  return [{\n    json: {\n      zapier_url:  row.zapier_webhook_url,\n      event_type:  body.event_type,\n      user_id:     body.user_id,\n      timestamp:   body.timestamp,\n      data:        body.data\n    }\n  }];\n} catch(e) {\n  return [];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Tier Gate"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.zapier_url }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ event_type: $json.event_type, user_id: $json.user_id, timestamp: $json.timestamp, data: $json.data, source: 'nexus-ai-receptionist' }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300],
+      "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
+      "name": "POST to Zapier",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const item  = $input.first().json;\nconst event = $('Tier Gate').first().json.event_type || 'unknown';\nconsole.log('[NEXUS Zapier]', event, '| HTTP', item.statusCode || item.status || 'ok');\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300],
+      "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
+      "name": "Log Result"
+    }
+  ],
+  "connections": {
+    "Receive Event":     { "main": [[{ "node": "Fetch Agent Config", "type": "main", "index": 0 }]] },
+    "Fetch Agent Config":{ "main": [[{ "node": "Tier Gate",          "type": "main", "index": 0 }]] },
+    "Tier Gate":         { "main": [[{ "node": "POST to Zapier",     "type": "main", "index": 0 }]] },
+    "POST to Zapier":    { "main": [[{ "node": "Log Result",         "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "instanceId": "" },
+  "tags": [{ "name": "nexus" }]
+}

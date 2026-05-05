@@ -12,8 +12,8 @@ const links = {
     { label: 'Contact', href: 'mailto:contact@nexus.ai' },
   ],
   Legal: [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
+    { label: 'Privacy Policy', href: '/legal/privacy' },
+    { label: 'Terms of Service', href: '/legal/terms' },
   ],
 }
 

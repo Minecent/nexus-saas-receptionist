@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
+import { syncVapiAssistant } from "@/lib/vapi";
 
 interface TransferRule {
   id: string;
@@ -16,12 +17,8 @@ interface TransferRule {
 }
 
 const integrations = [
-  { id: "slack", name: "Slack", description: "Get notifications in your Slack channels", icon: "💬" },
-  { id: "zapier", name: "Zapier", description: "Connect with 5,000+ apps", icon: "⚡" },
-  { id: "google_calendar", name: "Google Calendar", description: "Book appointments directly", icon: "📅" },
-  { id: "hubspot", name: "HubSpot", description: "Sync contacts and leads", icon: "🔶" },
-  { id: "salesforce", name: "Salesforce", description: "CRM integration", icon: "☁️" },
-  { id: "webhook", name: "Custom Webhook", description: "Send data to any endpoint", icon: "🔗" },
+  { id: "google_calendar", name: "Google Calendar", description: "Automatic appointment booking and rescheduling", icon: "📅" },
+  { id: "gmail", name: "Gmail", description: "Email summaries and confirmations after every call", icon: "✉️" },
 ];
 
 export default function AgentSettingsPage() {
@@ -29,12 +26,15 @@ export default function AgentSettingsPage() {
   const supabase = createClient();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     transferEnabled: true,
     transferRules: [] as TransferRule[],
     recordingEnabled: false,
     callScreeningEnabled: true,
     selectedIntegrations: [] as string[],
+    zapierEnabled: false,
+    zapierWebhookUrl: "",
   });
 
   useEffect(() => {
@@ -56,12 +56,15 @@ export default function AgentSettingsPage() {
         .single();
 
       if (data) {
+        setSelectedPlan(data.selected_plan ?? null);
         setFormData({
           transferEnabled: data.transfer_enabled ?? true,
           transferRules: Array.isArray(data.transfer_rules) ? data.transfer_rules : [],
           recordingEnabled: data.recording_enabled ?? false,
           callScreeningEnabled: data.call_screening_enabled ?? true,
           selectedIntegrations: data.integrations ? Object.keys(data.integrations) : [],
+          zapierEnabled: data.zapier_enabled ?? false,
+          zapierWebhookUrl: data.zapier_webhook_url ?? "",
         });
       }
     } catch (error) {
@@ -91,6 +94,8 @@ export default function AgentSettingsPage() {
           recording_enabled: formData.recordingEnabled,
           call_screening_enabled: formData.callScreeningEnabled,
           integrations: integrationsObj,
+          zapier_enabled: formData.zapierEnabled,
+          zapier_webhook_url: formData.zapierWebhookUrl || null,
           updated_at: new Date().toISOString(),
         }, {
           onConflict: "user_id",
@@ -104,6 +109,7 @@ export default function AgentSettingsPage() {
       // Update onboarding progress
       await updateOnboardingProgress(user.id, 4);
       
+      syncVapiAssistant(user.id)
       router.push("/onboarding/select-plan");
     } catch (error) {
       console.error("Error saving:", error);
@@ -295,7 +301,7 @@ export default function AgentSettingsPage() {
         <div className="space-y-4">
           <div>
             <h3 className="text-lg font-semibold text-white">Integrations</h3>
-            <p className="text-sm text-slate-400">Connect with your existing tools</p>
+            <p className="text-sm text-slate-400">Native integrations available now</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {integrations.map((integration) => (
@@ -320,7 +326,84 @@ export default function AgentSettingsPage() {
               </Card>
             ))}
           </div>
+          <p className="text-xs text-slate-500 pt-1">
+            Need Outlook, Salesforce, HubSpot, or a custom CRM?{' '}
+            <a href="mailto:sales@nexus.ai" className="text-slate-400 underline underline-offset-2 hover:text-teal-400 transition-colors">
+              Contact our sales team
+            </a>{' '}
+            — available in the Custom Build tier.
+          </p>
         </div>
+
+        {/* Zapier Integration */}
+        {(() => {
+          const isEligible = ['pro', 'scale', 'custom'].includes((selectedPlan || '').toLowerCase());
+          return (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-semibold text-white">Zapier Integration</h3>
+                      {!isEligible && (
+                        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                          Pro+
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-slate-400">
+                      Push call events to 8,000+ apps — CRMs, Slack, Google Sheets, and more
+                    </p>
+                  </div>
+                </div>
+                <label className={`relative inline-flex items-center ${isEligible ? 'cursor-pointer' : 'cursor-not-allowed opacity-40'}`}>
+                  <input
+                    type="checkbox"
+                    checked={formData.zapierEnabled}
+                    onChange={(e) => isEligible && setFormData({ ...formData, zapierEnabled: e.target.checked })}
+                    disabled={!isEligible}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                </label>
+              </div>
+
+              {isEligible && formData.zapierEnabled && (
+                <div className="ml-4 space-y-3 border-l-2 border-slate-700 pl-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-sm text-slate-300">Zapier Webhook URL</Label>
+                    <Input
+                      value={formData.zapierWebhookUrl}
+                      onChange={(e) => setFormData({ ...formData, zapierWebhookUrl: e.target.value })}
+                      placeholder="https://hooks.zapier.com/hooks/catch/..."
+                      className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
+                    />
+                    <p className="text-xs text-slate-500">
+                      In Zapier, create a Zap with a <strong className="text-slate-400">Webhooks by Zapier → Catch Hook</strong> trigger and paste the URL here.
+                    </p>
+                  </div>
+                  <div className="rounded-lg bg-slate-900/50 border border-slate-700 p-3 space-y-1">
+                    <p className="text-xs font-medium text-slate-300">Events we&apos;ll send:</p>
+                    {['new_booking', 'missed_call', 'voicemail', 'call_completed', 'call_transferred'].map(evt => (
+                      <div key={evt} className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                        <span className="text-xs text-slate-400 font-mono">{evt}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!isEligible && (
+                <div className="ml-4 rounded-lg bg-amber-500/5 border border-amber-500/20 p-3">
+                  <p className="text-xs text-amber-400/80">
+                    Zapier integration is available on the <strong>Pro plan and above</strong>. Upgrade after completing onboarding to unlock this.
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
     </OnboardingWrapper>
   );

@@ -2,20 +2,20 @@ import { X, Check } from 'lucide-react'
 import { FadeIn } from './fade-in'
 
 const humanCons = [
-  'Salary: $2,800 – $3,500/mo',
+  'Salary: $3,500 – $4,500/mo',
   'Benefits & payroll taxes: +30%',
-  'Only covers 8 hours/day',
+  'Only covers 8 hours/day, 5 days/week',
   'Sick days, vacations, turnover',
   'Weeks to hire and train',
   'One call at a time',
 ]
 
 const nexusPros = [
-  'From $25/mo — no hidden fees',
-  'No benefits, payroll, or HR',
-  'Available 24/7/365',
-  'Never calls in sick',
-  'Live in under 5 minutes',
+  'From $149/mo on the Pro plan',
+  'No benefits, payroll, or HR costs',
+  'Available 24/7/365 — nights, weekends, holidays',
+  'Never calls in sick or goes on vacation',
+  'Keep your existing business number',
   'Handles unlimited concurrent calls',
 ]
 
@@ -32,8 +32,8 @@ export default function CostComparison() {
               A fraction of the cost. None of the headaches.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-slate-400">
-              The average small business spends $3,000+ per month on a full-time receptionist.
-              NEXUS starts at $25.
+              The average small business spends $48,000 per year on a full-time receptionist.
+              NEXUS Pro costs $1,788 per year — and works around the clock.
             </p>
           </div>
         </FadeIn>
@@ -48,10 +48,11 @@ export default function CostComparison() {
                   Human Receptionist
                 </span>
               </div>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-rose-400">$3,200</span>
-                <span className="ml-1 text-sm text-slate-500">/ month avg.</span>
+              <div className="mb-1">
+                <span className="text-4xl font-bold text-rose-400">$48,000</span>
+                <span className="ml-1 text-sm text-slate-500">/ year</span>
               </div>
+              <p className="mb-6 text-xs text-slate-600">$4,000/mo salary + benefits + payroll tax</p>
               <ul className="flex flex-col gap-3">
                 {humanCons.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-slate-400">
@@ -70,10 +71,11 @@ export default function CostComparison() {
                   NEXUS AI Receptionist
                 </span>
               </div>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-teal-400">$25</span>
-                <span className="ml-1 text-sm text-slate-500">/ month to start</span>
+              <div className="mb-1">
+                <span className="text-4xl font-bold text-teal-400">$1,788</span>
+                <span className="ml-1 text-sm text-slate-500">/ year</span>
               </div>
+              <p className="mb-6 text-xs text-slate-600">$149/mo on the Pro plan, billed monthly</p>
               <ul className="flex flex-col gap-3">
                 {nexusPros.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
@@ -88,8 +90,9 @@ export default function CostComparison() {
           {/* Savings callout */}
           <div className="mx-auto mt-6 max-w-4xl rounded-xl border border-teal-500/20 bg-teal-500/5 px-6 py-4 text-center">
             <p className="text-sm font-medium text-teal-300">
-              Most businesses save <span className="font-bold text-white">$35,000+</span> per year
-              switching to NEXUS — while covering more hours than ever before.
+              That is a saving of{' '}
+              <span className="font-bold text-white">$46,212 every year</span>
+              {' '}— while answering more calls than any human ever could.
             </p>
           </div>
         </FadeIn>

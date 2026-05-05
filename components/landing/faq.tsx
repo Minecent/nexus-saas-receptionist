@@ -7,36 +7,44 @@ import { FadeIn } from './fade-in'
 
 const faqs = [
   {
-    q: 'Does NEXUS sound like a real person?',
-    a: 'Yes. NEXUS uses the latest voice AI technology — natural pacing, realistic intonation, and context-aware responses. Most callers can\'t tell they\'re speaking with AI. You can also choose from multiple voice options and customize the greeting, tone, and persona to match your brand.',
+    q: 'What can NEXUS actually do?',
+    a: 'NEXUS answers calls in 1 ring, 24/7. It collects caller information, answers questions about your business, books appointments, qualifies leads, and sends you instant summaries after every call. It can also transfer urgent calls to you or your team when needed — so nothing falls through the cracks.',
   },
   {
-    q: "What happens if NEXUS can't answer a question?",
-    a: "NEXUS is trained on your business information, but when a caller asks something outside its knowledge, it doesn't guess. It takes a detailed message, captures the caller's contact info, and immediately notifies you via SMS or email so you can follow up. No caller is ever left hanging.",
+    q: 'How fast does NEXUS answer calls?',
+    a: 'NEXUS answers in 1 ring — faster than most call centers. Callers never wait on hold or hear a busy signal. Every call is answered instantly, even during your busiest hours.',
   },
   {
-    q: 'Can NEXUS transfer calls to my team?',
-    a: 'Absolutely. You set the rules — NEXUS can transfer to specific team members based on call type, time of day, or urgency. Emergency calls can be routed immediately. Routine inquiries can be handled and logged without interrupting your team.',
+    q: 'Can NEXUS handle multiple calls at once?',
+    a: 'Yes. NEXUS handles unlimited parallel calls simultaneously. No busy signals, no hold times — every caller gets answered instantly, even during peak hours or when your team is already on other calls.',
   },
   {
-    q: 'Is my data private and secure?',
-    a: 'Yes. All calls and data are encrypted in transit and at rest. We do not sell or share your data with third parties. For medical offices, NEXUS follows HIPAA-conscious practices. You own your data and can export or delete it at any time from your dashboard.',
+    q: 'Does NEXUS work after business hours?',
+    a: 'Yes. NEXUS answers calls 24/7, including nights, weekends, and public holidays. Every lead that calls outside your office hours gets answered, qualified, and logged — so you never miss an opportunity.',
   },
   {
-    q: 'How long does setup take?',
-    a: 'Most businesses are live in under 5 minutes. You provide your business details, set your availability and call rules, choose a voice, and connect your phone number. There\'s no code, no IT team required, and no lengthy onboarding process.',
+    q: 'How does NEXUS learn about my business?',
+    a: "During onboarding, we train NEXUS on your website, services, pricing, and booking policies. You customise the greeting, responses, and transfer rules to match how your business operates. NEXUS gets smarter over time based on your feedback — the more you use it, the better it gets.",
   },
   {
-    q: 'What languages does NEXUS speak?',
-    a: 'NEXUS currently supports 31 languages including English, Spanish, French, Portuguese, Mandarin, Hindi, Arabic, and more. Language detection is automatic — NEXUS responds in the language the caller uses without any configuration required.',
+    q: 'Will callers know they are talking to AI?',
+    a: "Most don't realise it. Those who do typically prefer getting help immediately over navigating phone trees or leaving voicemail. You can choose to disclose upfront that callers are speaking with an AI assistant — many businesses do, and it doesn't hurt satisfaction at all.",
   },
   {
-    q: 'What tools does NEXUS integrate with?',
-    a: 'NEXUS connects with popular calendars (Google Calendar, Outlook), CRMs (HubSpot, Salesforce, Zoho), and practice management software. It also supports Zapier and webhooks for custom workflows. The integration library is growing every month.',
+    q: 'Can I keep my existing phone number?',
+    a: 'Yes. You keep your current business number and set up call forwarding to NEXUS — a 5-minute change with your phone provider. No number porting required. We send you step-by-step instructions for your specific carrier after signup.',
   },
   {
-    q: 'What happens if there is an outage?',
-    a: 'NEXUS is built on enterprise-grade infrastructure with 99.9% uptime. In the rare event of a disruption, incoming calls are automatically forwarded to a backup number you specify — typically your direct line. You will never have unanswered calls due to a NEXUS outage.',
+    q: 'What integrations does NEXUS support?',
+    a: 'Pro and above includes a Zapier webhook that connects AVA to 7,000+ apps — CRMs, spreadsheets, email tools, project management platforms, and more. Scale customers also get direct connections to Outlook, Salesforce, and HubSpot. Custom Build customers get hands-on integration setup with our team for fully custom workflows.',
+  },
+  {
+    q: 'How does the Zapier integration work — do I need technical knowledge?',
+    a: "No technical knowledge needed. When you sign up for the Pro plan, you receive a unique webhook URL, a 5-minute setup guide, and a set of pre-built templates for common tools (HubSpot, Google Sheets, Slack, Gmail, and more). You paste your webhook URL into Zapier, pick a template, connect your app, and you are done. NEXUS delivers your call data — you decide where it goes. Zapier's own support team handles any questions about your specific workflow. If you would rather have our team build and manage your integrations end-to-end, that is available on the Scale plan.",
+  },
+  {
+    q: 'What happens if NEXUS cannot answer a question?',
+    a: "NEXUS is trained on your business information, but when a caller asks something outside its knowledge, it doesn't guess. It takes a detailed message, captures the caller's contact info, and immediately notifies you via SMS or email so you can follow up. No caller is ever left without a response.",
   },
 ]
 

@@ -5,6 +5,7 @@ import DemoAudio from '@/components/landing/demo-audio'
 import Features from '@/components/landing/features'
 import Industries from '@/components/landing/industries'
 import HowItWorks from '@/components/landing/how-it-works'
+import Integrations from '@/components/landing/integrations'
 import Pricing from '@/components/landing/pricing'
 import CostComparison from '@/components/landing/cost-comparison'
 import CallCta from '@/components/landing/call-cta'
@@ -33,6 +34,7 @@ export default function Home() {
         <FadeIn>
           <HowItWorks />
         </FadeIn>
+        <Integrations />
         <FadeIn>
           <Pricing />
         </FadeIn>

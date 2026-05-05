@@ -1,0 +1,543 @@
+{
+  "name": "AI PROPRTY MNGMNT",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}", "rightValue": "cancelAppointment_copy", "operator": { "type": "string", "operation": "equals" }, "id": "b7612062-6290-4d52-ba51-a653bbf387e8" }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelAppointment_copy"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "8f9a1e73-3eaa-4424-a3c0-4bae891664c2", "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}", "rightValue": "rescheduleAppointment_copy", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "rescheduleAppointment_copy"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "38c72348-4e58-46ae-8869-5233e3719422", "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}", "rightValue": "bookAppointment_copy", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bookAppointment_copy"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "27c64371-47e9-4154-b1a1-5688eab3441f", "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}", "rightValue": "checkAvailability_copy", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "checkAvailability_copy"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "17db0f38-a545-41e1-9bbe-db062260ca22", "leftValue": "={{ $json.body.message.toolCalls[0].function.name }}", "rightValue": "findAppointment_copy", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "findAppointment_copy"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "13cdb74f-9531-46b6-a85b-483142dc7b32", "leftValue": "={{ $json.body.message.type }}", "rightValue": "tool-calls", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Tool Calls"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [-304, 704],
+      "id": "7dfed4dd-9f38-4758-be9e-4f1b8b1fb508",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": { "__rl": true, "value": "421c2988d8cc370e16301c750edd58ceb417f0f2ff03b778ae6e0a84ed7e8bc2@group.calendar.google.com", "mode": "list", "cachedResultName": "AVA Property Demo" },
+        "returnAll": true,
+        "timeMin": "={{ $now.toISO() }}",
+        "timeMax": "={{ $now.plus({ months: 3 }).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [528, 1136],
+      "id": "c541d449-deef-4f0f-b060-dabf52f7f374",
+      "name": "getEventsForCancel",
+      "credentials": { "googleCalendarOAuth2Api": { "id": "CsCPI7frJNLTKWSP", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const phone = $('Webhook').first().json.body.message.toolCalls[0].function.arguments.callerPhone;\n  const events = $input.all();\n  \n  const match = events.find(e => {\n    const desc = e.json.description || '';\n    return desc.includes(phone);\n  });\n  \n  if (!match) {\n    return [{ json: { found: false, event_id: null, phone: phone } }];\n  }\n  \n  return [{ json: { \n    found: true,\n    event_id: match.json.id,\n    summary: match.json.summary,\n    start: match.json.start?.dateTime,\n    phone: phone\n  }}];\n  \n} catch(e) {\n  return [{ json: { found: false, error: e.message } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [688, 1136],
+      "id": "ea6aaffd-16b6-4ad1-8d95-e987334ff623",
+      "name": "findEventToCancel"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Webhook').first().json.body.message.toolCalls[0].id, result: $('findEventToCancel').first().json.found ? 'Appointment successfully cancelled.' : 'No appointment found under that phone number.' }] }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [976, 1136],
+      "id": "ab129491-ac0e-4a4d-be9e-9944fd978c5e",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": { "__rl": true, "value": "421c2988d8cc370e16301c750edd58ceb417f0f2ff03b778ae6e0a84ed7e8bc2@group.calendar.google.com", "mode": "list", "cachedResultName": "AVA Property Demo" },
+        "eventId": "={{ $('findEventToCancel').first().json.event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [832, 1136],
+      "id": "a3a101e8-8e36-40ea-8391-4f5059c39428",
+      "name": "deleteEvent",
+      "credentials": { "googleCalendarOAuth2Api": { "id": "CsCPI7frJNLTKWSP", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "=2905b28a-3448-4cb8-867e-5bab3af1a4f3",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [-480, 768],
+      "id": "531ef8d9-8aa6-4257-a76f-754d0f541e33",
+      "name": "Webhook",
+      "webhookId": "2905b28a-3448-4cb8-867e-5bab3af1a4f3"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const input = $input.first().json;\n  const toolCalls = input?.body?.message?.toolCalls;\n  \n  let args = {};\n  let toolCallId = \"\";\n  \n  if (Array.isArray(toolCalls) && toolCalls.length > 0) {\n    const lastTool = toolCalls[toolCalls.length - 1];\n    toolCallId = lastTool?.id || \"\";\n    args = lastTool?.function?.arguments;\n    if (typeof args === \"string\") {\n      try { args = JSON.parse(args); } catch { args = {}; }\n    }\n  }\n  \n  return [{\n    json: {\n      toolCallId: toolCallId\n    }\n  }];\n} catch (e) {\n  return [{ json: { error: e.message } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [416, 752],
+      "id": "e529c542-78f9-47d2-a571-987b2864d513",
+      "name": "Extract Find Args"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": { "__rl": true, "value": "421c2988d8cc370e16301c750edd58ceb417f0f2ff03b778ae6e0a84ed7e8bc2@group.calendar.google.com", "mode": "list", "cachedResultName": "AVA Property Demo" },
+        "returnAll": true,
+        "timeMin": "={{ $now.toISO() }}",
+        "timeMax": "={{ $now.plus({ months: 1 }).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [640, 752],
+      "id": "3ae8a9b8-7dde-4449-8235-b2fecc5753ce",
+      "name": "Get All Events",
+      "alwaysOutputData": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "CsCPI7frJNLTKWSP", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const events = $input.all().map(i => i.json);\n  const toolCallId = $('Extract Find Args').first().json.toolCallId;\n  \n  if (events.length === 0 || (events.length === 1 && !events[0].id)) {\n    return [{\n      json: {\n        toolCallId: toolCallId,\n        result: 'No upcoming appointments found.'\n      }\n    }];\n  }\n  \n  const eventList = events.map(e => {\n    return `id: ${e.id}, summary: ${e.summary || 'N/A'}, start: ${e.start?.dateTime || 'N/A'}, description: ${e.description || 'N/A'}`;\n  }).join(' | ');\n  \n  return [{\n    json: {\n      toolCallId: toolCallId,\n      result: 'Upcoming appointments: ' + eventList\n    }\n  }];\n} catch (e) {\n  return [{ json: { error: e.message, result: 'Error finding appointments' } }];\n}\n```\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [864, 752],
+      "id": "c5d18288-c6df-4cb4-a0e3-6f1113688c42",
+      "name": "Format Find Results"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $json.toolCallId, result: $json.result }] }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [1056, 752],
+      "id": "e7b30155-51ed-4b93-835b-45955206996c",
+      "name": "Respond to Webhook4"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const input = $input.first().json;\n  const toolCalls = input?.body?.message?.toolCalls;\n  let args = {};\n  let toolCallId = \"\";\n  \n  if (Array.isArray(toolCalls) && toolCalls.length > 0) {\n    const lastTool = toolCalls[toolCalls.length - 1];\n    toolCallId = lastTool?.id || \"\";\n    let rawArgs = lastTool?.function?.arguments || {};\n    if (typeof rawArgs === \"string\") {\n      try { rawArgs = JSON.parse(rawArgs); } catch { rawArgs = {}; }\n    }\n    args = rawArgs;\n  }\n  \n  return [{\n    json: {\n      caller_phone: args.caller_phone || args.phone || \"\",\n      new_start_time: args.new_requested_time || args.new_start_time || \"\",\n      toolCallId: toolCallId\n    }\n  }];\n} catch (e) {\n  return [{ json: { error: e.message } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [496, 944],
+      "id": "98f1eac2-69b9-4bbf-8a18-26daf69d6adc",
+      "name": "Extract Reschedule Args",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": { "__rl": true, "value": "421c2988d8cc370e16301c750edd58ceb417f0f2ff03b778ae6e0a84ed7e8bc2@group.calendar.google.com", "mode": "list", "cachedResultName": "AVA Property Demo" },
+        "eventId": "={{ $json.event_id }}",
+        "updateFields": {
+          "end": "={{ DateTime.fromISO($json.new_start_time).plus({hours: 1}).toISO() }}",
+          "start": "={{ $json.new_start_time }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [1120, 944],
+      "id": "85589b69-c5c6-4609-a5a9-72fd9eeb41c0",
+      "name": "Update an event",
+      "alwaysOutputData": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "CsCPI7frJNLTKWSP", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Webhook').first().json.body.message.toolCalls[0].id, result: 'Appointment rescheduled successfully to ' + $('Extract Reschedule Args').first().json.new_start_time }] }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [1328, 944],
+      "id": "1400501e-f880-4d5c-a0fc-da53674588eb",
+      "name": "Respond to Webhook5"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": { "__rl": true, "value": "421c2988d8cc370e16301c750edd58ceb417f0f2ff03b778ae6e0a84ed7e8bc2@group.calendar.google.com", "mode": "list", "cachedResultName": "AVA Property Demo" },
+        "timeMin": "={{ $now.toISO() }}",
+        "timeMax": "={{ $now.plus({ months: 1 }).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [704, 944],
+      "id": "96ab5d01-f262-439c-b3eb-791cc55cf14a",
+      "name": "Find Event For Reschedule",
+      "alwaysOutputData": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "CsCPI7frJNLTKWSP", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const events = $input.all().map(i => i.json);\n  const callerPhone = $('Extract Reschedule Args').first().json.caller_phone;\n  const newStartTime = $('Extract Reschedule Args').first().json.new_start_time;\n  const toolCallId = $('Extract Reschedule Args').first().json.toolCallId;\n  \n  let matchedEvent = null;\n  for (const event of events) {\n    const desc = event.description || \"\";\n    if (desc.includes(callerPhone) && callerPhone !== \"\") {\n      matchedEvent = event;\n      break;\n    }\n  }\n  \n  if (!matchedEvent) {\n    return [{\n      json: {\n        toolCallId: toolCallId,\n        result: 'No appointment found under phone number ' + callerPhone,\n        event_id: \"\",\n        new_start_time: newStartTime,\n        found: false\n      }\n    }];\n  }\n  \n  return [{\n    json: {\n      toolCallId: toolCallId,\n      event_id: matchedEvent.id,\n      new_start_time: newStartTime,\n      result: 'Found appointment: ' + matchedEvent.summary + ' - updating to ' + newStartTime,\n      found: true\n    }\n  }];\n} catch (e) {\n  return [{ json: { error: e.message, found: false } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [912, 944],
+      "id": "d56d102f-3cef-4296-a5b1-30fb9e207fcd",
+      "name": "Match Event And Reschedule"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Webhook').first().json.body.message.toolCalls[0].id, result: $('Code in JavaScript').first().json.result }] }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [1376, 528],
+      "id": "9d2faee6-0d71-483f-9f0b-997f74c0f2b0",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const events = $input.all().map(i => i.json);\n  const requestedTime = $('Extract Availability Args').first().json.requested_time;\n  const toolCallId = $('Extract Availability Args').first().json.toolCallId;\n  \n  if (events.length === 0 || (events.length === 1 && !events[0].id)) {\n    return [{\n      json: {\n        toolCallId: toolCallId,\n        result: `The time slot at ${requestedTime} is available. You can proceed with booking.`\n      }\n    }];\n  } else {\n    const booked = events.map(e => e.summary || \"Unknown\").join(\", \");\n    return [{\n      json: {\n        toolCallId: toolCallId,\n        result: `The time slot at ${requestedTime} is NOT available. There are existing bookings: ${booked}. Please suggest an alternative time to the caller.`\n      }\n    }];\n  }\n} catch (e) {\n  return [{ json: { error: e.message, result: \"Error checking availability\" } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1168, 528],
+      "id": "d9c1f6dc-6b26-48aa-a489-fbd960228c98",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": { "__rl": true, "value": "421c2988d8cc370e16301c750edd58ceb417f0f2ff03b778ae6e0a84ed7e8bc2@group.calendar.google.com", "mode": "list", "cachedResultName": "AVA Property Demo" },
+        "limit": 5,
+        "timeMin": "={{ $json.requested_time }}",
+        "timeMax": "={{ DateTime.fromISO($json.requested_time).plus({hours: 1}).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [960, 528],
+      "id": "c98f1649-b651-4d77-b0f9-f898f76197f4",
+      "name": "Get many events",
+      "alwaysOutputData": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "CsCPI7frJNLTKWSP", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const input = $input.first().json;\n  const toolCalls = input?.body?.message?.toolCalls;\n  \n  let args = {};\n  let toolCallId = \"\";\n  \n  if (Array.isArray(toolCalls) && toolCalls.length > 0) {\n    const lastTool = toolCalls[toolCalls.length - 1];\n    toolCallId = lastTool?.id || \"\";\n    args = lastTool?.function?.arguments;\n    if (typeof args === \"string\") {\n      try { args = JSON.parse(args); } catch { args = {}; }\n    }\n  }\n  \n  return [{\n    json: {\n      requested_time: args.requested_time || \"\",\n      procedure_type: args.procedure_type || \"\",\n      duration_minutes: args.duration_minutes || 30,\n      toolCallId: toolCallId\n    }\n  }];\n} catch (e) {\n  return [{ json: { error: e.message } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [752, 528],
+      "id": "0aef0500-51b0-45de-b856-f089ca9a2659",
+      "name": "Extract Availability Args"
+    },
+    {
+      "parameters": {
+        "jsCode": "try {\n  const input = $input.first().json;\n  const toolCalls = input?.body?.message?.toolCalls;\n  \n  let args = {};\n  let toolCallId = \"\";\n  \n  if (Array.isArray(toolCalls) && toolCalls.length > 0) {\n    const lastTool = toolCalls[toolCalls.length - 1];\n    toolCallId = lastTool?.id || \"\";\n    args = lastTool?.function?.arguments;\n    if (typeof args === \"string\") {\n      try { args = JSON.parse(args); } catch { args = {}; }\n    }\n  }\n\n  // Get phone number from Vapi call metadata first\n  const vapiPhone = input?.body?.message?.call?.customer?.number || \n                    input?.body?.call?.customer?.number || \"\";\n\n  // Extract phone from notes as fallback\n  const notes = args.notes || \"\";\n  let callerPhone = vapiPhone;\n  if (!callerPhone) {\n    const phoneMatch = notes.match(/^([\\d\\+\\-\\s\\(\\)]+)\\s*-/);\nif (phoneMatch) callerPhone = phoneMatch[1].trim();\n  }\n\n  // Clean notes - remove \"Phone: xxx\" from notes to avoid duplication\n  const cleanNotes = notes.replace(/Phone:\\s*[\\d\\+\\-\\s\\(\\)]+[,.]?\\s*/i, \"\").trim();\n\n  return [{\n    json: {\n      full_name: args.full_name || \"\",\n      confirmed_time: args.confirmed_time || \"\",\n      procedure_type: args.procedure_type || \"\",\n      notes: cleanNotes,\n      location: args.location || notes.replace(/^[\\d\\+\\-\\s\\(\\)]+\\s*-\\s*\\w+:\\s*/i, \"\").split(\",\")[0].trim() || \"\",\n      caller_phone: callerPhone,\n      caller_email: args.caller_email || \"\",\n      toolCallId: toolCallId\n    }\n  }];\n} catch (e) {\n  return [{ json: { error: e.message } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [624, 336],
+      "id": "ba72d93b-565f-4764-8354-22c22142a1e4",
+      "name": "Extract Booking Args"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Webhook').first().json.body.message.toolCalls[0].id, result: 'Appointment booked successfully for ' + $('Extract Booking Args').first().json.full_name + ' on ' + $('Extract Booking Args').first().json.confirmed_time }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [1024, 336],
+      "id": "dc172db5-825f-45f7-a426-cb2c4c3529a0",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "calendar": { "__rl": true, "value": "421c2988d8cc370e16301c750edd58ceb417f0f2ff03b778ae6e0a84ed7e8bc2@group.calendar.google.com", "mode": "list", "cachedResultName": "AVA Property Demo" },
+        "start": "={{ $json.confirmed_time }}",
+        "end": "={{ DateTime.fromISO($json.confirmed_time).plus({hours: 1}).toISO() }}",
+        "additionalFields": {
+          "description": "=Phone: {{ $json.notes }}",
+          "location": "={{ $json.location }}",
+          "summary": "={{ $json.full_name }} - {{ $json.procedure_type }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [832, 336],
+      "id": "48555218-1f44-4316-b611-7a95b695c969",
+      "name": "Create an event",
+      "credentials": { "googleCalendarOAuth2Api": { "id": "CsCPI7frJNLTKWSP", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "https://docs.google.com/spreadsheets/d/1q9KyI6Z5LMvXZkWr_2KmWMXMYItOGuAdYPG5CYMlsZc/edit?gid=0#gid=0", "mode": "url" },
+        "sheetName": { "__rl": true, "value": "Sheet1", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp":   "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+            "Name":        "={{ $('Extract Booking Args').first().json.full_name }}",
+            "Phone":       "={{ $('Extract Booking Args').first().json.caller_phone }}",
+            "Service":     "={{ $('Extract Booking Args').first().json.procedure_type }}",
+            "Location":    "={{ $('Extract Booking Args').first().json.location }}",
+            "Appointment": "={{ DateTime.fromISO($('Extract Booking Args').first().json.confirmed_time).toFormat('cccc, MMMM d yyyy at h:mm a') }}",
+            "Status":      "New Lead",
+            "Notes":       "={{ $('Extract Booking Args').first().json.notes }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            { "id": "Timestamp",   "displayName": "Timestamp",   "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Name",        "displayName": "Name",        "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Phone",       "displayName": "Phone",       "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Service",     "displayName": "Service",     "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Location",    "displayName": "Location",    "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Appointment", "displayName": "Appointment", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Status",      "displayName": "Status",      "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "Notes",       "displayName": "Notes",       "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true, "removed": false }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": { "locationDefine": { "values": {} } }
+      },
+      "id": "4b66e9e5-5204-4267-b2c7-0b9d21683b60",
+      "name": "Log Lead to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [832, 80],
+      "alwaysOutputData": true,
+      "credentials": { "googleSheetsOAuth2Api": { "id": "4lOYo6OpPShzcAPp", "name": "Google Sheets account" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/YOUR_TWILIO_ACCOUNT_SID/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "To",   "value": "={{ $('Extract Booking Args').first().json.caller_phone }}" },
+            { "name": "From", "value": "+1XXXXXXXXXX" },
+            { "name": "Body", "value": "=Hi {{ $('Extract Booking Args').first().json.full_name }}, your viewing with AVA Property Management is confirmed!\n\nDate & Time: {{ DateTime.fromISO($('Extract Booking Args').first().json.confirmed_time).toFormat('cccc, MMMM d yyyy at h:mm a') }}\nService: {{ $('Extract Booking Args').first().json.procedure_type }}\nLocation: {{ $('Extract Booking Args').first().json.location }}\n\nTo reschedule or cancel call us at [YOUR PHONE NUMBER]." }
+          ]
+        },
+        "options": {}
+      },
+      "id": "82145626-cb95-4fb7-b0e9-5fc8366960c6",
+      "name": "Send SMS via Twilio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1024, 80],
+      "disabled": true,
+      "continueOnFail": true
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({'user_id':'4885f004-270c-4a20-aa3f-852d419c7fea','event_type':'appointment_booked','timestamp':$now.toISO(),'data':{'caller_name':$('Extract Booking Args').first().json.full_name,'caller_phone':$('Extract Booking Args').first().json.caller_phone,'caller_email':$('Extract Booking Args').first().json.caller_email,'service':$('Extract Booking Args').first().json.procedure_type,'appointment_time':$('Extract Booking Args').first().json.confirmed_time,'location':$('Extract Booking Args').first().json.location,'notes':$('Extract Booking Args').first().json.notes}}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1224, 80],
+      "id": "zap-trigger-booked-001",
+      "name": "Trigger Zapier - Booked",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({'user_id':'4885f004-270c-4a20-aa3f-852d419c7fea','event_type':'appointment_cancelled','timestamp':$now.toISO(),'data':{'caller_phone':$('Webhook').first().json.body.message.toolCalls[0].function.arguments.callerPhone,'event_id':$('findEventToCancel').first().json.event_id,'cancelled_successfully':$('findEventToCancel').first().json.found}}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1176, 1136],
+      "id": "zap-trigger-cancelled-001",
+      "name": "Trigger Zapier - Cancelled",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({'user_id':'4885f004-270c-4a20-aa3f-852d419c7fea','event_type':'appointment_rescheduled','timestamp':$now.toISO(),'data':{'caller_phone':$('Extract Reschedule Args').first().json.caller_phone,'new_time':$('Extract Reschedule Args').first().json.new_start_time,'event_id':$('Match Event And Reschedule').first().json.event_id}}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1224, 1040],
+      "id": "zap-trigger-rescheduled-001",
+      "name": "Trigger Zapier - Rescheduled",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({'user_id':'4885f004-270c-4a20-aa3f-852d419c7fea','event_type':'availability_checked','timestamp':$now.toISO(),'data':{'requested_time':$('Extract Availability Args').first().json.requested_time,'is_available':!$json.result.includes('NOT available'),'result':$json.result}}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1376, 624],
+      "id": "zap-trigger-availability-001",
+      "name": "Trigger Zapier - Availability Checked",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({'user_id':'4885f004-270c-4a20-aa3f-852d419c7fea','event_type':'appointment_found','timestamp':$now.toISO(),'data':{'result':$json.result,'tool_call_id':$json.toolCallId}}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1056, 848],
+      "id": "zap-trigger-found-001",
+      "name": "Trigger Zapier - Found",
+      "continueOnFail": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch1": {
+      "main": [
+        [{ "node": "getEventsForCancel",      "type": "main", "index": 0 }],
+        [{ "node": "Extract Reschedule Args",  "type": "main", "index": 0 }],
+        [{ "node": "Extract Booking Args",     "type": "main", "index": 0 }],
+        [{ "node": "Extract Availability Args","type": "main", "index": 0 }],
+        [{ "node": "Extract Find Args",        "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "getEventsForCancel":       { "main": [[{ "node": "findEventToCancel",         "type": "main", "index": 0 }]] },
+    "findEventToCancel":        { "main": [[{ "node": "deleteEvent",               "type": "main", "index": 0 }]] },
+    "deleteEvent":              { "main": [[{ "node": "Trigger Zapier - Cancelled","type": "main", "index": 0 }]] },
+    "Trigger Zapier - Cancelled":{ "main": [[{ "node": "Respond to Webhook1",     "type": "main", "index": 0 }]] },
+    "Webhook":                  { "main": [[{ "node": "Switch1",                   "type": "main", "index": 0 }]] },
+    "Extract Find Args":        { "main": [[{ "node": "Get All Events",            "type": "main", "index": 0 }]] },
+    "Get All Events":           { "main": [[{ "node": "Format Find Results",       "type": "main", "index": 0 }]] },
+    "Format Find Results":      { "main": [[{ "node": "Trigger Zapier - Found",    "type": "main", "index": 0 }]] },
+    "Trigger Zapier - Found":   { "main": [[{ "node": "Respond to Webhook4",       "type": "main", "index": 0 }]] },
+    "Extract Reschedule Args":  { "main": [[{ "node": "Find Event For Reschedule", "type": "main", "index": 0 }]] },
+    "Find Event For Reschedule":{ "main": [[{ "node": "Match Event And Reschedule","type": "main", "index": 0 }]] },
+    "Match Event And Reschedule":{ "main": [[{ "node": "Update an event",          "type": "main", "index": 0 }]] },
+    "Update an event":          { "main": [[{ "node": "Trigger Zapier - Rescheduled","type": "main", "index": 0 }]] },
+    "Trigger Zapier - Rescheduled":{ "main": [[{ "node": "Respond to Webhook5",   "type": "main", "index": 0 }]] },
+    "Extract Availability Args":{ "main": [[{ "node": "Get many events",           "type": "main", "index": 0 }]] },
+    "Get many events":          { "main": [[{ "node": "Code in JavaScript",        "type": "main", "index": 0 }]] },
+    "Code in JavaScript":       { "main": [[{ "node": "Trigger Zapier - Availability Checked","type": "main", "index": 0 }]] },
+    "Trigger Zapier - Availability Checked":{ "main": [[{ "node": "Respond to Webhook3","type": "main", "index": 0 }]] },
+    "Extract Booking Args":     { "main": [[{ "node": "Create an event",           "type": "main", "index": 0 }]] },
+    "Create an event":          { "main": [[{ "node": "Log Lead to Google Sheets", "type": "main", "index": 0 }]] },
+    "Log Lead to Google Sheets":{ "main": [[{ "node": "Send SMS via Twilio",       "type": "main", "index": 0 }]] },
+    "Send SMS via Twilio":      { "main": [[{ "node": "Trigger Zapier - Booked",   "type": "main", "index": 0 }]] },
+    "Trigger Zapier - Booked":  { "main": [[{ "node": "Respond to Webhook2",       "type": "main", "index": 0 }]] }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "3024152a-2ad4-4689-80e0-735e437e6673",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8bd269e0df31907673ccacf0305f39b8abc55d90e0f4a46d0cbe907fb0939496"
+  },
+  "id": "1cWFrmvmns7O6o3o",
+  "tags": []
+}

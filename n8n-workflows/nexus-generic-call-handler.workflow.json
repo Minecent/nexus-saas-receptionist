@@ -1,0 +1,139 @@
+{
+  "name": "NEXUS — Generic Call Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nexus-call-tools",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [240, 300],
+      "id": "aa000001-0000-0000-0000-000000000001",
+      "name": "Receive Tool Call",
+      "webhookId": "nexus-call-tools-v1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst msg = body.message || body;\nconst call = msg.call || {};\n\nconst assistantId = call.assistantId || call.assistant?.id || msg.assistantId || msg.assistant?.id || '';\nconst callId = call.id || msg.callId || '';\n\n// Try all Vapi formats to find the tool call with arguments\nlet toolName = 'unknown';\nlet toolParams = {};\nlet toolCallId = null;\n\nconst parseArgs = (args) => {\n  if (!args) return {};\n  if (typeof args === 'object') return args;\n  try { return JSON.parse(args); } catch(e) { return {}; }\n};\n\nif (msg.toolWithToolCallList && msg.toolWithToolCallList[0]) {\n  const t = msg.toolWithToolCallList[0];\n  toolName = t.toolCall?.function?.name || t.function?.name || 'unknown';\n  toolParams = parseArgs(t.toolCall?.function?.arguments || t.function?.arguments);\n  toolCallId = t.toolCall?.id || t.id || null;\n} else if (msg.toolCalls && msg.toolCalls[0]) {\n  const t = msg.toolCalls[0];\n  toolName = t.function?.name || 'unknown';\n  toolParams = parseArgs(t.function?.arguments);\n  toolCallId = t.id || null;\n} else if (msg.toolCallList && msg.toolCallList[0]) {\n  const t = msg.toolCallList[0];\n  toolName = t.function?.name || 'unknown';\n  toolParams = parseArgs(t.function?.arguments);\n  toolCallId = t.id || null;\n} else if (msg.functionCall) {\n  toolName = msg.functionCall.name || 'unknown';\n  toolParams = msg.functionCall.parameters || {};\n  toolCallId = null;\n}\n\nreturn [{\n  json: {\n    assistant_id: assistantId,\n    call_id: callId,\n    caller_number: call.customer?.number || null,\n    tool_name: toolName,\n    tool_params: toolParams,\n    tool_call_id: toolCallId,\n    _debug_tc0: JSON.stringify(msg.toolCalls?.[0] || null),\n    _debug_twt0: JSON.stringify(msg.toolWithToolCallList?.[0] || null)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "id": "aa000001-0000-0000-0000-000000000002",
+      "name": "Extract Tool Call"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://gqlphahfvxsngmytxorw.supabase.co/rest/v1/rpc/get_config_by_assistant_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey",        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Content-Type",  "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"p_assistant_id\": \"{{ $json.assistant_id }}\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "id": "aa000001-0000-0000-0000-000000000003",
+      "name": "Fetch Customer Config",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const config = (() => { const r = $input.first().json; return Array.isArray(r) ? r[0] : r; })();\nconst tool = $('Extract Tool Call').first().json;\n\nif (!config || !config.user_id) {\n  return [{ json: { result: 'I apologize, I am unable to process your request at the moment. Please try again or call back later.', user_id: null, should_save: false } }];\n}\n\nconst toolName = tool.tool_name;\nconst params = tool.tool_params || {};\nconst businessName = config.business_name || 'us';\n\nlet result = '';\nlet recordType = 'message';\nlet should_save = true;\n\nif (toolName === 'book_appointment') {\n  const name = params.caller_name || 'the caller';\n  const time = params.preferred_time || 'a time to be confirmed';\n  const service = params.service_type || 'your appointment';\n  result = `Perfect, I've noted down ${service} for ${name} at ${time}. Someone from ${businessName} will confirm this with you shortly. Is there anything else I can help you with?`;\n  recordType = 'appointment';\n} else if (toolName === 'take_message') {\n  const name = params.caller_name || 'the caller';\n  result = `Got it, I've taken your message, ${name}. Someone from ${businessName} will get back to you as soon as possible. Is there anything else I can help you with?`;\n  recordType = 'message';\n} else if (toolName === 'request_callback') {\n  const name = params.caller_name || 'the caller';\n  result = `Noted! I've logged a callback request for ${name}. Someone from ${businessName} will call you back shortly. Is there anything else I can help you with?`;\n  recordType = 'callback';\n} else if (toolName === 'check_hours') {\n  const hours = config.business_hours;\n  if (hours && Object.keys(hours).length > 0) {\n    result = `${businessName} business hours are: ${JSON.stringify(hours)}. Is there anything else I can help you with?`;\n  } else {\n    result = `Please contact ${businessName} directly for their current business hours. Is there anything else I can help you with?`;\n  }\n  should_save = false;\n} else {\n  result = `I've noted your request. Someone from ${businessName} will follow up with you shortly.`;\n  recordType = 'message';\n}\n\nreturn [{\n  json: {\n    result,\n    user_id: config.user_id,\n    business_name: businessName,\n    record_type: recordType,\n    should_save,\n    caller_name: params.caller_name || null,\n    caller_number: tool.caller_number || null,\n    service_type: params.service_type || null,\n    preferred_time: params.preferred_time || null,\n    message: params.message || params.reason || null,\n    call_id: tool.call_id,\n    tool_call_id: tool.tool_call_id\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "id": "aa000001-0000-0000-0000-000000000004",
+      "name": "Handle Tool"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.should_save }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "true" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1120, 300],
+      "id": "aa000001-0000-0000-0000-000000000005",
+      "name": "Should Save?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://gqlphahfvxsngmytxorw.supabase.co/rest/v1/appointments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey",        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Content-Type",  "value": "application/json" },
+            { "name": "Prefer",        "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $json.user_id, vapi_call_id: $json.call_id, caller_name: $json.caller_name, caller_number: $json.caller_number, service_type: $json.service_type, preferred_time: $json.preferred_time, message: $json.message, type: $json.record_type, status: 'pending' }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 200],
+      "id": "aa000001-0000-0000-0000-000000000006",
+      "name": "Save to Supabase",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify((() => { const d = $('Handle Tool').first().json; return d.tool_call_id ? { results: [{ toolCallId: d.tool_call_id, result: d.result }] } : { result: d.result }; })()) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1560, 300],
+      "id": "aa000001-0000-0000-0000-000000000007",
+      "name": "Respond to Vapi"
+    }
+  ],
+  "connections": {
+    "Receive Tool Call":    { "main": [[{ "node": "Extract Tool Call",    "type": "main", "index": 0 }]] },
+    "Extract Tool Call":    { "main": [[{ "node": "Fetch Customer Config", "type": "main", "index": 0 }]] },
+    "Fetch Customer Config":{ "main": [[{ "node": "Handle Tool",           "type": "main", "index": 0 }]] },
+    "Handle Tool":          { "main": [[{ "node": "Should Save?",          "type": "main", "index": 0 }]] },
+    "Should Save?": {
+      "main": [
+        [{ "node": "Save to Supabase", "type": "main", "index": 0 }],
+        [{ "node": "Respond to Vapi",  "type": "main", "index": 0 }]
+      ]
+    },
+    "Save to Supabase": { "main": [[{ "node": "Respond to Vapi", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "instanceId": "" },
+  "tags": [{ "name": "nexus" }]
+}

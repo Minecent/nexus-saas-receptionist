@@ -29,6 +29,10 @@ export function HeaderUserMenu({ email }: { email: string }) {
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        <DropdownMenuItem render={<Link href="/dashboard" />}>
+          Dashboard
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link href="/logout" />}>
           Sign out
         </DropdownMenuItem>

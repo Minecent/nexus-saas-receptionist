@@ -4,7 +4,16 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npm run *)",
       "Bash(npx tsc *)",
-      "Bash(node -e \"const icons = require\\('lucide-react'\\); const social = Object.keys\\(icons\\).filter\\(k => /twitter|github|x$/i.test\\(k\\)\\); console.log\\(social.slice\\(0, 20\\)\\)\")"
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); const social = Object.keys\\(icons\\).filter\\(k => /twitter|github|x$/i.test\\(k\\)\\); console.log\\(social.slice\\(0, 20\\)\\)\")",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Zapier__execute_zapier_write_action",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "mcp__claude_ai_Supabase__deploy_edge_function",
+      "Bash(curl -s \"https://gqlphahfvxsngmytxorw.supabase.co/functions/v1/vapi-webhook\" -X POST -H \"Content-Type: application/json\" -d \"{\\\\\"message\\\\\":{\\\\\"type\\\\\":\\\\\"end-of-call-report\\\\\",\\\\\"call\\\\\":{\\\\\"id\\\\\":\\\\\"test\\\\\",\\\\\"assistantId\\\\\":\\\\\"12069c7e-1810-43e9-826b-9c18a0639dbd\\\\\"},\\\\\"endedReason\\\\\":\\\\\"customer-ended-call\\\\\",\\\\\"transcript\\\\\":\\\\\"Test transcript\\\\\",\\\\\"summary\\\\\":\\\\\"Test call\\\\\"}}\")",
+      "Read(//dev/**)",
+      "Bash(curl -s \"https://api.vapi.ai/assistant/8b4909bc-386e-4d73-be8c-bc914990838f\" -H \"Authorization: Bearer $\\(cat /dev/stdin\\)\")",
+      "mcp__claude_ai_Supabase__get_logs",
+      "Bash(curl -s -X POST \"https://gqlphahfvxsngmytxorw.supabase.co/functions/v1/update-vapi-assistant\" -H \"Content-Type: application/json\" -d \"{\\\\\"user_id\\\\\":\\\\\"4885f004-270c-4a20-aa3f-852d419c7fea\\\\\"}\")"
     ]
   }
 }

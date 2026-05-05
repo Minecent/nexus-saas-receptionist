@@ -3,172 +3,82 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingWrapper } from "@/components/onboarding/onboarding-wrapper";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { Mail, PhoneForwarded, Phone } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+type RoutingPreference = "forward" | "new_number";
 
 export default function PhoneNumberPage() {
   const router = useRouter();
   const supabase = createClient();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [showVerification, setShowVerification] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
-  const [existingPhone, setExistingPhone] = useState("");
-  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
+  const [routing, setRouting] = useState<RoutingPreference | "">("");
 
   useEffect(() => {
-    loadExistingConfig();
+    const load = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) { router.push("/login"); return; }
+
+        const { data } = await supabase
+          .from("agent_config")
+          .select("selected_plan, phone_routing_preference")
+          .eq("user_id", user.id)
+          .single();
+
+        if (data) {
+          setSelectedPlan(data.selected_plan || "");
+          setRouting((data.phone_routing_preference as RoutingPreference) || "");
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    load();
   }, []);
 
-  const loadExistingConfig = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/login");
-        return;
-      }
+  const isLite = selectedPlan === "lite" || selectedPlan === "starter" || selectedPlan === "";
 
-      const { data } = await supabase
-        .from("agent_config")
-        .select("phone_number, phone_verified")
-        .eq("user_id", user.id)
-        .single();
-
-      if (data) {
-        setExistingPhone(data.phone_number || "");
-        setPhoneNumber(data.phone_number || "");
-        setPhoneVerified(data.phone_verified || false);
-      }
-    } catch (error) {
-      console.error("Error loading config:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSendVerification = async () => {
-    if (!phoneNumber || phoneNumber.length < 10) return;
-    
-    setIsVerifying(true);
-    try {
-      // In production, this would call an API to send verification SMS
-      // For demo, we'll simulate the verification
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Generate a random 6-digit code
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
-      
-      // Save the code temporarily (in production, store in DB with expiry)
-      await supabase
-        .from("agent_config")
-        .upsert({
-          user_id: user.id,
-          phone_number: phoneNumber,
-          phone_verification_code: code,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: "user_id",
-        });
-
-      // Simulate sending SMS (in production, use Twilio or similar)
-      console.log("Verification code:", code);
-      alert(`Demo mode: Your verification code is ${code}`);
-      
-      setVerificationSent(true);
-      setShowVerification(true);
-    } catch (error) {
-      console.error("Error sending verification:", error);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  const handleVerify = async () => {
-    if (!verificationCode || verificationCode.length !== 6) return;
-    
-    setIsVerifying(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Verify the code (in production, compare with stored code)
-      // For demo, accept any 6-digit code
-      if (verificationCode.length === 6) {
-        await supabase
-          .from("agent_config")
-          .upsert({
-            user_id: user.id,
-            phone_number: phoneNumber,
-            phone_verified: true,
-            phone_verification_code: null,
-            updated_at: new Date().toISOString(),
-          }, {
-            onConflict: "user_id",
-          });
-
-        setPhoneVerified(true);
-      }
-    } catch (error) {
-      console.error("Error verifying:", error);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  const handleSkip = async () => {
-    // Update onboarding progress and complete onboarding
-    await completeOnboarding();
-  };
-
-  const handleSave = async () => {
-    if (!phoneVerified && phoneNumber) {
-      // Need to verify first
-      return;
-    }
-    
-    await completeOnboarding();
-  };
-
-  const completeOnboarding = async () => {
+  const completeOnboarding = async (routingPref?: RoutingPreference) => {
     setIsSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Update onboarding to completed
-      const { data } = await supabase
-        .from("user_onboarding")
-        .select("completed_steps")
-        .eq("user_id", user.id)
-        .single();
-
-      const completedSteps = data?.completed_steps || [];
-      if (!completedSteps.includes(6)) {
-        completedSteps.push(6);
+      if (routingPref) {
+        await supabase.from("agent_config").upsert(
+          { user_id: user.id, phone_routing_preference: routingPref, updated_at: new Date().toISOString() },
+          { onConflict: "user_id" }
+        );
       }
 
-      await supabase
-        .from("user_onboarding")
-        .upsert({
-          user_id: user.id,
-          current_step: 7,
-          completed_steps: completedSteps,
-          is_completed: true,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: "user_id",
-        });
+      const { data } = await supabase.from("user_onboarding").select("completed_steps").eq("user_id", user.id).single();
+      const steps = Array.isArray(data?.completed_steps) ? data.completed_steps : [];
+      if (!steps.includes(6)) steps.push(6);
 
-      // Redirect to dashboard
+      await supabase.from("user_onboarding").upsert(
+        { user_id: user.id, current_step: 7, completed_steps: steps, is_completed: true, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" }
+      );
+
+      // Kick off Vapi provisioning in the background — don't await, don't block
+      fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/provision-vapi`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ user_id: user.id }),
+      }).catch(() => { /* provisioning failure is non-blocking */ })
+
       router.push("/dashboard");
-    } catch (error) {
-      console.error("Error completing onboarding:", error);
+    } catch (e) {
+      console.error(e);
     } finally {
       setIsSaving(false);
     }
@@ -177,133 +87,122 @@ export default function PhoneNumberPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500" />
       </div>
     );
   }
 
+  // ── LITE TIER ──
+  if (isLite) {
+    return (
+      <OnboardingWrapper
+        currentStep={6}
+        stepTitle="Phone number"
+        stepDescription="Almost done — one last thing"
+        onNext={() => completeOnboarding()}
+        isNextDisabled={isSaving}
+        nextLabel={isSaving ? "Finishing..." : "Complete setup"}
+      >
+        <div className="space-y-5">
+          <div className="flex items-start gap-4 rounded-2xl border border-slate-700 bg-slate-900 p-5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 mt-0.5">
+              <Mail className="size-5 text-teal-400" />
+            </div>
+            <div>
+              <p className="font-semibold text-white">Your dedicated NEXUS number is on its way</p>
+              <p className="mt-1 text-sm text-slate-400 leading-relaxed">
+                Your dedicated NEXUS phone number will be provided after setup. Check your email
+                for details and forwarding instructions within 24 hours.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-teal-500/20 bg-teal-500/5 px-4 py-3">
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Once you receive the number, it takes about 5 minutes to set up call forwarding
+              with your phone provider. We'll send step-by-step instructions for your carrier.
+            </p>
+          </div>
+
+          <p className="text-xs text-slate-600 text-center">
+            You can also add your number anytime from your dashboard settings.
+          </p>
+        </div>
+      </OnboardingWrapper>
+    );
+  }
+
+  // ── PREMIUM / CUSTOM TIER ──
+  const options: { id: RoutingPreference; icon: React.ElementType; label: string; badge?: string; description: string; helper: string }[] = [
+    {
+      id: "forward",
+      icon: PhoneForwarded,
+      label: "Forward my existing number",
+      badge: "Recommended",
+      description: "Keep using your current business phone number. Just set up call forwarding to the NEXUS number we'll provide.",
+      helper: "After setup, we'll email you a NEXUS phone number and forwarding instructions (5 minutes with your phone provider).",
+    },
+    {
+      id: "new_number",
+      icon: Phone,
+      label: "Get a new NEXUS number",
+      description: "We'll assign you a dedicated NEXUS phone number for your business.",
+      helper: "Available instantly after setup.",
+    },
+  ];
+
   return (
     <OnboardingWrapper
       currentStep={6}
-      stepTitle="Phone Number"
-      stepDescription="Add your business phone number for AVA to answer"
-      onNext={handleSave}
-      isNextDisabled={isSaving}
-      nextLabel={isSaving ? "Completing..." : "Complete Setup"}
+      stepTitle="How should we route your calls?"
+      stepDescription="Choose how NEXUS will receive calls for your business"
+      onNext={routing ? () => completeOnboarding(routing as RoutingPreference) : undefined}
+      isNextDisabled={!routing || isSaving}
+      nextLabel={isSaving ? "Finishing..." : "Complete setup"}
     >
-      <div className="space-y-6">
-        {phoneVerified ? (
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto">
-              <svg className="w-8 h-8 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+      <div className="space-y-4">
+        {options.map(({ id, icon: Icon, label, badge, description, helper }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setRouting(id)}
+            className={cn(
+              "w-full flex items-start gap-4 rounded-2xl border p-5 text-left transition-all",
+              routing === id
+                ? "border-teal-500 bg-teal-500/10"
+                : "border-slate-700 bg-slate-900/50 hover:border-slate-600"
+            )}
+          >
+            <div className={cn(
+              "flex size-10 shrink-0 items-center justify-center rounded-xl mt-0.5",
+              routing === id ? "bg-teal-500/20" : "bg-slate-800"
+            )}>
+              <Icon className={cn("size-5", routing === id ? "text-teal-400" : "text-slate-400")} />
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-white">Phone Verified!</h3>
-              <p className="text-slate-400 mt-2">{existingPhone || phoneNumber}</p>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="font-semibold text-white">{label}</p>
+                {badge && (
+                  <span className="rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-xs font-medium text-teal-400">
+                    {badge}
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-slate-300 mb-2">{description}</p>
+              <p className="text-xs text-slate-500">{helper}</p>
             </div>
-            <p className="text-sm text-slate-500">
-              AVA is now ready to answer calls at this number.
-            </p>
-          </div>
-        ) : showVerification ? (
-          <div className="space-y-4">
-            <div className="text-center mb-4">
-              <p className="text-slate-400">
-                We've sent a 6-digit code to <span className="text-white">{phoneNumber}</span>
-              </p>
+            <div className={cn(
+              "flex size-5 shrink-0 items-center justify-center rounded-full border-2 mt-0.5",
+              routing === id ? "border-teal-400" : "border-slate-600"
+            )}>
+              {routing === id && <span className="size-2 rounded-full bg-teal-400" />}
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="verificationCode" className="text-slate-200">Enter Verification Code</Label>
-              <Input
-                id="verificationCode"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                placeholder="000000"
-                className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 text-center text-2xl tracking-widest"
-                maxLength={6}
-              />
-            </div>
+          </button>
+        ))}
 
-            <Button
-              onClick={handleVerify}
-              disabled={isVerifying || verificationCode.length !== 6}
-              className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-semibold"
-            >
-              {isVerifying ? "Verifying..." : "Verify Code"}
-            </Button>
-
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowVerification(false);
-                  setVerificationSent(false);
-                }}
-                className="text-sm text-slate-500 hover:text-slate-400"
-              >
-                Change phone number
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="bg-slate-900/30 border border-slate-700 rounded-lg p-4">
-              <h3 className="text-white font-medium mb-2">Why add a phone number?</h3>
-              <ul className="text-sm text-slate-400 space-y-2">
-                <li className="flex items-start gap-2">
-                  <span className="text-teal-500">✓</span>
-                  AVA will answer calls at this number
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-teal-500">✓</span>
-                  Call forwarding to your existing number
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-teal-500">✓</span>
-                  Get a new dedicated business number
-                </li>
-              </ul>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber" className="text-slate-200">Business Phone Number</Label>
-              <Input
-                id="phoneNumber"
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="+1 (555) 000-0000"
-                className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
-              />
-            </div>
-
-            <Button
-              onClick={handleSendVerification}
-              disabled={isVerifying || !phoneNumber || phoneNumber.length < 10}
-              className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-semibold"
-            >
-              {isVerifying ? "Sending..." : "Send Verification Code"}
-            </Button>
-
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={handleSkip}
-                className="text-sm text-slate-500 hover:text-slate-400"
-              >
-                Skip for now →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Info note */}
-        <div className="text-center text-xs text-slate-500 mt-4">
-          <p>You can always add or change your phone number later from settings.</p>
-        </div>
+        <p className="text-xs text-slate-600 text-center pt-1">
+          You can change this anytime from your dashboard settings.
+        </p>
       </div>
     </OnboardingWrapper>
   );

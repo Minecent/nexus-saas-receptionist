@@ -1,6 +1,5 @@
 'use client'
 
-// TODO: Replace placeholder src with a real call recording once available.
 import { useState, useRef } from 'react'
 import { Play, Pause, Volume2 } from 'lucide-react'
 import { FadeIn } from './fade-in'
@@ -45,22 +44,14 @@ export default function DemoAudio() {
 
         <FadeIn delay={100}>
           <div className="mx-auto max-w-2xl rounded-2xl border border-slate-700 bg-slate-950 p-6 sm:p-8">
-            {/* Demo notice */}
-            <div className="mb-6 flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2">
-              <span className="size-1.5 rounded-full bg-amber-400" />
-              <span className="text-xs text-amber-400">
-                Demo audio — replace with a real recording before launch
-              </span>
-            </div>
-
             {/* Call metadata */}
             <div className="mb-5 flex items-center gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-teal-500/15">
                 <Volume2 className="size-4 text-teal-400" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">Sample call — Plumbing emergency inquiry</p>
-                <p className="text-xs text-slate-500">Duration: 1 min 47 sec · NEXUS answered in &lt;2s</p>
+                <p className="text-sm font-semibold text-white">Sample call — NEXUS AI Receptionist demo</p>
+                <p className="text-xs text-slate-500">NEXUS answered in &lt;2s</p>
               </div>
             </div>
 
@@ -87,12 +78,10 @@ export default function DemoAudio() {
               <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-800">
                 <div className="h-full w-0 rounded-full bg-teal-500 transition-all" />
               </div>
-              <span className="text-xs tabular-nums text-slate-500">1:47</span>
             </div>
 
-            {/* Hidden audio element — src intentionally empty */}
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <audio ref={audioRef} src={undefined} onEnded={() => setPlaying(false)} />
+            <audio ref={audioRef} src="/audio/Demo.mp3" onEnded={() => setPlaying(false)} />
           </div>
         </FadeIn>
       </div>
