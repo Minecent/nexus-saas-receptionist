@@ -11,7 +11,7 @@ const humanCons = [
 ]
 
 const nexusPros = [
-  'From $149/mo on the Pro plan',
+  'Plans starting from $25/month',
   'No benefits, payroll, or HR costs',
   'Available 24/7/365 — nights, weekends, holidays',
   'Never calls in sick or goes on vacation',
@@ -33,7 +33,7 @@ export default function CostComparison() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-slate-400">
               The average small business spends $48,000 per year on a full-time receptionist.
-              NEXUS Pro costs $1,788 per year — and works around the clock.
+              NEXUS starts at $25/month — and works around the clock.
             </p>
           </div>
         </FadeIn>
@@ -41,7 +41,7 @@ export default function CostComparison() {
         <FadeIn delay={100}>
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Human receptionist */}
-            <div className="rounded-2xl border border-slate-700 bg-slate-950 p-6">
+            <div className="rounded-2xl border border-slate-700 bg-slate-800 p-6">
               <div className="mb-2 flex items-center gap-2">
                 <div className="size-2 rounded-full bg-rose-500" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
@@ -49,10 +49,10 @@ export default function CostComparison() {
                 </span>
               </div>
               <div className="mb-1">
-                <span className="text-4xl font-bold text-rose-400">$48,000</span>
-                <span className="ml-1 text-sm text-slate-500">/ year</span>
+                <span className="text-4xl font-bold text-rose-400">$4,000</span>
+                <span className="ml-1 text-sm text-slate-500">/ month</span>
               </div>
-              <p className="mb-6 text-xs text-slate-600">$4,000/mo salary + benefits + payroll tax</p>
+              <p className="mb-6 text-xs text-slate-500">Salary + benefits + payroll tax = $48,000/yr</p>
               <ul className="flex flex-col gap-3">
                 {humanCons.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-slate-400">
@@ -64,7 +64,7 @@ export default function CostComparison() {
             </div>
 
             {/* NEXUS */}
-            <div className="rounded-2xl border border-teal-500/40 bg-slate-950 p-6 shadow-lg shadow-teal-500/5">
+            <div className="rounded-2xl border border-teal-500/40 bg-slate-800 p-6 shadow-lg shadow-teal-500/5">
               <div className="mb-2 flex items-center gap-2">
                 <div className="size-2 rounded-full bg-teal-400" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-teal-500">
@@ -72,10 +72,10 @@ export default function CostComparison() {
                 </span>
               </div>
               <div className="mb-1">
-                <span className="text-4xl font-bold text-teal-400">$1,788</span>
-                <span className="ml-1 text-sm text-slate-500">/ year</span>
+                <span className="text-4xl font-bold text-teal-400">from $25</span>
+                <span className="ml-1 text-sm text-slate-500">/ month</span>
               </div>
-              <p className="mb-6 text-xs text-slate-600">$149/mo on the Pro plan, billed monthly</p>
+              <p className="mb-6 text-xs text-slate-500">Pay only for what you need. No contracts.</p>
               <ul className="flex flex-col gap-3">
                 {nexusPros.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
@@ -87,12 +87,14 @@ export default function CostComparison() {
             </div>
           </div>
 
-          {/* Savings callout */}
-          <div className="mx-auto mt-6 max-w-4xl rounded-xl border border-teal-500/20 bg-teal-500/5 px-6 py-4 text-center">
-            <p className="text-sm font-medium text-teal-300">
-              That is a saving of{' '}
-              <span className="font-bold text-white">$46,212 every year</span>
-              {' '}— while answering more calls than any human ever could.
+          {/* Savings callout — large and impactful */}
+          <div className="mx-auto mt-6 max-w-4xl rounded-2xl border border-teal-500/30 bg-teal-500/5 px-6 py-8 text-center">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-teal-400">Your annual saving</p>
+            <p className="text-5xl sm:text-6xl font-extrabold text-white mb-3">
+              $47,700<span className="text-teal-400">/year</span>
+            </p>
+            <p className="text-base text-slate-400 max-w-md mx-auto">
+              Switch to NEXUS and put that money back into growing your business — while answering more calls than any human ever could.
             </p>
           </div>
         </FadeIn>

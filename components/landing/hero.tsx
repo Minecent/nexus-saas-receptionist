@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { PhoneCall, CalendarCheck, MessageSquare } from 'lucide-react'
+import { PhoneCall, CalendarCheck, MessageSquare, TrendingDown } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-slate-950">
+    <section className="relative overflow-hidden bg-slate-900">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.12),transparent_60%)]" />
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
         <div className="flex flex-col gap-6">
@@ -33,6 +33,30 @@ export default function Hero() {
             </Link>
           </div>
 
+          {/* Cost comparison — the hook */}
+          <div className="rounded-2xl border border-slate-700 bg-slate-800/60 p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <TrendingDown className="size-4 text-teal-400" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-teal-400">Cost comparison</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl border border-slate-600 bg-slate-900 px-4 py-3 text-center">
+                <p className="mb-0.5 text-xs text-slate-500">Full-time receptionist</p>
+                <p className="text-2xl font-bold text-slate-300">$4,000</p>
+                <p className="text-xs text-slate-500">per month</p>
+              </div>
+              <div className="rounded-xl border border-teal-500/50 bg-teal-500/10 px-4 py-3 text-center">
+                <p className="mb-0.5 text-xs text-teal-400/80">NEXUS AI</p>
+                <p className="text-2xl font-bold text-teal-400">from $25</p>
+                <p className="text-xs text-teal-400/80">per month</p>
+              </div>
+            </div>
+            <div className="mt-3 rounded-lg bg-teal-500/10 px-3 py-2 text-center">
+              <span className="text-sm font-semibold text-white">Save up to </span>
+              <span className="text-lg font-bold text-teal-400">$47,700 per year</span>
+            </div>
+          </div>
+
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
             {[
               'Keep your existing number',
@@ -48,7 +72,7 @@ export default function Hero() {
         </div>
 
         <div className="flex flex-col gap-3 lg:pl-8">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+          <div className="rounded-2xl border border-slate-700 bg-slate-800 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <PhoneCall className="size-3.5 text-teal-400" />
@@ -64,7 +88,7 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+          <div className="rounded-2xl border border-slate-700 bg-slate-800 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <CalendarCheck className="size-3.5 text-teal-400" />
@@ -77,7 +101,7 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+          <div className="rounded-2xl border border-slate-700 bg-slate-800 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <MessageSquare className="size-3.5 text-teal-400" />

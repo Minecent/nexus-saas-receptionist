@@ -97,7 +97,7 @@ const tiers = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="border-b border-slate-800 bg-slate-950">
+    <section id="pricing" className="border-b border-slate-800 bg-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -120,8 +120,8 @@ export default function Pricing() {
               className={cn(
                 'relative flex flex-col rounded-2xl border p-6 transition-all',
                 tier.highlight
-                  ? 'border-teal-500 bg-slate-900 shadow-xl shadow-teal-500/10'
-                  : 'border-slate-800 bg-slate-900 hover:border-slate-700'
+                  ? 'border-teal-500 bg-slate-800 shadow-xl shadow-teal-500/10'
+                  : 'border-slate-700 bg-slate-800 hover:border-slate-600'
               )}
             >
               {/* Badge */}
@@ -166,7 +166,7 @@ export default function Pricing() {
 
               {/* Overage */}
               {tier.overage && (
-                <div className="mb-4 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-slate-500">
+                <div className="mb-4 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-500">
                   {tier.overage}
                 </div>
               )}
@@ -209,34 +209,33 @@ export default function Pricing() {
           Pricing is in USD. Cancel anytime. No setup fees.
         </p>
 
-        {/* Transparency callout */}
+        {/* Yearly savings callout */}
         <div className="mt-10 mx-auto max-w-3xl rounded-2xl border border-teal-500/30 bg-teal-500/5 p-8 shadow-lg shadow-teal-500/5 text-center">
-          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full border border-teal-500/30 bg-teal-500/10">
-            <Shield className="size-5 text-teal-400" />
-          </div>
-          <h3 className="mb-3 text-xl font-bold text-white">
-            Transparent pricing. No surprise bills.
-          </h3>
-          <p className="mx-auto mb-6 max-w-xl text-sm text-slate-400 leading-relaxed">
-            Other receptionist services are notorious for shocking customers with bills that jump
-            from a few hundred to thousands during busy months. We have heard the stories — and we
-            built NEXUS differently.
+          <p className="mb-1 text-sm text-slate-400 uppercase tracking-widest font-semibold">vs. a full-time receptionist at $4,000/month</p>
+          <p className="text-5xl sm:text-6xl font-extrabold text-teal-400 mb-2">Save $47,700/yr</p>
+          <p className="text-base text-slate-300 font-medium mb-6">
+            Starting from just $25/month — same professional front desk, zero overhead.
           </p>
-          <ul className="mb-6 inline-flex flex-col gap-3 text-left">
+          <div className="mb-6 inline-flex flex-col gap-3 text-left">
             {[
               'We will notify you when you are nearing your call limit',
               'We will ask for your approval before any extra charges',
               'You will never see a surprise bill from us — ever',
             ].map((promise) => (
-              <li key={promise} className="flex items-start gap-3 text-sm text-slate-300">
+              <div key={promise} className="flex items-start gap-3 text-sm text-slate-300">
                 <Check className="mt-0.5 size-4 shrink-0 text-teal-400" />
                 {promise}
-              </li>
+              </div>
             ))}
-          </ul>
-          <p className="text-sm font-semibold text-white">
-            Your costs stay predictable. Your business stays in control.
-          </p>
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-full border border-teal-500/30 bg-teal-500/10">
+              <Shield className="size-4 text-teal-400" />
+            </div>
+            <p className="text-sm font-semibold text-white">
+              Transparent pricing. Your costs stay predictable. Your business stays in control.
+            </p>
+          </div>
         </div>
       </div>
     </section>

@@ -16,13 +16,14 @@ import { FadeIn } from '@/components/landing/fade-in'
 
 export default function Home() {
   return (
-    <div className="bg-slate-950">
+    <div className="bg-slate-900">
       <Header />
       <main>
         {/* Hero fades in immediately on load */}
         <FadeIn>
           <Hero />
         </FadeIn>
+        <CostComparison />
         <FadeIn>
           <Stats />
         </FadeIn>
@@ -38,7 +39,6 @@ export default function Home() {
         <FadeIn>
           <Pricing />
         </FadeIn>
-        <CostComparison />
         <CallCta />
         <Faq />
         <FadeIn>
