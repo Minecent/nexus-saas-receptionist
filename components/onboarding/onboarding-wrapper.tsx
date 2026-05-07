@@ -59,6 +59,7 @@ export function OnboardingWrapper({
       "/onboarding/train-agent",
       "/onboarding/business-details",
       "/onboarding/select-voice",
+      "/onboarding/agent-customization",
       "/onboarding/agent-settings",
       "/onboarding/select-plan",
       "/onboarding/phone-number",
@@ -112,12 +113,13 @@ export function OnboardingWrapper({
         "/onboarding/train-agent",
         "/onboarding/business-details",
         "/onboarding/select-voice",
+        "/onboarding/agent-customization",
         "/onboarding/agent-settings",
         "/onboarding/select-plan",
         "/onboarding/phone-number",
       ];
 
-      if (currentStep < 6) {
+      if (currentStep < 7) {
         router.push(steps[currentStep]);
       } else {
         // Onboarding complete - redirect to dashboard

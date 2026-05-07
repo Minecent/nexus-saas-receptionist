@@ -217,7 +217,7 @@ export default function SelectVoicePage() {
       );
 
       syncVapiAssistant(user.id)
-      router.push("/onboarding/agent-settings");
+      router.push("/onboarding/agent-customization");
     } catch (e) {
       console.error(e);
     } finally {

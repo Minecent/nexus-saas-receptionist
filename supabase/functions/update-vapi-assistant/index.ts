@@ -72,16 +72,61 @@ function buildTools(n8nUrl: string) {
       type: 'function', server,
       function: {
         name: 'book_appointment',
-        description: 'Book an appointment or service request for the caller',
+        description: 'Book an appointment or service request for the caller — creates a calendar event',
         parameters: {
           type: 'object',
           properties: {
             caller_name:    { type: 'string', description: 'Full name of the caller' },
             caller_phone:   { type: 'string', description: 'Phone number of the caller' },
-            preferred_time: { type: 'string', description: 'Preferred date and time for the appointment' },
+            caller_email:   { type: 'string', description: 'Email address of the caller (if provided)' },
+            preferred_time: { type: 'string', description: 'Preferred date and time for the appointment (ISO 8601)' },
             service_type:   { type: 'string', description: 'Type of service or appointment requested' },
+            notes:          { type: 'string', description: 'Any additional notes or special requests' },
           },
           required: ['caller_name', 'preferred_time'],
+        },
+      },
+    },
+    {
+      type: 'function', server,
+      function: {
+        name: 'check_availability',
+        description: 'Check whether a specific date and time is available for an appointment',
+        parameters: {
+          type: 'object',
+          properties: {
+            requested_time: { type: 'string', description: 'The date and time to check availability for (ISO 8601)' },
+          },
+          required: ['requested_time'],
+        },
+      },
+    },
+    {
+      type: 'function', server,
+      function: {
+        name: 'cancel_appointment',
+        description: 'Cancel an existing appointment for the caller',
+        parameters: {
+          type: 'object',
+          properties: {
+            caller_phone: { type: 'string', description: 'Phone number of the caller whose appointment should be cancelled' },
+          },
+          required: ['caller_phone'],
+        },
+      },
+    },
+    {
+      type: 'function', server,
+      function: {
+        name: 'reschedule_appointment',
+        description: 'Reschedule an existing appointment to a new date and time',
+        parameters: {
+          type: 'object',
+          properties: {
+            caller_phone:       { type: 'string', description: 'Phone number of the caller whose appointment should be rescheduled' },
+            new_requested_time: { type: 'string', description: 'The new preferred date and time (ISO 8601)' },
+          },
+          required: ['caller_phone', 'new_requested_time'],
         },
       },
     },
@@ -111,6 +156,7 @@ function buildTools(n8nUrl: string) {
           properties: {
             caller_name:  { type: 'string', description: 'Full name of the caller' },
             caller_phone: { type: 'string', description: 'Phone number to call back' },
+            reason:       { type: 'string', description: 'Reason for the callback request' },
           },
           required: ['caller_name'],
         },
@@ -154,22 +200,28 @@ function buildSystemPrompt(config: Record<string, unknown>): string {
   const industry = (config.business_industry as string) ?? ''
   const personality = (config.agent_personality as string) ?? 'Professional and friendly'
   const instructions = (config.agent_instructions as string) ?? ''
+  const services = (config.services_offered as string) ?? ''
   const hours = config.business_hours ? JSON.stringify(config.business_hours) : null
   const tz = (config.timezone as string) ?? 'America/New_York'
+  const apptDuration = (config.appointment_duration_minutes as number) ?? 30
 
   return [
     `You are ${name}, the AI receptionist for ${business}${industry ? ` (${industry})` : ''}.`,
     `Personality: ${personality}.`,
     instructions ? `Instructions: ${instructions}` : '',
+    services ? `Services offered: ${services}` : '',
     hours ? `Business hours (${tz}): ${hours}` : '',
+    `Standard appointment duration: ${apptDuration} minutes.`,
     'Keep responses concise and professional. Never reveal that you are an AI unless directly asked.',
     'If you cannot help with something, offer to take a message or connect to a team member.',
     '',
     'TOOL USAGE RULES — follow exactly:',
-    '- Before calling book_appointment, you MUST collect: full name, preferred date/time, and reason/service. Always include caller_name, preferred_time, and service_type in the tool call arguments.',
-    '- Before calling take_message, collect the caller full name and their message. Always include caller_name and message in the arguments.',
-    '- Before calling request_callback, collect the caller full name and phone number. Always include caller_name and caller_phone in the arguments.',
-    '- Never call a tool with empty or missing required fields. Ask the caller for missing information before calling the tool.',
+    '- Use check_availability before booking to confirm the slot is free.',
+    '- Before calling book_appointment, collect: full name, phone number, preferred date/time, and service type. Always include caller_name, caller_phone, preferred_time, and service_type.',
+    '- Before calling take_message, collect the caller full name and their message. Always include caller_name and message.',
+    '- Before calling request_callback, collect the caller full name and phone number. Always include caller_name and caller_phone.',
+    '- Before calling cancel_appointment or reschedule_appointment, confirm the caller phone number.',
+    '- Never call a tool with empty or missing required fields. Ask the caller for missing information first.',
     '- Always include caller_phone in every tool call if the caller has provided it.',
   ].filter(Boolean).join('\n')
 }

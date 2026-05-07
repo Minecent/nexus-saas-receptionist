@@ -16,6 +16,7 @@ export default function PhoneNumberPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [routing, setRouting] = useState<RoutingPreference | "">("");
+  const [areaCode, setAreaCode] = useState("415");
 
   useEffect(() => {
     const load = async () => {
@@ -25,13 +26,14 @@ export default function PhoneNumberPage() {
 
         const { data } = await supabase
           .from("agent_config")
-          .select("selected_plan, phone_routing_preference")
+          .select("selected_plan, phone_routing_preference, preferred_area_code")
           .eq("user_id", user.id)
           .single();
 
         if (data) {
           setSelectedPlan(data.selected_plan || "");
           setRouting((data.phone_routing_preference as RoutingPreference) || "");
+          setAreaCode(data.preferred_area_code || "415");
         }
       } catch (e) {
         console.error(e);
@@ -50,16 +52,14 @@ export default function PhoneNumberPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      if (routingPref) {
-        await supabase.from("agent_config").upsert(
-          { user_id: user.id, phone_routing_preference: routingPref, updated_at: new Date().toISOString() },
-          { onConflict: "user_id" }
-        );
-      }
+      const updatePayload: Record<string, unknown> = { user_id: user.id, updated_at: new Date().toISOString() };
+      if (routingPref) updatePayload.phone_routing_preference = routingPref;
+      if (routingPref === "new_number") updatePayload.preferred_area_code = areaCode || "415";
+      await supabase.from("agent_config").upsert(updatePayload, { onConflict: "user_id" });
 
       const { data } = await supabase.from("user_onboarding").select("completed_steps").eq("user_id", user.id).single();
       const steps = Array.isArray(data?.completed_steps) ? data.completed_steps : [];
-      if (!steps.includes(6)) steps.push(6);
+      if (!steps.includes(7)) steps.push(7);
 
       await supabase.from("user_onboarding").upsert(
         { user_id: user.id, current_step: 7, completed_steps: steps, is_completed: true, updated_at: new Date().toISOString() },
@@ -96,7 +96,7 @@ export default function PhoneNumberPage() {
   if (isLite) {
     return (
       <OnboardingWrapper
-        currentStep={6}
+        currentStep={7}
         stepTitle="Phone number"
         stepDescription="Almost done — one last thing"
         onNext={() => completeOnboarding()}
@@ -151,9 +151,11 @@ export default function PhoneNumberPage() {
     },
   ];
 
+  const isNewNumber = routing === "new_number";
+
   return (
     <OnboardingWrapper
-      currentStep={6}
+      currentStep={7}
       stepTitle="How should we route your calls?"
       stepDescription="Choose how NEXUS will receive calls for your business"
       onNext={routing ? () => completeOnboarding(routing as RoutingPreference) : undefined}
@@ -199,6 +201,21 @@ export default function PhoneNumberPage() {
             </div>
           </button>
         ))}
+
+        {isNewNumber && (
+          <div className="rounded-xl border border-slate-700 bg-slate-900/50 px-5 py-4 space-y-1.5">
+            <label className="text-sm font-medium text-slate-300">Preferred area code (3 digits)</label>
+            <input
+              type="text"
+              maxLength={3}
+              value={areaCode}
+              onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 3))}
+              placeholder="415"
+              className="w-24 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+            />
+            <p className="text-xs text-slate-500">We'll provision the closest available number in this area code.</p>
+          </div>
+        )}
 
         <p className="text-xs text-slate-600 text-center pt-1">
           You can change this anytime from your dashboard settings.

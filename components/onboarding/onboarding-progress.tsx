@@ -12,12 +12,13 @@ const steps = [
   { number: 1, label: "Train Agent", path: "/onboarding/train-agent" },
   { number: 2, label: "Business Details", path: "/onboarding/business-details" },
   { number: 3, label: "Select Voice", path: "/onboarding/select-voice" },
-  { number: 4, label: "Agent Settings", path: "/onboarding/agent-settings" },
-  { number: 5, label: "Select Plan", path: "/onboarding/select-plan" },
-  { number: 6, label: "Phone Number", path: "/onboarding/phone-number" },
+  { number: 4, label: "Agent Setup", path: "/onboarding/agent-customization" },
+  { number: 5, label: "Agent Settings", path: "/onboarding/agent-settings" },
+  { number: 6, label: "Select Plan", path: "/onboarding/select-plan" },
+  { number: 7, label: "Phone Number", path: "/onboarding/phone-number" },
 ];
 
-export function OnboardingProgress({ currentStep, totalSteps = 6 }: OnboardingProgressProps) {
+export function OnboardingProgress({ currentStep, totalSteps = 7 }: OnboardingProgressProps) {
   const router = useRouter();
   const pathname = usePathname();
 

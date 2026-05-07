@@ -1,0 +1,576 @@
+{
+  "name": "NEXUS — Generic Call Handler v2 (Multi-Tenant)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nexus-call-tools",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [-1200, 600],
+      "id": "wh000001-0000-0000-0000-000000000001",
+      "name": "Receive Tool Call",
+      "webhookId": "nexus-call-tools-v2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst msg = body.message || body;\nconst call = msg.call || {};\n\nconst assistantId = call.assistantId || call.assistant?.id || msg.assistantId || msg.assistant?.id || '';\nconst callId = call.id || msg.callId || '';\nconst callerNumber = call.customer?.number || msg.customer?.number || null;\n\nlet toolName = 'unknown';\nlet toolParams = {};\nlet toolCallId = null;\n\nconst parseArgs = (args) => {\n  if (!args) return {};\n  if (typeof args === 'object') return args;\n  try { return JSON.parse(args); } catch(e) { return {}; }\n};\n\nif (msg.toolWithToolCallList && msg.toolWithToolCallList[0]) {\n  const t = msg.toolWithToolCallList[0];\n  toolName = t.toolCall?.function?.name || t.function?.name || 'unknown';\n  toolParams = parseArgs(t.toolCall?.function?.arguments || t.function?.arguments);\n  toolCallId = t.toolCall?.id || t.id || null;\n} else if (msg.toolCalls && msg.toolCalls[0]) {\n  const t = msg.toolCalls[0];\n  toolName = t.function?.name || 'unknown';\n  toolParams = parseArgs(t.function?.arguments);\n  toolCallId = t.id || null;\n} else if (msg.toolCallList && msg.toolCallList[0]) {\n  const t = msg.toolCallList[0];\n  toolName = t.function?.name || 'unknown';\n  toolParams = parseArgs(t.function?.arguments);\n  toolCallId = t.id || null;\n} else if (msg.functionCall) {\n  toolName = msg.functionCall.name || 'unknown';\n  toolParams = msg.functionCall.parameters || {};\n  toolCallId = null;\n}\n\nreturn [{\n  json: {\n    assistant_id: assistantId,\n    call_id: callId,\n    caller_number: callerNumber,\n    tool_name: toolName,\n    tool_params: toolParams,\n    tool_call_id: toolCallId\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-980, 600],
+      "id": "ex000001-0000-0000-0000-000000000001",
+      "name": "Extract Tool Call"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://gqlphahfvxsngmytxorw.supabase.co/rest/v1/rpc/get_config_by_assistant_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey",        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Content-Type",  "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"p_assistant_id\": \"{{ $json.assistant_id }}\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-760, 600],
+      "id": "fc000001-0000-0000-0000-000000000001",
+      "name": "Fetch Customer Config",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst config = Array.isArray(raw) ? raw[0] : raw;\nconst tool = $('Extract Tool Call').first().json;\n\nif (!config || !config.user_id) {\n  return [{ json: {\n    config_found: false,\n    tool_name: '_no_config_',\n    tool_call_id: tool.tool_call_id,\n    fallback_message: 'I apologize, I am unable to process your request at the moment. Please try again or call back later.'\n  }}];\n}\n\nreturn [{\n  json: {\n    config_found: true,\n    user_id: config.user_id,\n    business_name: config.business_name || 'us',\n    business_hours: config.business_hours || {},\n    calendar_id: config.calendar_id || '',\n    notification_email: config.notification_email || '',\n    zapier_webhook_url: config.zapier_webhook_url || '',\n    zapier_enabled: config.zapier_enabled || false,\n    selected_plan: config.selected_plan || 'lite',\n    timezone: config.timezone || 'America/Cayman',\n    appointment_duration_minutes: config.appointment_duration_minutes || 30,\n    assistant_id: tool.assistant_id,\n    call_id: tool.call_id,\n    caller_number: tool.caller_number,\n    tool_name: tool.tool_name,\n    tool_params: tool.tool_params,\n    tool_call_id: tool.tool_call_id\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-540, 600],
+      "id": "mg000001-0000-0000-0000-000000000001",
+      "name": "Merge Config + Tool"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "r1", "leftValue": "={{ $json.tool_name }}", "rightValue": "book_appointment", "operator": { "type": "string", "operation": "equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "book_appointment"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "r2", "leftValue": "={{ $json.tool_name }}", "rightValue": "check_availability", "operator": { "type": "string", "operation": "equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "check_availability"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "r3", "leftValue": "={{ $json.tool_name }}", "rightValue": "cancel_appointment", "operator": { "type": "string", "operation": "equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancel_appointment"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "r4", "leftValue": "={{ $json.tool_name }}", "rightValue": "reschedule_appointment", "operator": { "type": "string", "operation": "equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "reschedule_appointment"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "r5", "leftValue": "={{ $json.tool_name }}", "rightValue": "take_message", "operator": { "type": "string", "operation": "equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "take_message"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "r6", "leftValue": "={{ $json.tool_name }}", "rightValue": "request_callback", "operator": { "type": "string", "operation": "equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "request_callback"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [{ "id": "r7", "leftValue": "={{ $json.tool_name }}", "rightValue": "check_hours", "operator": { "type": "string", "operation": "equals" } }],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "check_hours"
+            }
+          ]
+        },
+        "options": { "fallbackOutput": "extra" }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [-320, 600],
+      "id": "sw000001-0000-0000-0000-000000000001",
+      "name": "Route by Tool"
+    },
+
+    {
+      "parameters": {
+        "calendar": { "__rl": true, "value": "={{ $json.calendar_id }}", "mode": "id" },
+        "start": "={{ $json.tool_params.preferred_time }}",
+        "end": "={{ DateTime.fromISO($json.tool_params.preferred_time).plus({ minutes: $json.appointment_duration_minutes }).toISO() }}",
+        "additionalFields": {
+          "summary": "={{ ($json.tool_params.caller_name || 'Caller') + ' - ' + ($json.tool_params.service_type || 'Appointment') }}",
+          "description": "=Phone: {{ $json.caller_number || $json.tool_params.caller_phone || 'unknown' }}\nEmail: {{ $json.tool_params.caller_email || 'n/a' }}\nNotes: {{ $json.tool_params.notes || '' }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [-100, 100],
+      "id": "bk000001-0000-0000-0000-000000000001",
+      "name": "Create Calendar Event",
+      "continueOnFail": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "REPLACE_WITH_GCAL_CRED_ID", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://gqlphahfvxsngmytxorw.supabase.co/rest/v1/appointments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey",        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Content-Type",  "value": "application/json" },
+            { "name": "Prefer",        "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, vapi_call_id: $('Merge Config + Tool').first().json.call_id, caller_name: $('Merge Config + Tool').first().json.tool_params.caller_name, caller_number: $('Merge Config + Tool').first().json.caller_number || $('Merge Config + Tool').first().json.tool_params.caller_phone, caller_email: $('Merge Config + Tool').first().json.tool_params.caller_email, service_type: $('Merge Config + Tool').first().json.tool_params.service_type, preferred_time: $('Merge Config + Tool').first().json.tool_params.preferred_time, message: $('Merge Config + Tool').first().json.tool_params.notes, type: 'appointment', status: 'confirmed', gcal_event_id: $json.id }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [120, 100],
+      "id": "bk000002-0000-0000-0000-000000000001",
+      "name": "Save Booking to Supabase",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, event_type: 'appointment_booked', timestamp: $now.toISO(), data: { caller_name: $('Merge Config + Tool').first().json.tool_params.caller_name, caller_phone: $('Merge Config + Tool').first().json.caller_number || $('Merge Config + Tool').first().json.tool_params.caller_phone, caller_email: $('Merge Config + Tool').first().json.tool_params.caller_email, service: $('Merge Config + Tool').first().json.tool_params.service_type, appointment_time: $('Merge Config + Tool').first().json.tool_params.preferred_time, notes: $('Merge Config + Tool').first().json.tool_params.notes, business_name: $('Merge Config + Tool').first().json.business_name, notification_email: $('Merge Config + Tool').first().json.notification_email } }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [340, 100],
+      "id": "bk000003-0000-0000-0000-000000000001",
+      "name": "Trigger Zapier - Booked",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Merge Config + Tool').first().json.tool_call_id, result: 'Perfect, I have booked ' + ($('Merge Config + Tool').first().json.tool_params.service_type || 'your appointment') + ' for ' + ($('Merge Config + Tool').first().json.tool_params.caller_name || 'you') + ' at ' + ($('Merge Config + Tool').first().json.tool_params.preferred_time || 'the requested time') + '. You will receive a confirmation shortly. Is there anything else I can help you with?' }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [560, 100],
+      "id": "bk000004-0000-0000-0000-000000000001",
+      "name": "Respond - Booked"
+    },
+
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": { "__rl": true, "value": "={{ $json.calendar_id }}", "mode": "id" },
+        "returnAll": true,
+        "timeMin": "={{ DateTime.fromISO($json.tool_params.requested_time).minus({ minutes: $json.appointment_duration_minutes }).toISO() }}",
+        "timeMax": "={{ DateTime.fromISO($json.tool_params.requested_time).plus({ minutes: $json.appointment_duration_minutes }).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [-100, 320],
+      "id": "av000001-0000-0000-0000-000000000001",
+      "name": "Get Events Around Time",
+      "continueOnFail": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "REPLACE_WITH_GCAL_CRED_ID", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "const ctx = $('Merge Config + Tool').first().json;\nconst events = $input.all().map(i => i.json).filter(e => e && e.id);\nconst requested = ctx.tool_params.requested_time;\nconst durMin = ctx.appointment_duration_minutes || 30;\nconst businessName = ctx.business_name;\n\nlet conflict = null;\ntry {\n  const reqStart = new Date(requested).getTime();\n  const reqEnd = reqStart + durMin * 60000;\n  for (const e of events) {\n    const eStart = new Date(e.start?.dateTime || e.start?.date).getTime();\n    const eEnd = new Date(e.end?.dateTime || e.end?.date).getTime();\n    if (reqStart < eEnd && reqEnd > eStart) { conflict = e; break; }\n  }\n} catch(err) {}\n\nconst available = !conflict;\nconst result = available\n  ? `That time is available. Would you like me to book it?`\n  : `I'm sorry, that time is not available. Please suggest another time.`;\n\nreturn [{ json: { result, available, tool_call_id: ctx.tool_call_id } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [120, 320],
+      "id": "av000002-0000-0000-0000-000000000001",
+      "name": "Evaluate Availability"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $json.tool_call_id, result: $json.result }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [340, 320],
+      "id": "av000003-0000-0000-0000-000000000001",
+      "name": "Respond - Availability"
+    },
+
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": { "__rl": true, "value": "={{ $json.calendar_id }}", "mode": "id" },
+        "returnAll": true,
+        "timeMin": "={{ $now.toISO() }}",
+        "timeMax": "={{ $now.plus({ months: 3 }).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [-100, 540],
+      "id": "cn000001-0000-0000-0000-000000000001",
+      "name": "Get Events for Cancel",
+      "continueOnFail": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "REPLACE_WITH_GCAL_CRED_ID", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "const ctx = $('Merge Config + Tool').first().json;\nconst phone = ctx.tool_params.caller_phone || ctx.caller_number || '';\nconst events = $input.all().map(i => i.json).filter(e => e && e.id);\n\nconst match = events.find(e => (e.description || '').includes(phone));\n\nif (!match) {\n  return [{ json: { found: false, event_id: null, phone, tool_call_id: ctx.tool_call_id } }];\n}\nreturn [{ json: { found: true, event_id: match.id, summary: match.summary, start: match.start?.dateTime, phone, tool_call_id: ctx.tool_call_id } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [120, 540],
+      "id": "cn000002-0000-0000-0000-000000000001",
+      "name": "Find Event to Cancel"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": { "__rl": true, "value": "={{ $('Merge Config + Tool').first().json.calendar_id }}", "mode": "id" },
+        "eventId": "={{ $json.event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [340, 540],
+      "id": "cn000003-0000-0000-0000-000000000001",
+      "name": "Delete Calendar Event",
+      "continueOnFail": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "REPLACE_WITH_GCAL_CRED_ID", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, event_type: 'appointment_cancelled', timestamp: $now.toISO(), data: { caller_phone: $('Merge Config + Tool').first().json.caller_number || $('Merge Config + Tool').first().json.tool_params.caller_phone, event_id: $('Find Event to Cancel').first().json.event_id, business_name: $('Merge Config + Tool').first().json.business_name, notification_email: $('Merge Config + Tool').first().json.notification_email } }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [560, 540],
+      "id": "cn000004-0000-0000-0000-000000000001",
+      "name": "Trigger Zapier - Cancelled",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Find Event to Cancel').first().json.tool_call_id, result: $('Find Event to Cancel').first().json.found ? 'Your appointment has been cancelled. Is there anything else I can help you with?' : 'I could not find an appointment under that phone number. Is there anything else I can help you with?' }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [780, 540],
+      "id": "cn000005-0000-0000-0000-000000000001",
+      "name": "Respond - Cancelled"
+    },
+
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": { "__rl": true, "value": "={{ $json.calendar_id }}", "mode": "id" },
+        "returnAll": true,
+        "timeMin": "={{ $now.toISO() }}",
+        "timeMax": "={{ $now.plus({ months: 3 }).toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [-100, 760],
+      "id": "rs000001-0000-0000-0000-000000000001",
+      "name": "Get Events for Reschedule",
+      "continueOnFail": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "REPLACE_WITH_GCAL_CRED_ID", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "const ctx = $('Merge Config + Tool').first().json;\nconst phone = ctx.tool_params.caller_phone || ctx.caller_number || '';\nconst newTime = ctx.tool_params.new_requested_time || ctx.tool_params.new_start_time || '';\nconst events = $input.all().map(i => i.json).filter(e => e && e.id);\n\nconst match = events.find(e => (e.description || '').includes(phone));\n\nif (!match) {\n  return [{ json: { found: false, event_id: '', new_start_time: newTime, tool_call_id: ctx.tool_call_id } }];\n}\nreturn [{ json: { found: true, event_id: match.id, new_start_time: newTime, tool_call_id: ctx.tool_call_id } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [120, 760],
+      "id": "rs000002-0000-0000-0000-000000000001",
+      "name": "Match Event for Reschedule"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": { "__rl": true, "value": "={{ $('Merge Config + Tool').first().json.calendar_id }}", "mode": "id" },
+        "eventId": "={{ $json.event_id }}",
+        "updateFields": {
+          "start": "={{ $json.new_start_time }}",
+          "end": "={{ DateTime.fromISO($json.new_start_time).plus({ minutes: $('Merge Config + Tool').first().json.appointment_duration_minutes }).toISO() }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [340, 760],
+      "id": "rs000003-0000-0000-0000-000000000001",
+      "name": "Update Calendar Event",
+      "continueOnFail": true,
+      "credentials": { "googleCalendarOAuth2Api": { "id": "REPLACE_WITH_GCAL_CRED_ID", "name": "Google Calendar account" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, event_type: 'appointment_rescheduled', timestamp: $now.toISO(), data: { caller_phone: $('Merge Config + Tool').first().json.caller_number || $('Merge Config + Tool').first().json.tool_params.caller_phone, new_time: $('Match Event for Reschedule').first().json.new_start_time, event_id: $('Match Event for Reschedule').first().json.event_id, business_name: $('Merge Config + Tool').first().json.business_name, notification_email: $('Merge Config + Tool').first().json.notification_email } }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [560, 760],
+      "id": "rs000004-0000-0000-0000-000000000001",
+      "name": "Trigger Zapier - Rescheduled",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Match Event for Reschedule').first().json.tool_call_id, result: $('Match Event for Reschedule').first().json.found ? ('Your appointment has been rescheduled to ' + $('Match Event for Reschedule').first().json.new_start_time + '. Is there anything else I can help you with?') : 'I could not find an appointment under that phone number. Is there anything else I can help you with?' }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [780, 760],
+      "id": "rs000005-0000-0000-0000-000000000001",
+      "name": "Respond - Rescheduled"
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://gqlphahfvxsngmytxorw.supabase.co/rest/v1/appointments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey",        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Content-Type",  "value": "application/json" },
+            { "name": "Prefer",        "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $json.user_id, vapi_call_id: $json.call_id, caller_name: $json.tool_params.caller_name, caller_number: $json.caller_number, message: $json.tool_params.message || $json.tool_params.reason, type: 'message', status: 'pending' }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-100, 980],
+      "id": "ms000001-0000-0000-0000-000000000001",
+      "name": "Save Message to Supabase",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, event_type: 'message_taken', timestamp: $now.toISO(), data: { caller_name: $('Merge Config + Tool').first().json.tool_params.caller_name, caller_phone: $('Merge Config + Tool').first().json.caller_number, message: $('Merge Config + Tool').first().json.tool_params.message || $('Merge Config + Tool').first().json.tool_params.reason, business_name: $('Merge Config + Tool').first().json.business_name, notification_email: $('Merge Config + Tool').first().json.notification_email } }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [120, 980],
+      "id": "ms000002-0000-0000-0000-000000000001",
+      "name": "Trigger Zapier - Message",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Merge Config + Tool').first().json.tool_call_id, result: 'Got it, I have taken your message' + ($('Merge Config + Tool').first().json.tool_params.caller_name ? ', ' + $('Merge Config + Tool').first().json.tool_params.caller_name : '') + '. Someone from ' + $('Merge Config + Tool').first().json.business_name + ' will get back to you as soon as possible. Is there anything else I can help you with?' }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [340, 980],
+      "id": "ms000003-0000-0000-0000-000000000001",
+      "name": "Respond - Message"
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://gqlphahfvxsngmytxorw.supabase.co/rest/v1/appointments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey",        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Authorization", "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbHBoYWhmdnhzbmdteXR4b3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODg5NDcsImV4cCI6MjA5Mjk2NDk0N30.2oaUzXVTSq52zj8FqcS8Qw0rMLBBcSpQoODLROtoRrg" },
+            { "name": "Content-Type",  "value": "application/json" },
+            { "name": "Prefer",        "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $json.user_id, vapi_call_id: $json.call_id, caller_name: $json.tool_params.caller_name, caller_number: $json.caller_number, message: $json.tool_params.reason || 'Callback requested', type: 'callback', status: 'pending' }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-100, 1200],
+      "id": "cb000001-0000-0000-0000-000000000001",
+      "name": "Save Callback to Supabase",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexusconsultancy.app.n8n.cloud/webhook/nexus-zapier",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, event_type: 'callback_requested', timestamp: $now.toISO(), data: { caller_name: $('Merge Config + Tool').first().json.tool_params.caller_name, caller_phone: $('Merge Config + Tool').first().json.caller_number, reason: $('Merge Config + Tool').first().json.tool_params.reason, business_name: $('Merge Config + Tool').first().json.business_name, notification_email: $('Merge Config + Tool').first().json.notification_email } }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [120, 1200],
+      "id": "cb000002-0000-0000-0000-000000000001",
+      "name": "Trigger Zapier - Callback",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Merge Config + Tool').first().json.tool_call_id, result: 'Noted! I have logged a callback request' + ($('Merge Config + Tool').first().json.tool_params.caller_name ? ' for ' + $('Merge Config + Tool').first().json.tool_params.caller_name : '') + '. Someone from ' + $('Merge Config + Tool').first().json.business_name + ' will call you back shortly. Is there anything else I can help you with?' }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [340, 1200],
+      "id": "cb000003-0000-0000-0000-000000000001",
+      "name": "Respond - Callback"
+    },
+
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $json.tool_call_id, result: ($json.business_hours && Object.keys($json.business_hours).length > 0) ? ($json.business_name + ' is open: ' + Object.entries($json.business_hours).map(([k,v]) => k + ': ' + v).join(', ') + '. Is there anything else I can help you with?') : ('Please contact ' + $json.business_name + ' directly for current business hours. Is there anything else I can help you with?') }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [-100, 1420],
+      "id": "ch000001-0000-0000-0000-000000000001",
+      "name": "Respond - Hours"
+    },
+
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $json.tool_call_id, result: $json.fallback_message || ('I have noted your request. Someone from ' + ($json.business_name || 'us') + ' will follow up with you shortly.') }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [-100, 1640],
+      "id": "fb000001-0000-0000-0000-000000000001",
+      "name": "Respond - Fallback"
+    }
+  ],
+  "connections": {
+    "Receive Tool Call":      { "main": [[{ "node": "Extract Tool Call",       "type": "main", "index": 0 }]] },
+    "Extract Tool Call":      { "main": [[{ "node": "Fetch Customer Config",   "type": "main", "index": 0 }]] },
+    "Fetch Customer Config":  { "main": [[{ "node": "Merge Config + Tool",     "type": "main", "index": 0 }]] },
+    "Merge Config + Tool":    { "main": [[{ "node": "Route by Tool",           "type": "main", "index": 0 }]] },
+    "Route by Tool": {
+      "main": [
+        [{ "node": "Create Calendar Event",      "type": "main", "index": 0 }],
+        [{ "node": "Get Events Around Time",     "type": "main", "index": 0 }],
+        [{ "node": "Get Events for Cancel",      "type": "main", "index": 0 }],
+        [{ "node": "Get Events for Reschedule",  "type": "main", "index": 0 }],
+        [{ "node": "Save Message to Supabase",   "type": "main", "index": 0 }],
+        [{ "node": "Save Callback to Supabase",  "type": "main", "index": 0 }],
+        [{ "node": "Respond - Hours",            "type": "main", "index": 0 }],
+        [{ "node": "Respond - Fallback",         "type": "main", "index": 0 }]
+      ]
+    },
+    "Create Calendar Event":      { "main": [[{ "node": "Save Booking to Supabase",   "type": "main", "index": 0 }]] },
+    "Save Booking to Supabase":   { "main": [[{ "node": "Trigger Zapier - Booked",    "type": "main", "index": 0 }]] },
+    "Trigger Zapier - Booked":    { "main": [[{ "node": "Respond - Booked",           "type": "main", "index": 0 }]] },
+
+    "Get Events Around Time":     { "main": [[{ "node": "Evaluate Availability",      "type": "main", "index": 0 }]] },
+    "Evaluate Availability":      { "main": [[{ "node": "Respond - Availability",     "type": "main", "index": 0 }]] },
+
+    "Get Events for Cancel":      { "main": [[{ "node": "Find Event to Cancel",       "type": "main", "index": 0 }]] },
+    "Find Event to Cancel":       { "main": [[{ "node": "Delete Calendar Event",      "type": "main", "index": 0 }]] },
+    "Delete Calendar Event":      { "main": [[{ "node": "Trigger Zapier - Cancelled", "type": "main", "index": 0 }]] },
+    "Trigger Zapier - Cancelled": { "main": [[{ "node": "Respond - Cancelled",        "type": "main", "index": 0 }]] },
+
+    "Get Events for Reschedule":  { "main": [[{ "node": "Match Event for Reschedule", "type": "main", "index": 0 }]] },
+    "Match Event for Reschedule": { "main": [[{ "node": "Update Calendar Event",      "type": "main", "index": 0 }]] },
+    "Update Calendar Event":      { "main": [[{ "node": "Trigger Zapier - Rescheduled","type": "main", "index": 0 }]] },
+    "Trigger Zapier - Rescheduled":{ "main": [[{ "node": "Respond - Rescheduled",     "type": "main", "index": 0 }]] },
+
+    "Save Message to Supabase":   { "main": [[{ "node": "Trigger Zapier - Message",   "type": "main", "index": 0 }]] },
+    "Trigger Zapier - Message":   { "main": [[{ "node": "Respond - Message",          "type": "main", "index": 0 }]] },
+
+    "Save Callback to Supabase":  { "main": [[{ "node": "Trigger Zapier - Callback",  "type": "main", "index": 0 }]] },
+    "Trigger Zapier - Callback":  { "main": [[{ "node": "Respond - Callback",         "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "instanceId": "" },
+  "tags": [{ "name": "nexus" }]
+}

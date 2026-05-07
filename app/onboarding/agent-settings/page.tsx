@@ -35,6 +35,8 @@ export default function AgentSettingsPage() {
     selectedIntegrations: [] as string[],
     zapierEnabled: false,
     zapierWebhookUrl: "",
+    calendarId: "",
+    notificationEmail: "",
   });
 
   useEffect(() => {
@@ -65,6 +67,8 @@ export default function AgentSettingsPage() {
           selectedIntegrations: data.integrations ? Object.keys(data.integrations) : [],
           zapierEnabled: data.zapier_enabled ?? false,
           zapierWebhookUrl: data.zapier_webhook_url ?? "",
+          calendarId: data.calendar_id ?? "",
+          notificationEmail: data.notification_email ?? data.business_email ?? "",
         });
       }
     } catch (error) {
@@ -96,6 +100,8 @@ export default function AgentSettingsPage() {
           integrations: integrationsObj,
           zapier_enabled: formData.zapierEnabled,
           zapier_webhook_url: formData.zapierWebhookUrl || null,
+          calendar_id: formData.calendarId || null,
+          notification_email: formData.notificationEmail || null,
           updated_at: new Date().toISOString(),
         }, {
           onConflict: "user_id",
@@ -107,7 +113,7 @@ export default function AgentSettingsPage() {
       }
 
       // Update onboarding progress
-      await updateOnboardingProgress(user.id, 4);
+      await updateOnboardingProgress(user.id, 5);
       
       syncVapiAssistant(user.id)
       router.push("/onboarding/select-plan");
@@ -187,7 +193,7 @@ export default function AgentSettingsPage() {
 
   return (
     <OnboardingWrapper
-      currentStep={4}
+      currentStep={5}
       stepTitle="Agent Settings"
       stepDescription="Configure advanced call handling options"
       onNext={handleSave}
@@ -294,6 +300,38 @@ export default function AgentSettingsPage() {
               />
               <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
             </label>
+          </div>
+        </div>
+
+        {/* Google Calendar & Notification Email */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold text-white">Calendar & Notifications</h3>
+            <p className="text-sm text-slate-400">Required for live appointment booking via Google Calendar</p>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-sm text-slate-300 font-medium">Google Calendar ID</label>
+            <Input
+              value={formData.calendarId}
+              onChange={(e) => setFormData({ ...formData, calendarId: e.target.value })}
+              placeholder="yourname@gmail.com  or  xxxxxxxx@group.calendar.google.com"
+              className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
+            />
+            <p className="text-xs text-slate-500">
+              Find this in Google Calendar → Settings → your calendar → Calendar ID.
+              Leave blank to save messages without creating calendar events.
+            </p>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-sm text-slate-300 font-medium">Notification email</label>
+            <Input
+              value={formData.notificationEmail}
+              onChange={(e) => setFormData({ ...formData, notificationEmail: e.target.value })}
+              placeholder="you@example.com"
+              type="email"
+              className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
+            />
+            <p className="text-xs text-slate-500">Where Zapier and email alerts get sent for new bookings and messages.</p>
           </div>
         </div>
 

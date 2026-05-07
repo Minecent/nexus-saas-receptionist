@@ -134,7 +134,7 @@ export default function SelectPlanPage() {
 
       if (error) { console.error("Error saving plan:", error); return; }
 
-      await updateOnboardingProgress(user.id, 5);
+      await updateOnboardingProgress(user.id, 6);
 
       // Custom plan skips checkout — contact sales handles billing
       if (selectedPlan === "custom") {
@@ -177,7 +177,7 @@ export default function SelectPlanPage() {
 
   return (
     <OnboardingWrapper
-      currentStep={5}
+      currentStep={6}
       stepTitle="Select Your Plan"
       stepDescription="Choose based on your expected call volume. You can upgrade at any time."
       onNext={handleSave}
