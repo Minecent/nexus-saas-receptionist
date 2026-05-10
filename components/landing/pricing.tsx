@@ -140,11 +140,6 @@ export default function Pricing() {
             All plans include 24/7 call answering. Scale up as you grow. No contracts.
           </p>
 
-          {/* Social proof — honest scarcity */}
-          <p className="mt-3 text-sm text-slate-500">
-            Join our <span className="font-semibold text-slate-300">founding cohort</span> — first 50 customers shape NEXUS
-          </p>
-
           {/* Annual/Monthly toggle */}
           <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-800 p-1">
             <button
