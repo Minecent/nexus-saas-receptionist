@@ -11,6 +11,8 @@ type Booking = {
   caller_email: string | null
   service_type: string | null
   preferred_time: string | null
+  preferred_time_iso: string | null
+  preferred_time_human: string | null
   message: string | null
   status: string | null
   gcal_event_id: string | null
@@ -25,6 +27,12 @@ function formatDateTime(iso: string | null) {
     month: 'short', day: 'numeric', year: 'numeric',
     hour: 'numeric', minute: '2-digit', hour12: true,
   })
+}
+
+function renderBookingTime(b: Booking) {
+  if (b.preferred_time_iso) return formatDateTime(b.preferred_time_iso)
+  if (b.preferred_time_human) return <span className="italic text-slate-400">as said: &ldquo;{b.preferred_time_human}&rdquo;</span>
+  return formatDateTime(b.preferred_time)
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -104,7 +112,7 @@ export default function BookingsTable({ bookings }: { bookings: Booking[] }) {
                       )}
                     </td>
                     <td className="px-5 py-3.5 text-slate-300">{b.service_type ?? '—'}</td>
-                    <td className="px-5 py-3.5 text-slate-300 whitespace-nowrap">{formatDateTime(b.preferred_time)}</td>
+                    <td className="px-5 py-3.5 text-slate-300 whitespace-nowrap">{renderBookingTime(b)}</td>
                     <td className="px-5 py-3.5">
                       <span className={cn('text-xs font-medium px-2 py-0.5 rounded-full capitalize', STATUS_STYLES[b.status ?? ''] ?? STATUS_STYLES.pending)}>
                         {b.status ?? 'pending'}

@@ -139,6 +139,50 @@
 
     {
       "parameters": {
+        "jsCode": "const ctx = $('Merge Config + Tool').first().json;\nconst rawTime = (ctx.tool_params || {}).preferred_time || '';\nconst tz = ctx.timezone || 'America/New_York';\n\nlet parseValid = false;\nlet isoString = '';\nlet humanString = rawTime;\n\n// Attempt 1: Luxon ISO (strict)\ntry {\n  const dt = DateTime.fromISO(rawTime, { setZone: true });\n  if (dt.isValid) {\n    parseValid = true;\n    isoString = dt.toUTC().toISO();\n    humanString = dt.setZone(tz).toLocaleString(DateTime.DATETIME_FULL);\n  }\n} catch(e) {}\n\n// Attempt 2: JS Date fallback\nif (!parseValid && rawTime) {\n  try {\n    const d = new Date(rawTime);\n    if (!isNaN(d.getTime())) {\n      parseValid = true;\n      isoString = d.toISOString();\n      humanString = d.toLocaleString('en-US', { timeZone: tz, dateStyle: 'long', timeStyle: 'short' });\n    }\n  } catch(e) {}\n}\n\nreturn [{\n  json: {\n    ...ctx,\n    parse_valid: parseValid,\n    preferred_time_iso: parseValid ? isoString : null,\n    preferred_time_human: humanString,\n    raw_preferred_time: rawTime,\n    tool_params: {\n      ...(ctx.tool_params || {}),\n      preferred_time: parseValid ? isoString : rawTime\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-100, 100],
+      "id": "vt000001-0000-0000-0000-000000000001",
+      "name": "Validate & Parse Time"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.parse_valid }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "equals", "rightType": "boolean" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [120, 100],
+      "id": "vt000002-0000-0000-0000-000000000001",
+      "name": "Time Valid?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Merge Config + Tool').first().json.tool_call_id, result: \"I'm sorry, I had trouble understanding the date and time you mentioned. Could you please tell me the exact date and time for your appointment? For example, 'Monday May 12th at 2 PM'.\" }] }) }}",
+        "options": { "responseCode": 200 }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [340, -120],
+      "id": "vt000003-0000-0000-0000-000000000001",
+      "name": "Respond - Bad Time"
+    },
+    {
+      "parameters": {
         "calendar": { "__rl": true, "value": "={{ $json.calendar_id }}", "mode": "id" },
         "start": "={{ $json.tool_params.preferred_time }}",
         "end": "={{ DateTime.fromISO($json.tool_params.preferred_time).plus({ minutes: $json.appointment_duration_minutes }).toISO() }}",
@@ -149,7 +193,7 @@
       },
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
-      "position": [-100, 100],
+      "position": [340, 100],
       "id": "bk000001-0000-0000-0000-000000000001",
       "name": "Create Calendar Event",
       "continueOnFail": true,
@@ -170,7 +214,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, vapi_call_id: $('Merge Config + Tool').first().json.call_id, caller_name: $('Merge Config + Tool').first().json.tool_params.caller_name, caller_number: $('Merge Config + Tool').first().json.caller_number || $('Merge Config + Tool').first().json.tool_params.caller_phone, caller_email: $('Merge Config + Tool').first().json.tool_params.caller_email, service_type: $('Merge Config + Tool').first().json.tool_params.service_type, preferred_time: $('Merge Config + Tool').first().json.tool_params.preferred_time, message: $('Merge Config + Tool').first().json.tool_params.notes, type: 'appointment', status: 'confirmed', gcal_event_id: $json.id }) }}",
+        "jsonBody": "={{ JSON.stringify({ user_id: $('Merge Config + Tool').first().json.user_id, vapi_call_id: $('Merge Config + Tool').first().json.call_id, caller_name: $('Merge Config + Tool').first().json.tool_params.caller_name, caller_number: $('Merge Config + Tool').first().json.caller_number || $('Merge Config + Tool').first().json.tool_params.caller_phone, caller_email: $('Merge Config + Tool').first().json.tool_params.caller_email, service_type: $('Merge Config + Tool').first().json.tool_params.service_type, preferred_time: $('Validate & Parse Time').first().json.tool_params.preferred_time, preferred_time_iso: $('Validate & Parse Time').first().json.preferred_time_iso, preferred_time_human: $('Validate & Parse Time').first().json.preferred_time_human, message: $('Merge Config + Tool').first().json.tool_params.notes, type: 'appointment', status: 'confirmed', gcal_event_id: $json.id }) }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -199,7 +243,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Merge Config + Tool').first().json.tool_call_id, result: 'Perfect, I have booked ' + ($('Merge Config + Tool').first().json.tool_params.service_type || 'your appointment') + ' for ' + ($('Merge Config + Tool').first().json.tool_params.caller_name || 'you') + ' at ' + ($('Merge Config + Tool').first().json.tool_params.preferred_time || 'the requested time') + '. You will receive a confirmation shortly. Is there anything else I can help you with?' }] }) }}",
+        "responseBody": "={{ JSON.stringify({ results: [{ toolCallId: $('Merge Config + Tool').first().json.tool_call_id, result: 'Perfect, I have booked ' + ($('Merge Config + Tool').first().json.tool_params.service_type || 'your appointment') + ' for ' + ($('Merge Config + Tool').first().json.tool_params.caller_name || 'you') + ' on ' + ($('Validate & Parse Time').first().json.preferred_time_human || $('Merge Config + Tool').first().json.tool_params.preferred_time || 'the requested time') + '. You will receive a confirmation shortly. Is there anything else I can help you with?' }] }) }}",
         "options": { "responseCode": 200 }
       },
       "type": "n8n-nodes-base.respondToWebhook",
@@ -535,7 +579,7 @@
     "Merge Config + Tool":    { "main": [[{ "node": "Route by Tool",           "type": "main", "index": 0 }]] },
     "Route by Tool": {
       "main": [
-        [{ "node": "Create Calendar Event",      "type": "main", "index": 0 }],
+        [{ "node": "Validate & Parse Time",      "type": "main", "index": 0 }],
         [{ "node": "Get Events Around Time",     "type": "main", "index": 0 }],
         [{ "node": "Get Events for Cancel",      "type": "main", "index": 0 }],
         [{ "node": "Get Events for Reschedule",  "type": "main", "index": 0 }],
@@ -543,6 +587,13 @@
         [{ "node": "Save Callback to Supabase",  "type": "main", "index": 0 }],
         [{ "node": "Respond - Hours",            "type": "main", "index": 0 }],
         [{ "node": "Respond - Fallback",         "type": "main", "index": 0 }]
+      ]
+    },
+    "Validate & Parse Time": { "main": [[{ "node": "Time Valid?", "type": "main", "index": 0 }]] },
+    "Time Valid?": {
+      "main": [
+        [{ "node": "Create Calendar Event",  "type": "main", "index": 0 }],
+        [{ "node": "Respond - Bad Time",     "type": "main", "index": 0 }]
       ]
     },
     "Create Calendar Event":      { "main": [[{ "node": "Save Booking to Supabase",   "type": "main", "index": 0 }]] },

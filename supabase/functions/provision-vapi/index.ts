@@ -149,7 +149,7 @@ function buildTools(n8nUrl: string) {
             caller_name:    { type: 'string', description: 'Full name of the caller' },
             caller_phone:   { type: 'string', description: 'Phone number of the caller' },
             caller_email:   { type: 'string', description: 'Email address of the caller (if provided)' },
-            preferred_time: { type: 'string', description: 'Preferred date and time for the appointment (ISO 8601)' },
+            preferred_time: { type: 'string', description: "ISO 8601 timestamp in the caller's local timezone. Format: YYYY-MM-DDTHH:MM:SS±HH:MM. Example: 2026-05-11T14:00:00-05:00. You MUST convert relative phrases ('tomorrow', 'next Monday', 'in two days', 'this Friday morning') into a concrete ISO timestamp using today's date as reference. If the caller is ambiguous about date or AM/PM, ask a clarifying question before calling this tool." },
             service_type:   { type: 'string', description: 'Type of service or appointment requested' },
             notes:          { type: 'string', description: 'Any additional notes or special requests' },
           },
@@ -165,7 +165,7 @@ function buildTools(n8nUrl: string) {
         parameters: {
           type: 'object',
           properties: {
-            requested_time: { type: 'string', description: 'The date and time to check availability for (ISO 8601)' },
+            requested_time: { type: 'string', description: 'ISO 8601 timestamp to check (YYYY-MM-DDTHH:MM:SS±HH:MM). Convert any relative date references into a concrete timestamp before calling this tool.' },
           },
           required: ['requested_time'],
         },
@@ -194,7 +194,7 @@ function buildTools(n8nUrl: string) {
           type: 'object',
           properties: {
             caller_phone:       { type: 'string', description: 'Phone number of the caller whose appointment should be rescheduled' },
-            new_requested_time: { type: 'string', description: 'The new preferred date and time (ISO 8601)' },
+            new_requested_time: { type: 'string', description: 'ISO 8601 timestamp for the new appointment time (YYYY-MM-DDTHH:MM:SS±HH:MM). Convert any relative date references into a concrete timestamp before calling this tool.' },
           },
           required: ['caller_phone', 'new_requested_time'],
         },
@@ -272,5 +272,11 @@ function buildSystemPrompt(config: Record<string, unknown>): string {
     '- Before calling cancel_appointment or reschedule_appointment, confirm the caller phone number.',
     '- Never call a tool with empty or missing required fields. Ask the caller for missing information first.',
     '- Always include caller_phone in every tool call if the caller has provided it.',
+    '',
+    'DATE/TIME HANDLING — critical:',
+    '- Always convert relative date references ("tomorrow at 3pm", "next Monday morning", "this Friday") to a specific ISO 8601 timestamp before calling any tool.',
+    `- Business timezone: ${tz}. Use this when converting relative times to absolute timestamps.`,
+    '- If the caller does not specify AM or PM, ask for clarification before booking.',
+    '- Never pass vague strings like "tomorrow" or "next week" as timestamp values — always resolve to YYYY-MM-DDTHH:MM:SS±HH:MM.',
   ].filter(Boolean).join('\n')
 }

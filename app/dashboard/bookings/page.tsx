@@ -9,7 +9,7 @@ export default async function BookingsPage() {
 
   const { data: bookings } = await supabase
     .from('appointments')
-    .select('id, caller_name, caller_number, caller_email, service_type, preferred_time, message, status, gcal_event_id, created_at')
+    .select('id, caller_name, caller_number, caller_email, service_type, preferred_time, preferred_time_iso, preferred_time_human, message, status, gcal_event_id, created_at')
     .eq('user_id', data.claims.sub)
     .eq('type', 'appointment')
     .order('preferred_time', { ascending: false })
