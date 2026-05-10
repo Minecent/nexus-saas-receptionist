@@ -34,6 +34,15 @@ export default function TrainAgentPage() {
     return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
   };
 
+  const isValidUrl = (raw: string) => {
+    try {
+      const u = new URL(normaliseUrl(raw));
+      return /\.[a-z]{2,}$/i.test(u.hostname);
+    } catch {
+      return false;
+    }
+  };
+
   const runAnalysis = async () => {
     if (!url.trim()) return;
     setPhase("analysing");
@@ -102,7 +111,7 @@ export default function TrainAgentPage() {
               type="url"
               value={url}
               onChange={(e) => { setUrl(e.target.value); setPhase("idle"); setCompletedSteps([]); }}
-              onKeyDown={(e) => { if (e.key === "Enter" && url.trim() && phase === "idle") runAnalysis(); }}
+              onKeyDown={(e) => { if (e.key === "Enter" && isValidUrl(url) && phase === "idle") runAnalysis(); }}
               placeholder="https://yourbusiness.com"
               disabled={phase === "analysing"}
               className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
@@ -110,13 +119,13 @@ export default function TrainAgentPage() {
             <button
               type="button"
               onClick={runAnalysis}
-              disabled={!url.trim() || phase === "analysing"}
+              disabled={!isValidUrl(url) || phase === "analysing"}
               className="shrink-0 rounded-lg bg-teal-500 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {phase === "analysing" ? "Analysing…" : "Train agent"}
             </button>
           </div>
-          {url.trim() && phase === "idle" && (
+          {isValidUrl(url) && phase === "idle" && (
             <p className="text-xs text-slate-500">
               We&apos;ll visit: <span className="font-semibold text-slate-300">{normaliseUrl(url)}</span>
             </p>
