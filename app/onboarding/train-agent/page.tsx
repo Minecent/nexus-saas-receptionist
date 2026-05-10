@@ -10,11 +10,11 @@ import { syncVapiAssistant } from "@/lib/vapi";
 import { CheckCircle, Circle, Loader2 } from "lucide-react";
 
 const ANALYSIS_STEPS = [
-  { label: "Fetching your website", duration: 2200 },
-  { label: "Scanning pages and content", duration: 2800 },
-  { label: "Extracting services and FAQs", duration: 3100 },
-  { label: "Identifying business hours and contact info", duration: 2600 },
-  { label: "Building your knowledge base", duration: 3300 },
+  { label: "Fetching your website", duration: 4500 },
+  { label: "Scanning pages and content", duration: 5500 },
+  { label: "Extracting services and FAQs", duration: 6000 },
+  { label: "Identifying business hours and contact info", duration: 5000 },
+  { label: "Building your knowledge base", duration: 6500 },
 ];
 
 type Phase = "idle" | "analysing" | "done";
