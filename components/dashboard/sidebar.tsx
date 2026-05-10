@@ -72,8 +72,8 @@ export default function DashboardSidebar({ businessName, plan, email }: Props) {
       </aside>
 
       {/* Mobile bottom tab bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex border-t border-slate-800 bg-slate-950">
-        {NAV.slice(0, 5).map(({ href, label, icon: Icon }) => {
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex overflow-x-auto border-t border-slate-800 bg-slate-950">
+        {NAV.map(({ href, label, icon: Icon }) => {
           const active = pathname === href
           return (
             <Link

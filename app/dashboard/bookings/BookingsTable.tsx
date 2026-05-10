@@ -19,11 +19,12 @@ type Booking = {
 
 function formatDateTime(iso: string | null) {
   if (!iso) return '—'
-  try {
-    return new Date(iso).toLocaleString('en-US', {
-      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true,
-    })
-  } catch { return iso }
+  const d = new Date(iso)
+  if (isNaN(d.getTime())) return '—'
+  return d.toLocaleString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+    hour: 'numeric', minute: '2-digit', hour12: true,
+  })
 }
 
 const STATUS_STYLES: Record<string, string> = {

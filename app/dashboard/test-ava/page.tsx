@@ -1,18 +1,44 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import VapiWidget from './VapiWidget'
+import RecentTestCalls from './RecentTestCalls'
 import { Mic, AlertTriangle } from 'lucide-react'
+
+const PLAN_LIMITS: Record<string, { calls: number; seconds: number }> = {
+  lite:   { calls: 3,   seconds: 120 },
+  pro:    { calls: 10,  seconds: 180 },
+  scale:  { calls: 25,  seconds: 180 },
+  custom: { calls: 999, seconds: 300 },
+}
 
 export default async function TestAvaPage() {
   const supabase = await createClient()
   const { data } = await supabase.auth.getClaims()
   if (!data?.claims) redirect('/login')
+  const userId = data.claims.sub
 
   const { data: config } = await supabase
     .from('agent_config')
-    .select('vapi_assistant_id, agent_name, business_name')
-    .eq('user_id', data.claims.sub)
+    .select('vapi_assistant_id, agent_name, business_name, selected_plan')
+    .eq('user_id', userId)
     .single()
+
+  const plan = config?.selected_plan ?? 'lite'
+  const limits = PLAN_LIMITS[plan] ?? PLAN_LIMITS.lite
+
+  const currentMonth = new Date().toISOString().slice(0, 7)
+  const { count: testCallsUsed } = await supabase
+    .from('test_call_usage')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('month_year', currentMonth)
+
+  const { data: recentCalls } = await supabase
+    .from('test_call_usage')
+    .select('id, started_at, duration_seconds, transcript, summary')
+    .eq('user_id', userId)
+    .order('started_at', { ascending: false })
+    .limit(5)
 
   return (
     <div className="px-4 py-8 max-w-2xl sm:px-6">
@@ -34,9 +60,9 @@ export default async function TestAvaPage() {
       ) : !process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY ? (
         <div className="rounded-2xl border border-slate-700 bg-slate-900 p-8 text-center">
           <Mic className="size-8 text-slate-600 mx-auto mb-3" />
-          <p className="text-sm font-medium text-white">Vapi public key not configured</p>
+          <p className="text-sm font-medium text-white">Browser testing not configured</p>
           <p className="text-xs text-slate-400 mt-2">
-            Add <code className="text-slate-300 bg-slate-800 px-1 py-0.5 rounded">NEXT_PUBLIC_VAPI_PUBLIC_KEY</code> to your Vercel env vars to enable browser testing.
+            Browser calling is not enabled on this environment. Contact support if you expected this to work.
           </p>
         </div>
       ) : (
@@ -44,14 +70,24 @@ export default async function TestAvaPage() {
           assistantId={config.vapi_assistant_id}
           agentName={config.agent_name ?? 'AVA'}
           businessName={config.business_name ?? ''}
+          plan={plan}
+          testCallsUsed={testCallsUsed ?? 0}
+          testCallsLimit={limits.calls}
+          maxSeconds={limits.seconds}
         />
       )}
 
       <div className="mt-6 rounded-xl border border-slate-800 bg-slate-900/50 px-4 py-3">
         <p className="text-xs text-slate-500 leading-relaxed">
-          Each test call uses Vapi minutes from your account. Keep tests short to avoid unexpected costs.
+          Each test call counts toward your monthly test call allowance. Keep tests short and focused for the best results.
         </p>
       </div>
+
+      {recentCalls && recentCalls.length > 0 && (
+        <div className="mt-8">
+          <RecentTestCalls calls={recentCalls} />
+        </div>
+      )}
     </div>
   )
 }
