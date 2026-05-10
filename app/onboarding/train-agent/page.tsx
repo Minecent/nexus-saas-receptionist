@@ -10,11 +10,11 @@ import { syncVapiAssistant } from "@/lib/vapi";
 import { CheckCircle, Circle, Loader2 } from "lucide-react";
 
 const ANALYSIS_STEPS = [
-  { label: "Fetching your website", duration: 900 },
-  { label: "Scanning pages and content", duration: 1100 },
-  { label: "Extracting services and FAQs", duration: 1200 },
-  { label: "Identifying business hours and contact info", duration: 900 },
-  { label: "Building your knowledge base", duration: 1300 },
+  { label: "Fetching your website", duration: 2200 },
+  { label: "Scanning pages and content", duration: 2800 },
+  { label: "Extracting services and FAQs", duration: 3100 },
+  { label: "Identifying business hours and contact info", duration: 2600 },
+  { label: "Building your knowledge base", duration: 3300 },
 ];
 
 type Phase = "idle" | "analysing" | "done";
@@ -102,6 +102,7 @@ export default function TrainAgentPage() {
               type="url"
               value={url}
               onChange={(e) => { setUrl(e.target.value); setPhase("idle"); setCompletedSteps([]); }}
+              onKeyDown={(e) => { if (e.key === "Enter" && url.trim() && phase === "idle") runAnalysis(); }}
               placeholder="https://yourbusiness.com"
               disabled={phase === "analysing"}
               className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
