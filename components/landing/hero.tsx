@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { PhoneCall, CalendarCheck, MessageSquare, TrendingDown } from 'lucide-react'
+import { PhoneCall, CalendarCheck, MessageSquare } from 'lucide-react'
 
 export default function Hero() {
   return (
@@ -31,30 +31,6 @@ export default function Hero() {
             >
               Learn More
             </Link>
-          </div>
-
-          {/* Cost comparison — the hook */}
-          <div className="rounded-2xl border border-slate-700 bg-slate-800/60 p-4">
-            <div className="mb-3 flex items-center gap-2">
-              <TrendingDown className="size-4 text-teal-400" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-teal-400">Cost comparison</span>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-slate-600 bg-slate-900 px-4 py-3 text-center">
-                <p className="mb-0.5 text-xs text-slate-500">Full-time receptionist</p>
-                <p className="text-2xl font-bold text-slate-300">$4,000</p>
-                <p className="text-xs text-slate-500">per month</p>
-              </div>
-              <div className="rounded-xl border border-teal-500/50 bg-teal-500/10 px-4 py-3 text-center">
-                <p className="mb-0.5 text-xs text-teal-400/80">NEXUS AI</p>
-                <p className="text-2xl font-bold text-teal-400">from $25</p>
-                <p className="text-xs text-teal-400/80">per month</p>
-              </div>
-            </div>
-            <div className="mt-3 rounded-lg bg-teal-500/10 px-3 py-2 text-center">
-              <span className="text-sm font-semibold text-white">Save up to </span>
-              <span className="text-lg font-bold text-teal-400">$47,700 per year</span>
-            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">

@@ -21,7 +21,7 @@ const nexusPros = [
 
 export default function CostComparison() {
   return (
-    <section className="border-b border-slate-800 bg-slate-900">
+    <section className="border-b border-slate-800 bg-slate-950">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mb-12 text-center">

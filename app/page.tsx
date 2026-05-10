@@ -19,15 +19,27 @@ export default function Home() {
     <div className="bg-slate-900">
       <Header />
       <main>
-        {/* Hero fades in immediately on load */}
-        <FadeIn>
-          <Hero />
-        </FadeIn>
-        <CostComparison />
+        {/* 1. Pain hook — The Reality */}
         <FadeIn>
           <Stats />
         </FadeIn>
+
+        {/* 2. Solution intro */}
+        <FadeIn>
+          <Hero />
+        </FadeIn>
+
+        {/* 3. Hear AVA before seeing price — kills last objection */}
         <DemoAudio />
+
+        {/* 4. Full cost breakdown */}
+        <CostComparison />
+
+        {/* 5. Buy moment */}
+        <FadeIn>
+          <Pricing />
+        </FadeIn>
+
         <FadeIn>
           <Features />
         </FadeIn>
@@ -36,9 +48,6 @@ export default function Home() {
           <HowItWorks />
         </FadeIn>
         <Integrations />
-        <FadeIn>
-          <Pricing />
-        </FadeIn>
         <CallCta />
         <Faq />
         <FadeIn>
