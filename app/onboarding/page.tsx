@@ -38,6 +38,7 @@ export default function OnboardingIndexPage() {
           "/onboarding/train-agent",
           "/onboarding/business-details",
           "/onboarding/select-voice",
+          "/onboarding/agent-customization",
           "/onboarding/agent-settings",
           "/onboarding/select-plan",
           "/onboarding/phone-number",

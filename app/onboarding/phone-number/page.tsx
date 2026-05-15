@@ -9,6 +9,20 @@ import { cn } from "@/lib/utils";
 
 type RoutingPreference = "forward" | "new_number";
 
+const AREA_REGIONS = [
+  // Florida
+  { region: "fl", label: "Miami (305)",             code: "305" },
+  { region: "fl", label: "Miami (786)",             code: "786" },
+  { region: "fl", label: "Fort Lauderdale (954)",   code: "954" },
+  { region: "fl", label: "Palm Beach (561)",        code: "561" },
+  { region: "fl", label: "Tampa (813)",             code: "813" },
+  { region: "fl", label: "Orlando (407)",           code: "407" },
+  // Cayman
+  { region: "ky", label: "Cayman Islands (345)",    code: "345" },
+  // Other
+  { region: "other", label: "Other (enter manually)", code: "other" },
+];
+
 export default function PhoneNumberPage() {
   const router = useRouter();
   const supabase = createClient();
@@ -16,7 +30,8 @@ export default function PhoneNumberPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [routing, setRouting] = useState<RoutingPreference | "">("");
-  const [areaCode, setAreaCode] = useState("415");
+  const [areaCode, setAreaCode] = useState("305");
+  const [areaRegion, setAreaRegion] = useState("fl-305");  // tracks dropdown selection
 
   useEffect(() => {
     const load = async () => {
@@ -33,7 +48,11 @@ export default function PhoneNumberPage() {
         if (data) {
           setSelectedPlan(data.selected_plan || "");
           setRouting((data.phone_routing_preference as RoutingPreference) || "");
-          setAreaCode(data.preferred_area_code || "415");
+          const saved = data.preferred_area_code || "305";
+          setAreaCode(saved);
+          // Restore region selector state from saved area code
+          const knownRegion = AREA_REGIONS.find(r => r.code === saved && r.code !== "other");
+          setAreaRegion(knownRegion ? `${knownRegion.region}-${knownRegion.code}` : "other");
         }
       } catch (e) {
         console.error(e);
@@ -54,7 +73,7 @@ export default function PhoneNumberPage() {
 
       const updatePayload: Record<string, unknown> = { user_id: user.id, updated_at: new Date().toISOString() };
       if (routingPref) updatePayload.phone_routing_preference = routingPref;
-      if (routingPref === "new_number") updatePayload.preferred_area_code = areaCode || "415";
+      if (routingPref === "new_number") updatePayload.preferred_area_code = areaCode || "305";
       await supabase.from("agent_config").upsert(updatePayload, { onConflict: "user_id" });
 
       const { data } = await supabase.from("user_onboarding").select("completed_steps").eq("user_id", user.id).single();
@@ -65,6 +84,24 @@ export default function PhoneNumberPage() {
         { user_id: user.id, current_step: 7, completed_steps: steps, is_completed: true, updated_at: new Date().toISOString() },
         { onConflict: "user_id" }
       );
+
+      // Log new client to admin_alerts (non-fatal)
+      try {
+        const { data: cfg } = await supabase.from("agent_config")
+          .select("business_name, selected_plan, phone_number, vapi_assistant_id")
+          .eq("user_id", user.id).single();
+        await supabase.from("admin_alerts").insert({
+          type: "new_client",
+          message: `New client onboarded: ${cfg?.business_name ?? "Unknown"}`,
+          metadata: {
+            user_id: user.id,
+            business_name: cfg?.business_name,
+            plan: cfg?.selected_plan,
+            phone_number: cfg?.phone_number,
+            vapi_assistant_id: cfg?.vapi_assistant_id,
+          },
+        });
+      } catch { /* non-fatal */ }
 
       // Kick off Vapi provisioning in the background — don't await, don't block
       fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/provision-vapi`, {
@@ -203,16 +240,47 @@ export default function PhoneNumberPage() {
         ))}
 
         {isNewNumber && (
-          <div className="rounded-xl border border-slate-700 bg-slate-900/50 px-5 py-4 space-y-1.5">
-            <label className="text-sm font-medium text-slate-300">Preferred area code (3 digits)</label>
-            <input
-              type="text"
-              maxLength={3}
-              value={areaCode}
-              onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 3))}
-              placeholder="415"
-              className="w-24 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
-            />
+          <div className="rounded-xl border border-slate-700 bg-slate-900/50 px-5 py-4 space-y-3">
+            <label className="text-sm font-medium text-slate-300">Preferred area code</label>
+            <div className="space-y-2">
+              <select
+                value={areaRegion}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setAreaRegion(val);
+                  if (val !== "other-other") {
+                    const region = AREA_REGIONS.find(r => `${r.region}-${r.code}` === val);
+                    if (region) setAreaCode(region.code);
+                  }
+                }}
+                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+              >
+                <optgroup label="Florida">
+                  {AREA_REGIONS.filter(r => r.region === "fl").map(r => (
+                    <option key={r.code} value={`${r.region}-${r.code}`}>{r.label}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Cayman Islands">
+                  {AREA_REGIONS.filter(r => r.region === "ky").map(r => (
+                    <option key={r.code} value={`${r.region}-${r.code}`}>{r.label}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Other">
+                  <option value="other-other">Other (enter manually)</option>
+                </optgroup>
+              </select>
+
+              {areaRegion === "other-other" && (
+                <input
+                  type="text"
+                  maxLength={3}
+                  value={areaCode}
+                  onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                  placeholder="e.g. 212"
+                  className="w-28 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                />
+              )}
+            </div>
             <p className="text-xs text-slate-500">We'll provision the closest available number in this area code.</p>
           </div>
         )}

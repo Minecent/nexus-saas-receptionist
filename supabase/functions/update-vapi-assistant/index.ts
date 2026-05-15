@@ -200,7 +200,8 @@ function buildSystemPrompt(config: Record<string, unknown>): string {
   const industry = (config.business_industry as string) ?? ''
   const personality = (config.agent_personality as string) ?? 'Professional and friendly'
   const instructions = (config.agent_instructions as string) ?? ''
-  const services = (config.services_offered as string) ?? ''
+  const rawServices = (config.services_offered as string) ?? ''
+  const serviceLines = rawServices.split('\n').map((s: string) => s.trim()).filter(Boolean)
   const hours = config.business_hours ? JSON.stringify(config.business_hours) : null
   const tz = (config.timezone as string) ?? 'America/New_York'
   const apptDuration = (config.appointment_duration_minutes as number) ?? 30
@@ -209,7 +210,7 @@ function buildSystemPrompt(config: Record<string, unknown>): string {
     `You are ${name}, the AI receptionist for ${business}${industry ? ` (${industry})` : ''}.`,
     `Personality: ${personality}.`,
     instructions ? `Instructions: ${instructions}` : '',
-    services ? `Services offered: ${services}` : '',
+    serviceLines.length > 0 ? `Services offered:\n${serviceLines.map((s: string) => `- ${s}`).join('\n')}` : '',
     hours ? `Business hours (${tz}): ${hours}` : '',
     `Standard appointment duration: ${apptDuration} minutes.`,
     'Keep responses concise and professional. Never reveal that you are an AI unless directly asked.',

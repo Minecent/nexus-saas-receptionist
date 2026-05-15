@@ -10,11 +10,23 @@ import { syncVapiAssistant } from "@/lib/vapi";
 import { cn } from "@/lib/utils";
 
 const PERSONALITIES = [
-  { id: "Professional and friendly", label: "Professional & Friendly", description: "Polished and warm — the default for most businesses." },
-  { id: "Warm and caring", label: "Warm & Caring", description: "Empathetic and patient. Ideal for healthcare and wellness." },
-  { id: "Energetic and upbeat", label: "Energetic & Upbeat", description: "High-energy and positive. Great for sales and retail." },
-  { id: "Calm and reassuring", label: "Calm & Reassuring", description: "Steady and composed. Perfect for legal and financial services." },
+  { id: "Professional and friendly", label: "Professional & Friendly", description: "Clear, composed, and helpful — great for law, finance, and real estate" },
+  { id: "Warm and caring", label: "Warm & Caring", description: "Caring and attentive — perfect for healthcare and wellness" },
+  { id: "Energetic and upbeat", label: "Energetic & Upbeat", description: "Upbeat and enthusiastic — ideal for fitness, hospitality, retail" },
+  { id: "Calm and reassuring", label: "Calm & Reassuring", description: "Measured and reassuring — suited for senior care, counselling, support" },
 ];
+
+const INDUSTRY_SERVICES: Record<string, string> = {
+  "Real Estate": "Property viewings\nLease enquiries\nMaintenance requests",
+  "Healthcare & Medical": "New patient intake\nAppointment scheduling\nPrescription refills",
+  "Fitness & Wellness": "Class bookings\nMembership enquiries\nPersonal training",
+  "Professional Services (Law, Accounting, Consulting)": "Initial consultations\nDocument review\nAccount enquiries",
+  "Home Services (Plumbing, HVAC, Electrical)": "Service calls\nFree estimates\nEmergency repairs",
+  "Retail & E-commerce": "Product enquiries\nOrder support\nReturns & exchanges",
+  "Restaurant & Hospitality": "Table reservations\nEvent bookings\nMenu enquiries",
+  "Automotive": "Service appointments\nParts enquiries\nVehicle consultations",
+  "Education": "Enrolment enquiries\nTutor bookings\nCourse information",
+};
 
 export default function AgentCustomizationPage() {
   const router = useRouter();
@@ -38,16 +50,20 @@ export default function AgentCustomizationPage() {
         if (!user) { router.push("/login"); return; }
         const { data } = await supabase
           .from("agent_config")
-          .select("agent_name, agent_greeting, agent_personality, services_offered, appointment_duration_minutes, agent_instructions, business_name")
+          .select("agent_name, agent_greeting, agent_personality, services_offered, appointment_duration_minutes, agent_instructions, business_name, business_industry")
           .eq("user_id", user.id)
           .single();
         if (data) {
           setBusinessName(data.business_name ?? "");
+          // Pre-fill services from industry if not already set
+          const industryServices = !data.services_offered && data.business_industry
+            ? (INDUSTRY_SERVICES[data.business_industry] ?? "")
+            : ""
           setFormData({
             agentName: data.agent_name ?? "",
             agentGreeting: data.agent_greeting ?? "",
             agentPersonality: data.agent_personality ?? "Professional and friendly",
-            servicesOffered: data.services_offered ?? "",
+            servicesOffered: data.services_offered ?? industryServices,
             appointmentDurationMinutes: data.appointment_duration_minutes ?? 30,
             agentInstructions: data.agent_instructions ?? "",
           });
