@@ -9,11 +9,31 @@ type Appointment = {
   caller_name: string | null
   caller_number: string | null
   service_type: string | null
-  preferred_time: string | null
+  preferred_time_iso: string | null
+  preferred_time_human: string | null
   message: string | null
   status: string | null
   created_at: string
   type: string
+}
+
+// Returns UTC ISO bounds for midnight–midnight in the given IANA timezone.
+// Uses noon-based offset detection to avoid DST transition edge cases.
+function getTodayBoundsUTC(tz: string): { start: string; end: string } {
+  const now = new Date()
+  const localDate = now.toLocaleDateString('en-CA', { timeZone: tz }) // "YYYY-MM-DD"
+  const noonUTC = new Date(`${localDate}T12:00:00Z`)
+  const noonLocalStr = noonUTC.toLocaleString('en-US', {
+    timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false,
+  })
+  const [lh, lm] = noonLocalStr.split(':').map(Number)
+  const offsetMins = (lh * 60 + lm) - 720 // local noon minus UTC noon
+  const [y, mo, d] = localDate.split('-').map(Number)
+  const startMs = Date.UTC(y, mo - 1, d, 0, -offsetMins)
+  return {
+    start: new Date(startMs).toISOString(),
+    end: new Date(startMs + 86400000 - 1).toISOString(),
+  }
 }
 
 function formatTime(iso: string) {
@@ -43,32 +63,35 @@ export default async function DashboardPage() {
   const user = data?.claims
   if (!user) redirect('/login')
 
-  const [configRes, todayRes, activityRes, callbacksRes, messagesRes] = await Promise.all([
-    supabase
-      .from('agent_config')
-      .select('business_name, phone_number, provisioning_status')
-      .eq('user_id', user.sub)
-      .single(),
+  const configRes = await supabase
+    .from('agent_config')
+    .select('business_name, phone_number, provisioning_status, timezone')
+    .eq('user_id', user.sub)
+    .single()
 
+  const config = configRes.data
+  const { start: todayStart, end: todayEnd } = getTodayBoundsUTC(config?.timezone ?? 'UTC')
+
+  const [todayRes, activityRes, callbacksRes, messagesRes] = await Promise.all([
     supabase
       .from('appointments')
-      .select('id, caller_name, caller_number, service_type, preferred_time, status, type, message, created_at')
+      .select('id, caller_name, caller_number, service_type, preferred_time_iso, preferred_time_human, status, type, message, created_at')
       .eq('user_id', user.sub)
       .eq('type', 'appointment')
-      .gte('preferred_time', new Date().toISOString().slice(0, 10))
-      .lt('preferred_time', new Date(Date.now() + 86400000).toISOString().slice(0, 10))
-      .order('preferred_time', { ascending: true }),
+      .gte('preferred_time_iso', todayStart)
+      .lte('preferred_time_iso', todayEnd)
+      .order('preferred_time_iso', { ascending: true }),
 
     supabase
       .from('appointments')
-      .select('id, type, caller_name, service_type, preferred_time, message, status, created_at')
+      .select('id, type, caller_name, service_type, preferred_time_iso, message, status, created_at')
       .eq('user_id', user.sub)
       .order('created_at', { ascending: false })
       .limit(10),
 
     supabase
       .from('appointments')
-      .select('id, caller_name, caller_number, message, created_at, status, type, service_type, preferred_time')
+      .select('id, caller_name, caller_number, message, created_at, status, type, service_type, preferred_time_iso')
       .eq('user_id', user.sub)
       .eq('type', 'callback')
       .eq('status', 'pending')
@@ -77,7 +100,7 @@ export default async function DashboardPage() {
 
     supabase
       .from('appointments')
-      .select('id, caller_name, caller_number, message, created_at, status, type, service_type, preferred_time')
+      .select('id, caller_name, caller_number, message, created_at, status, type, service_type, preferred_time_iso')
       .eq('user_id', user.sub)
       .eq('type', 'message')
       .eq('status', 'pending')
@@ -85,13 +108,12 @@ export default async function DashboardPage() {
       .limit(5),
   ])
 
-  const config = configRes.data
   const todayAppts: Appointment[] = (todayRes.data ?? []) as Appointment[]
   const activity: Appointment[] = (activityRes.data ?? []) as Appointment[]
   const callbacks: Appointment[] = (callbacksRes.data ?? []) as Appointment[]
   const messages: Appointment[] = (messagesRes.data ?? []) as Appointment[]
 
-  const bookingsToday = activity.filter(a => a.type === 'appointment' && new Date(a.created_at).toDateString() === new Date().toDateString()).length
+  const bookingsToday = todayAppts.filter(a => a.status === 'confirmed').length
   const callbacksPending = callbacks.length
   const messagesPending = messages.length
 
@@ -144,7 +166,7 @@ export default async function DashboardPage() {
               todayAppts.map((appt, i) => (
                 <div key={appt.id} className={cn('flex items-center gap-3 px-5 py-3.5', i < todayAppts.length - 1 && 'border-b border-slate-800')}>
                   <span className="text-xs font-mono text-slate-500 w-16 shrink-0">
-                    {appt.preferred_time ? formatTime(appt.preferred_time) : '—'}
+                    {appt.preferred_time_iso ? formatTime(appt.preferred_time_iso) : (appt.preferred_time_human ?? '—')}
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white truncate">{appt.caller_name ?? 'Unknown'}</p>
