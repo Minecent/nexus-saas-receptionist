@@ -1,8 +1,14 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { ArrowRight, Phone, CalendarDays, MessageSquare, PhoneCall, PhoneOff } from 'lucide-react'
+import { DateTime } from 'luxon'
+import {
+  ArrowRight, CalendarDays, MessageSquare, PhoneCall, PhoneOff,
+  AlertTriangle, TrendingUp, CalendarCheck,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
+import PhoneCard from './PhoneCard'
+import NudgeCard from './NudgeCard'
 
 type Appointment = {
   id: string
@@ -17,23 +23,18 @@ type Appointment = {
   type: string
 }
 
-// Returns UTC ISO bounds for midnight–midnight in the given IANA timezone.
-// Uses noon-based offset detection to avoid DST transition edge cases.
-function getTodayBoundsUTC(tz: string): { start: string; end: string } {
-  const now = new Date()
-  const localDate = now.toLocaleDateString('en-CA', { timeZone: tz }) // "YYYY-MM-DD"
-  const noonUTC = new Date(`${localDate}T12:00:00Z`)
-  const noonLocalStr = noonUTC.toLocaleString('en-US', {
-    timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false,
-  })
-  const [lh, lm] = noonLocalStr.split(':').map(Number)
-  const offsetMins = (lh * 60 + lm) - 720 // local noon minus UTC noon
-  const [y, mo, d] = localDate.split('-').map(Number)
-  const startMs = Date.UTC(y, mo - 1, d, 0, -offsetMins)
-  return {
-    start: new Date(startMs).toISOString(),
-    end: new Date(startMs + 86400000 - 1).toISOString(),
-  }
+const TYPE_LABEL: Record<string, string> = {
+  appointment: 'Booking',
+  message: 'Message',
+  callback: 'Callback',
+}
+
+const TEST_LIMITS: Record<string, number | null> = {
+  lite: 5,
+  pro: 25,
+  advanced: null,
+  scale: null,
+  custom: null,
 }
 
 function formatTime(iso: string) {
@@ -43,18 +44,13 @@ function formatTime(iso: string) {
 }
 
 function formatRelative(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime()
-  const mins = Math.floor(diff / 60000)
+  const d = new Date(iso)
+  const now = new Date()
+  const mins = Math.floor((now.getTime() - d.getTime()) / 60000)
   if (mins < 60) return `${mins}m ago`
-  const hrs = Math.floor(mins / 60)
-  if (hrs < 24) return `${hrs}h ago`
-  return `${Math.floor(hrs / 24)}d ago`
-}
-
-const TYPE_LABEL: Record<string, string> = {
-  appointment: 'Booking',
-  message: 'Message',
-  callback: 'Callback',
+  if (mins < 1440) return `${Math.floor(mins / 60)}h ago`
+  if (mins < 2880) return `Yesterday at ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 }
 
 export default async function DashboardPage() {
@@ -63,16 +59,37 @@ export default async function DashboardPage() {
   const user = data?.claims
   if (!user) redirect('/login')
 
+  // Onboarding guard — belt-and-suspenders (middleware already checks, but protect server-side too)
+  const { data: onboarding } = await supabase
+    .from('user_onboarding')
+    .select('is_completed, dismissed_nudges')
+    .eq('user_id', user.sub)
+    .single()
+
+  if (!onboarding?.is_completed) redirect('/onboarding')
+
+  // Config first — need timezone for date bounds
   const configRes = await supabase
     .from('agent_config')
-    .select('business_name, phone_number, provisioning_status, timezone')
+    .select('business_name, phone_number, provisioning_status, timezone, selected_plan, calendar_id')
     .eq('user_id', user.sub)
     .single()
 
   const config = configRes.data
-  const { start: todayStart, end: todayEnd } = getTodayBoundsUTC(config?.timezone ?? 'UTC')
+  const tz = config?.timezone ?? 'America/New_York'
+  const plan = config?.selected_plan ?? 'lite'
 
-  const [todayRes, activityRes, callbacksRes, messagesRes] = await Promise.all([
+  // Timezone-aware date bounds
+  const todayStart = DateTime.now().setZone(tz).startOf('day').toUTC().toISO()!
+  const todayEnd   = DateTime.now().setZone(tz).endOf('day').toUTC().toISO()!
+  const monthStart = DateTime.now().setZone(tz).startOf('month').toUTC().toISO()!
+
+  const activityLimit = plan === 'lite' ? 10 : 100
+
+  const [
+    todayRes, activityRes, callbacksRes, messagesRes,
+    lastCallRes, monthlyCallsCountRes, monthlyApptsRes, nextApptRes,
+  ] = await Promise.all([
     supabase
       .from('appointments')
       .select('id, caller_name, caller_number, service_type, preferred_time_iso, preferred_time_human, status, type, message, created_at')
@@ -84,10 +101,10 @@ export default async function DashboardPage() {
 
     supabase
       .from('appointments')
-      .select('id, type, caller_name, service_type, preferred_time_iso, message, status, created_at')
+      .select('id, type, caller_name, service_type, preferred_time_iso, preferred_time_human, message, status, created_at')
       .eq('user_id', user.sub)
       .order('created_at', { ascending: false })
-      .limit(10),
+      .limit(activityLimit),
 
     supabase
       .from('appointments')
@@ -106,49 +123,187 @@ export default async function DashboardPage() {
       .eq('status', 'pending')
       .order('created_at', { ascending: false })
       .limit(5),
+
+    supabase
+      .from('calls')
+      .select('started_at')
+      .eq('user_id', user.sub)
+      .order('started_at', { ascending: false })
+      .limit(1),
+
+    supabase
+      .from('calls')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.sub)
+      .gte('started_at', monthStart),
+
+    supabase
+      .from('appointments')
+      .select('type')
+      .eq('user_id', user.sub)
+      .gte('created_at', monthStart),
+
+    supabase
+      .from('appointments')
+      .select('caller_name, preferred_time_iso, preferred_time_human')
+      .eq('user_id', user.sub)
+      .eq('type', 'appointment')
+      .gt('preferred_time_iso', new Date().toISOString())
+      .order('preferred_time_iso', { ascending: true })
+      .limit(1),
   ])
 
-  const todayAppts: Appointment[] = (todayRes.data ?? []) as Appointment[]
-  const activity: Appointment[] = (activityRes.data ?? []) as Appointment[]
-  const callbacks: Appointment[] = (callbacksRes.data ?? []) as Appointment[]
-  const messages: Appointment[] = (messagesRes.data ?? []) as Appointment[]
+  const todayAppts   = (todayRes.data ?? []) as Appointment[]
+  const activity     = (activityRes.data ?? []) as Appointment[]
+  const callbacks    = (callbacksRes.data ?? []) as Appointment[]
+  const messages     = (messagesRes.data ?? []) as Appointment[]
+  const lastCallAt   = lastCallRes.data?.[0]?.started_at ?? null
+  const monthlyCallsCount = monthlyCallsCountRes.count ?? 0
+  const monthlyAppts = monthlyApptsRes.data ?? []
+  const nextAppt     = nextApptRes.data?.[0] ?? null
 
-  const bookingsToday = todayAppts.filter(a => a.status === 'confirmed').length
+  const daysSinceCall = lastCallAt
+    ? (Date.now() - new Date(lastCallAt).getTime()) / 86400000
+    : Infinity
+  const avaHealthy = daysSinceCall <= 7
+
+  const bookingsToday    = todayAppts.filter(a => a.status === 'confirmed').length
   const callbacksPending = callbacks.length
-  const messagesPending = messages.length
+  const messagesPending  = messages.length
 
-  const kpis = [
-    { label: 'Bookings today',   value: bookingsToday,    icon: CalendarDays, color: 'text-teal-400' },
-    { label: 'Pending callbacks', value: callbacksPending, icon: PhoneCall,   color: callbacksPending > 0 ? 'text-amber-400' : 'text-slate-400' },
-    { label: 'Unread messages',  value: messagesPending,  icon: MessageSquare, color: messagesPending > 0 ? 'text-amber-400' : 'text-slate-400' },
-    { label: 'AVA number', value: config?.phone_number ?? '—', icon: Phone, color: 'text-slate-400', isText: true },
-  ]
+  // Monthly summary with weighted time-saved
+  const monthlyBookings  = monthlyAppts.filter(a => a.type === 'appointment').length
+  const monthlyMessages  = monthlyAppts.filter(a => a.type === 'message').length
+  const monthlyCallbacks = monthlyAppts.filter(a => a.type === 'callback').length
+  const minSaved = monthlyBookings * 5 + monthlyMessages * 3 + monthlyCallbacks * 3 + monthlyCallsCount * 1
+  const timeSavedLabel = minSaved >= 60 ? `${(minSaved / 60).toFixed(1)} hrs` : `${minSaved} min`
+
+  // Test call limits
+  const testLimit   = TEST_LIMITS[plan] ?? null
+  const atTestLimit = testLimit !== null && monthlyCallsCount >= testLimit
+
+  // Nudge: show when no activity and AVA has been quiet > 7 days, unless dismissed
+  const dismissedNudges = (onboarding?.dismissed_nudges as string[]) ?? []
+  const showNudge = !dismissedNudges.includes('setup') && activity.length === 0 && daysSinceCall > 7
 
   return (
     <div className="px-4 py-8 max-w-6xl sm:px-6">
-      <div className="mb-8">
+
+      {/* Header + P1a: AVA Status Bar */}
+      <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight">{config?.business_name ?? 'Dashboard'}</h1>
-        <p className="mt-1 text-sm text-slate-400">
-          {config?.phone_number
-            ? <>Your NEXUS number: <span className="font-mono text-white">{config.phone_number}</span></>
-            : 'Your phone number is being provisioned — check your email for updates.'}
-        </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
+          {avaHealthy ? (
+            <>
+              <span className="flex items-center gap-1.5 text-xs text-teal-400">
+                <span className="size-1.5 rounded-full bg-teal-400 animate-pulse" />
+                AVA is active
+              </span>
+              {lastCallAt && (
+                <span className="text-xs text-slate-500">Last call: {formatRelative(lastCallAt)}</span>
+              )}
+              <span className="text-xs text-slate-500">Calls this month: {monthlyCallsCount}</span>
+            </>
+          ) : (
+            <span className="flex items-center gap-2 text-xs text-amber-400">
+              <AlertTriangle className="size-3.5 shrink-0" />
+              AVA hasn&apos;t taken a call recently —{' '}
+              <Link href="/dashboard/test-ava" className="underline hover:text-amber-300 transition-colors">
+                run a test call
+              </Link>
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* KPI strip */}
-      <div className="grid grid-cols-2 gap-3 mb-8 lg:grid-cols-4">
-        {kpis.map(({ label, value, icon: Icon, color, isText }) => (
-          <div key={label} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
-            <Icon className={cn('size-4 mb-2', color)} />
-            <p className={cn('font-bold text-white', isText ? 'text-sm font-mono truncate' : 'text-2xl')}>{value}</p>
-            <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+      {/* P4: Onboarding nudge */}
+      {showNudge && <NudgeCard hasCalendar={!!config?.calendar_id} />}
+
+      {/* KPI strip — P1b + P5 */}
+      <div className="grid grid-cols-2 gap-3 mb-6 lg:grid-cols-4">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+          <CalendarDays className="size-4 mb-2 text-teal-400" />
+          <p className="text-2xl font-bold text-white">{bookingsToday}</p>
+          <p className="text-xs text-slate-500 mt-0.5">Bookings today</p>
+        </div>
+
+        <div className={cn('rounded-2xl border bg-slate-900 p-4', callbacksPending > 0 ? 'border-amber-500/40' : 'border-slate-800')}>
+          <PhoneCall className={cn('size-4 mb-2', callbacksPending > 0 ? 'text-amber-400' : 'text-slate-400')} />
+          <p className="text-2xl font-bold text-white">{callbacksPending}</p>
+          <p className="text-xs text-slate-500 mt-0.5">Pending callbacks</p>
+        </div>
+
+        <div className={cn('rounded-2xl border bg-slate-900 p-4', messagesPending > 0 ? 'border-amber-500/40' : 'border-slate-800')}>
+          <MessageSquare className={cn('size-4 mb-2', messagesPending > 0 ? 'text-amber-400' : 'text-slate-400')} />
+          <p className="text-2xl font-bold text-white">{messagesPending}</p>
+          <p className="text-xs text-slate-500 mt-0.5">Unread messages</p>
+        </div>
+
+        {/* P1b: AVA number with provisioning state + copy */}
+        <PhoneCard
+          phoneNumber={config?.phone_number ?? null}
+          provisioningStatus={config?.provisioning_status ?? 'pending'}
+        />
+      </div>
+
+      {/* P3: Monthly value widget */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-400">This month</h2>
+          <TrendingUp className="size-4 text-teal-400" />
+        </div>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div>
+            <p className="text-2xl font-bold text-white">{monthlyCallsCount}</p>
+            <p className="text-xs text-slate-500 mt-0.5">Calls answered</p>
           </div>
-        ))}
+          <div>
+            <p className="text-2xl font-bold text-white">{monthlyBookings}</p>
+            <p className="text-xs text-slate-500 mt-0.5">Bookings made</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-white">{monthlyMessages + monthlyCallbacks}</p>
+            <p className="text-xs text-slate-500 mt-0.5">Messages taken</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-teal-400">{timeSavedLabel}</p>
+            <p className="text-xs text-slate-500 mt-0.5">Est. time saved</p>
+          </div>
+        </div>
+
+        {testLimit !== null && (
+          <div className="mt-4 pt-4 border-t border-slate-800">
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className={cn(
+                atTestLimit ? 'text-red-400' :
+                monthlyCallsCount >= testLimit - 1 ? 'text-amber-400' :
+                'text-slate-400'
+              )}>
+                {monthlyCallsCount} / {testLimit} test calls used this month
+              </span>
+              {atTestLimit && (
+                <Link href="/dashboard/settings" className="text-teal-400 hover:text-teal-300 transition-colors">
+                  Upgrade plan
+                </Link>
+              )}
+            </div>
+            <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+              <div
+                className={cn('h-full rounded-full transition-all',
+                  atTestLimit ? 'bg-red-500' :
+                  monthlyCallsCount >= testLimit - 1 ? 'bg-amber-500' :
+                  'bg-teal-500'
+                )}
+                style={{ width: `${Math.min((monthlyCallsCount / testLimit) * 100, 100)}%` }}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Main two-column grid */}
       <div className="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-5">
-        {/* Today's appointments — 60% */}
+        {/* Today's appointments — 60% — P5 empty state */}
         <div className="lg:col-span-3">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400">Today&apos;s appointments</h2>
@@ -160,7 +315,17 @@ export default async function DashboardPage() {
             {todayAppts.length === 0 ? (
               <div className="p-10 text-center">
                 <CalendarDays className="size-8 text-slate-700 mx-auto mb-3" />
-                <p className="text-sm text-slate-400">No appointments today</p>
+                {nextAppt ? (
+                  <>
+                    <p className="text-sm text-slate-400">No appointments today</p>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Next: {nextAppt.preferred_time_human ?? nextAppt.preferred_time_iso}
+                      {nextAppt.caller_name ? ` with ${nextAppt.caller_name}` : ''}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-slate-400">No appointments scheduled — AVA is ready to book</p>
+                )}
               </div>
             ) : (
               todayAppts.map((appt, i) => (
@@ -186,54 +351,73 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Action queue — 40% */}
+        {/* Action queue — 40% — P5 unified empty state */}
         <div className="lg:col-span-2">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400 mb-3">Action queue</h2>
           <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
-            <div className="px-4 py-3 border-b border-slate-800 bg-slate-800/30">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-white flex items-center gap-1.5">
-                  <PhoneCall className="size-3 text-amber-400" /> Callbacks
-                </span>
-                <Link href="/dashboard/callbacks" className="text-xs text-teal-400 hover:text-teal-300">View all</Link>
+            {callbacks.length === 0 && messages.length === 0 ? (
+              <div className="px-5 py-8 text-center">
+                <CalendarCheck className="size-6 text-teal-400/40 mx-auto mb-2" />
+                <p className="text-xs text-slate-500">Nothing needs your attention right now — AVA is handling things.</p>
               </div>
-            </div>
-            {callbacks.length === 0 ? (
-              <div className="px-5 py-4 text-xs text-slate-600">No pending callbacks</div>
             ) : (
-              callbacks.slice(0, 3).map((cb, i) => (
-                <div key={cb.id} className={cn('px-5 py-3', i < Math.min(callbacks.length, 3) - 1 && 'border-b border-slate-800/50')}>
-                  <p className="text-sm font-medium text-white">{cb.caller_name ?? 'Unknown'}</p>
-                  <p className="text-xs text-slate-500">{formatRelative(cb.created_at)}</p>
+              <>
+                <div className="px-4 py-3 border-b border-slate-800 bg-slate-800/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                      <PhoneCall className="size-3 text-amber-400" /> Callbacks
+                    </span>
+                    <Link href="/dashboard/callbacks" className="text-xs text-teal-400 hover:text-teal-300">View all</Link>
+                  </div>
                 </div>
-              ))
-            )}
+                {callbacks.length === 0 ? (
+                  <div className="px-5 py-4 text-xs text-slate-600">No pending callbacks</div>
+                ) : (
+                  callbacks.slice(0, 3).map((cb, i) => (
+                    <div key={cb.id} className={cn('px-5 py-3', i < Math.min(callbacks.length, 3) - 1 && 'border-b border-slate-800/50')}>
+                      <p className="text-sm font-medium text-white">{cb.caller_name ?? 'Unknown'}</p>
+                      <p className="text-xs text-slate-500">{formatRelative(cb.created_at)}</p>
+                    </div>
+                  ))
+                )}
 
-            <div className="px-4 py-3 border-t border-b border-slate-800 bg-slate-800/30 mt-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-white flex items-center gap-1.5">
-                  <MessageSquare className="size-3 text-teal-400" /> Messages
-                </span>
-                <Link href="/dashboard/messages" className="text-xs text-teal-400 hover:text-teal-300">View all</Link>
-              </div>
-            </div>
-            {messages.length === 0 ? (
-              <div className="px-5 py-4 text-xs text-slate-600">No unread messages</div>
-            ) : (
-              messages.slice(0, 3).map((msg, i) => (
-                <div key={msg.id} className={cn('px-5 py-3', i < Math.min(messages.length, 3) - 1 && 'border-b border-slate-800/50')}>
-                  <p className="text-sm font-medium text-white">{msg.caller_name ?? 'Unknown'}</p>
-                  <p className="text-xs text-slate-500 truncate">{msg.message ?? ''}</p>
+                <div className="px-4 py-3 border-t border-b border-slate-800 bg-slate-800/30 mt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                      <MessageSquare className="size-3 text-teal-400" /> Messages
+                    </span>
+                    <Link href="/dashboard/messages" className="text-xs text-teal-400 hover:text-teal-300">View all</Link>
+                  </div>
                 </div>
-              ))
+                {messages.length === 0 ? (
+                  <div className="px-5 py-4 text-xs text-slate-600">No unread messages</div>
+                ) : (
+                  messages.slice(0, 3).map((msg, i) => (
+                    <div key={msg.id} className={cn('px-5 py-3', i < Math.min(messages.length, 3) - 1 && 'border-b border-slate-800/50')}>
+                      <p className="text-sm font-medium text-white">{msg.caller_name ?? 'Unknown'}</p>
+                      <p className="text-xs text-slate-500 truncate">{msg.message ?? ''}</p>
+                    </div>
+                  ))
+                )}
+              </>
             )}
           </div>
         </div>
       </div>
 
-      {/* Recent activity */}
+      {/* P2: Recent activity — improved rows */}
       <div>
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400 mb-3">Recent activity</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400">Recent activity</h2>
+          {plan === 'lite' && activity.length >= 10 && (
+            <span className="text-xs text-slate-500">
+              Last 10 shown —{' '}
+              <Link href="/dashboard/settings" className="text-teal-400 hover:text-teal-300 transition-colors">
+                upgrade for full history
+              </Link>
+            </span>
+          )}
+        </div>
         <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
           {activity.length === 0 ? (
             <div className="p-10 text-center">
@@ -245,24 +429,47 @@ export default async function DashboardPage() {
             activity.map((item, i) => (
               <div key={item.id} className={cn('flex items-start gap-3 px-5 py-3.5', i < activity.length - 1 && 'border-b border-slate-800')}>
                 <span className={cn(
-                  'size-1.5 rounded-full shrink-0 mt-2',
-                  item.type === 'appointment' ? 'bg-teal-400' :
-                  item.type === 'callback' ? 'bg-amber-400' : 'bg-slate-400'
-                )} />
+                  'size-5 rounded-full flex items-center justify-center shrink-0 mt-0.5',
+                  item.type === 'appointment' ? 'bg-teal-500/10' :
+                  item.type === 'callback' ? 'bg-amber-500/10' : 'bg-slate-700/50'
+                )}>
+                  {item.type === 'appointment' ? (
+                    <CalendarDays className="size-2.5 text-teal-400" />
+                  ) : item.type === 'callback' ? (
+                    <PhoneCall className="size-2.5 text-amber-400" />
+                  ) : (
+                    <MessageSquare className="size-2.5 text-slate-400" />
+                  )}
+                </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-white">
-                    <span className="font-medium">{TYPE_LABEL[item.type] ?? item.type}</span>
-                    {item.caller_name ? ` — ${item.caller_name}` : ''}
-                    {item.service_type ? ` · ${item.service_type}` : ''}
+                    <span className="font-medium">{item.caller_name ?? 'Unknown caller'}</span>
+                    {item.service_type ? <span className="text-slate-400"> · {item.service_type}</span> : null}
                   </p>
-                  {item.message && <p className="text-xs text-slate-500 truncate mt-0.5">{item.message}</p>}
+                  {item.type === 'appointment' && item.preferred_time_human && (
+                    <p className="text-xs text-teal-400/70 mt-0.5">{item.preferred_time_human}</p>
+                  )}
+                  {item.message && item.type !== 'appointment' && (
+                    <p className="text-xs text-slate-500 truncate mt-0.5">{item.message}</p>
+                  )}
                 </div>
-                <span className="text-xs text-slate-600 shrink-0">{formatRelative(item.created_at)}</span>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className={cn(
+                    'text-[10px] font-medium px-1.5 py-0.5 rounded-full',
+                    item.type === 'appointment' ? 'bg-teal-500/10 text-teal-400' :
+                    item.type === 'callback' ? 'bg-amber-500/10 text-amber-400' :
+                    'bg-slate-700 text-slate-400'
+                  )}>
+                    {TYPE_LABEL[item.type] ?? item.type}
+                  </span>
+                  <span className="text-xs text-slate-600">{formatRelative(item.created_at)}</span>
+                </div>
               </div>
             ))
           )}
         </div>
       </div>
+
     </div>
   )
 }
