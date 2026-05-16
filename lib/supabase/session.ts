@@ -16,7 +16,7 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet, headers) {
+        setAll(cookiesToSet, headers = {}) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
@@ -32,14 +32,11 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: If you remove getClaims() and you use server-side rendering
-  // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims()
+  // Do not run code between createServerClient and supabase.auth.getUser().
+  // getUser() (not getClaims()) triggers token refresh when the access token
+  // has expired, updating request cookies so server components see the new token.
+  const { data: { user } } = await supabase.auth.getUser()
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  return { response: supabaseResponse, claims: data?.claims ?? null, supabase }
+  return { response: supabaseResponse, user, supabase }
 }

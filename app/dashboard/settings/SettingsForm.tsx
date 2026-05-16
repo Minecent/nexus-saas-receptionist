@@ -537,7 +537,7 @@ export default function SettingsForm({
               </div>
             </div>
             <Link
-              href="/pricing#pricing"
+              href="/checkout?plan=pro"
               className="flex items-center gap-2 rounded-lg bg-teal-500 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600 transition-colors"
             >
               <ArrowUpRight className="size-3.5" /> Upgrade plan

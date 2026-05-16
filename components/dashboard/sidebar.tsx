@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, CalendarDays, MessageSquare, PhoneCall, Settings, LogOut, Zap, Mic } from 'lucide-react'
+import { LayoutDashboard, CalendarDays, MessageSquare, PhoneCall, Settings, LogOut, Zap, Mic, ArrowUpRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV = [
@@ -54,11 +54,19 @@ export default function DashboardSidebar({ businessName, plan, email }: Props) {
           })}
         </nav>
 
-        <div className="px-4 pb-2">
+        <div className="px-4 pb-2 space-y-1.5">
           <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900 px-3 py-2">
             <Zap className="size-3 text-teal-400 shrink-0" />
             <span className="text-xs font-semibold capitalize text-teal-400">{plan} plan</span>
           </div>
+          {plan === 'lite' && (
+            <Link
+              href="/checkout?plan=pro"
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-teal-500/30 bg-teal-500/10 px-3 py-1.5 text-xs font-semibold text-teal-400 hover:bg-teal-500/20 transition-colors"
+            >
+              <ArrowUpRight className="size-3" /> Upgrade plan
+            </Link>
+          )}
         </div>
 
         <div className="border-t border-slate-800 px-4 py-4 space-y-1">
