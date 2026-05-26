@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { label: "Pricing", href: "#pricing" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "mailto:contact@nexus.ai" },
+  { label: "Log in", href: "/login" },
 ];
 
 export function MobileNav() {

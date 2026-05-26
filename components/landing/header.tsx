@@ -30,9 +30,8 @@ export default async function Header() {
           </Link>
         </nav>
 
-        <MobileNav />
-
-        <div className="flex items-center gap-2">
+        {/* Desktop auth buttons */}
+        <div className="hidden items-center gap-2 sm:flex">
           {user ? (
             <HeaderUserMenu email={user.email as string} />
           ) : (
@@ -51,6 +50,21 @@ export default async function Header() {
               </Link>
             </>
           )}
+        </div>
+
+        {/* Mobile: Get Started CTA + hamburger */}
+        <div className="flex items-center gap-2 sm:hidden">
+          {user ? (
+            <HeaderUserMenu email={user.email as string} />
+          ) : (
+            <Link
+              href="/signup"
+              className="rounded-lg bg-teal-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-teal-600"
+            >
+              Get Started
+            </Link>
+          )}
+          <MobileNav />
         </div>
       </div>
     </header>
