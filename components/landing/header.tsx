@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { HeaderUserMenu } from './header-user-menu'
+import { MobileNav } from './mobile-nav'
 
 export default async function Header() {
   const supabase = await createClient()
@@ -28,6 +29,8 @@ export default async function Header() {
             Contact
           </Link>
         </nav>
+
+        <MobileNav />
 
         <div className="flex items-center gap-2">
           {user ? (

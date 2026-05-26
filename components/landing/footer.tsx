@@ -8,7 +8,7 @@ const links = {
   ],
   Company: [
     { label: 'About', href: '#' },
-    { label: 'Blog', href: '#' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: 'mailto:contact@nexus.ai' },
   ],
   Legal: [
