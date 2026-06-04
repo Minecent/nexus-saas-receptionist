@@ -1,12 +1,20 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Check, Minus } from 'lucide-react'
+import { blogPostingSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   title: 'Abby Connect Alternative 2026: NEXUS vs Abby Connect (Pricing + Features)',
   description:
     'Abby Connect starts at $299/month for 100 minutes of live answering. NEXUS starts at $25/month with 24/7 AI coverage. Full comparison for 2026.',
 }
+
+const schema = blogPostingSchema({
+  headline: 'Abby Connect Alternative 2026: NEXUS vs Abby Connect (Pricing + Features)',
+  description: 'Abby Connect starts at $299/month for 100 minutes of live answering. NEXUS starts at $25/month with 24/7 AI coverage. Full comparison for 2026.',
+  slug: 'nexus-vs-abby-connect',
+  keywords: ['Abby Connect alternative', 'AI receptionist', 'virtual receptionist comparison', 'NEXUS vs Abby Connect'],
+})
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -23,6 +31,7 @@ function Disclaimer({ children }: { children: React.ReactNode }) {
 export default function NexusVsAbbyConnectPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4 sm:px-6">
           <Link href="/" className="text-lg font-bold tracking-tight">

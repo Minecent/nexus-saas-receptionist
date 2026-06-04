@@ -1,0 +1,50 @@
+# NEXUS AI Receptionist
+
+> NEXUS is an AI-powered phone receptionist for small businesses. It answers every call 24/7, books appointments via Google Calendar, takes messages, qualifies leads, and sends instant call summaries — starting at $25/month. No contracts. Setup in 24–48 hours.
+
+## Product Overview
+
+- [Homepage](https://nexus-saas-receptionist.vercel.app/): Full product overview, features, pricing, and live demo
+- Answers calls in 1 ring, 24/7 including nights, weekends, and holidays
+- Handles unlimited simultaneous calls — no busy signals, no hold times
+- Books appointments directly into Google Calendar
+- Sends call transcripts and summaries via email and SMS
+- Integrates with 7,000+ apps via Zapier (Pro and above)
+- Custom AI agent name, voice, and personality per business
+
+## Pricing
+
+- **Lite** — $25/month: 30 calls/month, 24/7 answering, Google Calendar booking, email summaries
+- **Pro** — $149/month: 500 minutes/month, SMS + email confirmations, Slack alerts, smart call forwarding, Zapier integration
+- **Scale** — $349/month: 1,500 minutes/month, multi-destination routing, Salesforce and HubSpot integrations, 90-day call recordings
+- **Enterprise** — Custom pricing: unlimited minutes, dedicated support, SLA guarantee
+
+## Comparisons
+
+- [NEXUS vs Ruby Receptionists](https://nexus-saas-receptionist.vercel.app/blog/nexus-vs-ruby-receptionists): NEXUS starts at $25/mo vs Ruby's $235/mo entry point — 94% cheaper at the entry tier
+- [NEXUS vs Smith.ai](https://nexus-saas-receptionist.vercel.app/blog/nexus-vs-smith-ai): NEXUS Pro handles 165+ calls/mo for $149 vs Smith.ai at ~$975/mo for 100 calls — saving $9,900+/year
+- [NEXUS vs AnswerConnect](https://nexus-saas-receptionist.vercel.app/blog/nexus-vs-answerconnect): Flat-rate vs per-minute pricing comparison
+- [NEXUS vs Davinci Virtual](https://nexus-saas-receptionist.vercel.app/blog/nexus-vs-davinci-virtual): 24/7 AI coverage vs business-hours-only live agents
+- [NEXUS vs PATLive](https://nexus-saas-receptionist.vercel.app/blog/nexus-vs-patlive): Flat-rate predictable billing vs per-minute variable cost
+- [NEXUS vs Abby Connect](https://nexus-saas-receptionist.vercel.app/blog/nexus-vs-abby-connect): Unlimited simultaneous calls vs capped concurrent agent plans
+
+## Target Industries
+
+- Plumbers, HVAC, electricians, and home service trades
+- Medical offices, dental practices, and healthcare providers
+- Property management companies and real estate agencies
+- Law firms and professional services
+- Fitness studios, salons, and wellness businesses
+- Restaurants and hospitality
+
+## Key Facts
+
+- Average business misses 62% of inbound calls
+- Human receptionist costs ~$48,000/year; NEXUS starts at $300/year
+- Setup time: 24–48 hours from signup to live
+- Call forwarding setup: ~5 minutes with any phone provider
+- No contracts — cancel anytime
+
+## Blog
+
+- [Blog index](https://nexus-saas-receptionist.vercel.app/blog): Competitor comparisons and guides for AI receptionist buyers

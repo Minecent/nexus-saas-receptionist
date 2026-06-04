@@ -1,15 +1,24 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
+import { blogPostingSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   title: 'NEXUS vs AnswerConnect (2026): Pricing & Features Compared',
   description: 'AnswerConnect charges per minute with surprise overage fees. NEXUS charges a flat monthly rate with 24/7 AI answering. Full comparison for 2026.',
 }
 
+const schema = blogPostingSchema({
+  headline: 'NEXUS vs AnswerConnect (2026): Pricing & Features Compared',
+  description: 'AnswerConnect charges per minute with surprise overage fees. NEXUS charges a flat monthly rate with 24/7 AI answering. Full comparison for 2026.',
+  slug: 'nexus-vs-answerconnect',
+  keywords: ['AnswerConnect alternative', 'AI receptionist', 'virtual receptionist comparison', 'NEXUS vs AnswerConnect'],
+})
+
 export default function NexusVsAnswerConnectPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4 sm:px-6">
           <Link href="/" className="text-lg font-bold tracking-tight">
