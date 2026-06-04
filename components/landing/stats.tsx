@@ -4,6 +4,7 @@ const stats = [
     title: 'of calls go unanswered',
     description:
       'Your team is busy helping customers. Calls still come in. NEXUS picks up every one so nothing slips through the cracks.',
+    source: 'BIA/Kelsey SMB Call Analytics Report',
   },
   {
     number: '5×',
@@ -46,6 +47,9 @@ export default function Stats() {
               <div className="mb-2 text-4xl font-bold text-teal-400">{stat.number}</div>
               <div className="mb-3 text-sm font-semibold text-white">{stat.title}</div>
               <p className="text-sm leading-relaxed text-slate-400">{stat.description}</p>
+              {stat.source && (
+                <p className="mt-3 text-xs text-slate-600">Source: {stat.source}</p>
+              )}
             </div>
           ))}
         </div>

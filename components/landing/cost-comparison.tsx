@@ -32,8 +32,8 @@ export default function CostComparison() {
               A fraction of the cost. None of the headaches.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-slate-400">
-              The average small business spends $48,000 per year on a full-time receptionist.
-              NEXUS starts at $25/month — and works around the clock.
+              The average small business spends $48,000 per year on a full-time receptionist.{' '}
+              <sup className="text-slate-500 text-xs">*</sup> NEXUS starts at $25/month — and works around the clock.
             </p>
           </div>
         </FadeIn>
@@ -98,6 +98,9 @@ export default function CostComparison() {
             </p>
           </div>
         </FadeIn>
+        <p className="mt-6 text-center text-xs text-slate-700">
+          * Based on U.S. Bureau of Labor Statistics median receptionist salary plus employer payroll taxes and benefits.
+        </p>
       </div>
     </section>
   )
