@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Check, Shield } from 'lucide-react'
 
 const trustItems = [
-  { icon: Shield, label: '30-day money-back guarantee' },
+  { icon: Shield, label: '14-day guarantee on Lite & Pro' },
   { icon: Check, label: 'No credit card to start' },
   { icon: Check, label: 'Cancel anytime' },
   { icon: Check, label: 'Live in 48 hours' },

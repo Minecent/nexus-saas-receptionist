@@ -98,8 +98,8 @@ const tiers = [
     crossOut: null,
     volume: 'Unlimited minutes',
     estimate: null,
-    description: 'Complex integrations and high-volume operations',
-    cta: 'Book a call',
+    description: 'Scoped and quoted upfront — no surprises',
+    cta: 'Book a discovery call',
     href: 'mailto:sales@nexus.ai',
     highlight: false,
     overage: null,
@@ -107,9 +107,10 @@ const tiers = [
     features: [
       'Everything in Scale, plus:',
       'Unlimited minutes (no overages)',
-      'Custom voice persona',
+      'Custom voice persona & branding',
       'Unlimited custom workflows',
       'Dedicated success manager',
+      'Fixed-scope agreement before work begins',
     ],
   },
 ]
@@ -289,7 +290,7 @@ export default function Pricing() {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <div className="flex items-center gap-1.5">
             <Shield className="size-3.5 shrink-0 text-teal-400" />
-            <span className="text-xs text-slate-400">30-day money-back guarantee</span>
+            <span className="text-xs text-slate-400">14-day money-back on Lite &amp; Pro</span>
           </div>
           {['Cancel anytime', 'No setup fees', 'No contracts', 'Transparent billing'].map((label) => (
             <div key={label} className="flex items-center gap-1.5">
