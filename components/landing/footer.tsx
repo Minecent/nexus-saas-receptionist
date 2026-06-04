@@ -7,7 +7,7 @@ const links = {
     { label: 'AI Receptionist', href: '#features' },
   ],
   Company: [
-    { label: 'About', href: '#' },
+    { label: 'About', href: '/about' },
     { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: 'mailto:contact@nexus.ai' },
   ],
@@ -55,12 +55,12 @@ export default function Footer() {
               <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">
                 {group}
               </p>
-              <ul className="mt-3 flex flex-col gap-2">
+              <ul className="mt-3 flex flex-col gap-1">
                 {items.map((item) => (
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className="text-sm text-slate-500 transition-colors hover:text-white"
+                      className="inline-block py-1.5 text-sm text-slate-500 transition-colors hover:text-white"
                     >
                       {item.label}
                     </Link>

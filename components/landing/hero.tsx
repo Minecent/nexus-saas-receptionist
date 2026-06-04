@@ -5,7 +5,7 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-slate-900">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.12),transparent_60%)]" />
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-28">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-28">
         <div className="flex flex-col gap-6">
           <div className="inline-flex w-fit items-center rounded-full border border-teal-500/30 bg-teal-500/10 px-3 py-1 text-xs font-medium text-teal-400">
             AI-powered front desk for modern businesses
@@ -18,16 +18,16 @@ export default function Hero() {
             NEXUS answers every call 24/7, takes perfect messages, books appointments, and handles
             customer inquiries — so your team can focus on what matters most. Set up in minutes.
           </p>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link
               href="/signup"
-              className="rounded-lg bg-teal-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-teal-600"
+              className="rounded-lg bg-teal-500 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-teal-600 text-center sm:text-left"
             >
               Start free — from $25/mo
             </Link>
             <Link
               href="#pricing"
-              className="rounded-lg border border-slate-700 bg-transparent px-6 py-3 text-base font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
+              className="rounded-lg border border-slate-700 bg-transparent px-6 py-3.5 text-base font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white text-center sm:text-left"
             >
               See pricing
             </Link>

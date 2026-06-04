@@ -69,7 +69,7 @@ export default function Faq() {
           {faqs.map((faq, i) => (
             <FadeIn key={i} delay={i * 40}>
               <button
-                className="flex w-full items-start gap-4 py-5 text-left"
+                className="flex w-full items-start gap-4 py-5 text-left min-h-[56px]"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 aria-expanded={openIndex === i}
               >

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { Play, Pause, Volume2 } from 'lucide-react'
 import { FadeIn } from './fade-in'
 
+// Fewer bars on mobile (via CSS), same data
 const WAVEFORM_BARS = Array.from({ length: 40 }, (_, i) => {
   const heights = [30, 50, 70, 90, 60, 40, 80, 55, 35, 75, 95, 65, 45, 85, 50, 30, 70, 90, 40, 60, 80, 50, 35, 75, 55, 90, 40, 65, 85, 45, 70, 30, 95, 50, 60, 80, 35, 75, 45, 65]
   return heights[i % heights.length]
@@ -55,12 +56,12 @@ export default function DemoAudio() {
               </div>
             </div>
 
-            {/* Waveform */}
-            <div className="mb-5 flex h-14 items-center gap-0.5">
+            {/* Waveform — hide every other bar on mobile to prevent overflow */}
+            <div className="mb-5 flex h-14 items-center gap-0.5 overflow-hidden">
               {WAVEFORM_BARS.map((h, i) => (
                 <div
                   key={i}
-                  className="flex-1 rounded-full bg-slate-700 transition-colors"
+                  className={`flex-1 rounded-full bg-slate-700 transition-colors${i % 2 === 1 ? ' hidden sm:block' : ''}`}
                   style={{ height: `${h}%` }}
                 />
               ))}

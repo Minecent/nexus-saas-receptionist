@@ -19,16 +19,16 @@ export default function CtaBanner() {
           Start with the plan that fits your business. Scale up as you grow.
           Your first call answered in under 48 hours.
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
           <Link
             href="/signup"
-            className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-teal-600 transition-colors hover:bg-teal-50"
+            className="rounded-lg bg-white px-6 py-3.5 text-sm font-semibold text-teal-600 transition-colors hover:bg-teal-50 text-center"
           >
             Get Started — from $25/mo
           </Link>
           <Link
             href="mailto:contact@nexus.ai"
-            className="rounded-lg border border-white/40 bg-transparent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+            className="rounded-lg border border-white/40 bg-transparent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 text-center"
           >
             Talk to us first
           </Link>
