@@ -18,26 +18,28 @@ export default function Hero() {
             NEXUS answers every call 24/7, takes perfect messages, books appointments, and handles
             customer inquiries — so your team can focus on what matters most. Set up in minutes.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/signup"
               className="rounded-lg bg-teal-500 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-teal-600"
             >
-              Get Started
+              Start free — from $25/mo
             </Link>
             <Link
-              href="#features"
+              href="#pricing"
               className="rounded-lg border border-slate-700 bg-transparent px-6 py-3 text-base font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
             >
-              Learn More
+              See pricing
             </Link>
           </div>
+
+          <p className="text-xs text-slate-500">No credit card required · Cancel anytime</p>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
             {[
               'Keep your existing number',
               'Live in 24–48 hours',
-              'Cancel anytime',
+              '30-day money-back guarantee',
             ].map((item) => (
               <span key={item} className="flex items-center gap-1.5 text-xs text-slate-400">
                 <span className="size-1.5 rounded-full bg-teal-400" />
