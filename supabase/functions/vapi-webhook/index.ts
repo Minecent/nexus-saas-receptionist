@@ -54,12 +54,13 @@ Deno.serve(async (req) => {
     // Map ended reason to status
     const status = mapStatus(endedReason)
 
-    // Upsert call record
+    // Upsert call record — including new columns; AI fields left NULL for n8n to fill
     const { error } = await supabase
       .from('calls')
       .upsert({
         user_id: userId,
         vapi_call_id: vapiCallId,
+        assistant_id: assistantId,
         caller_number: callerNumber,
         duration_seconds: durationSeconds,
         status,
@@ -70,24 +71,34 @@ Deno.serve(async (req) => {
         cost_cents: costCents,
         started_at: startedAt,
         ended_at: endedAt,
-        metadata: { ended_reason: endedReason, assistant_id: assistantId },
+        ended_reason: endedReason,
+        raw_report: body,
+        metadata: { assistant_id: assistantId },
       }, { onConflict: 'vapi_call_id' })
 
     if (error) console.error('[vapi-webhook] upsert error', error)
 
-    // Forward to Zapier sub-workflow if n8n URL is set
+    // Forward to n8n for AI analysis — only for completed calls with a transcript
     const n8nUrl = Deno.env.get('N8N_ZAPIER_WEBHOOK_URL')
-    if (n8nUrl && status !== 'in_progress') {
+    if (n8nUrl && type === 'end-of-call-report' && transcript) {
       fetch(n8nUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          event_type: status === 'missed' ? 'missed_call' : type === 'end-of-call-report' ? 'call_completed' : type,
+          event_type: 'call_completed',
+          vapi_call_id: vapiCallId,
           user_id: userId,
+          assistant_id: assistantId,
+          caller_number: callerNumber,
+          duration_seconds: durationSeconds,
+          ended_reason: endedReason,
+          status,
+          transcript,
+          summary,
+          recording_url: recordingUrl,
           timestamp: endedAt ?? new Date().toISOString(),
-          data: { caller_number: callerNumber, duration_seconds: durationSeconds, summary, status },
         }),
-      }).catch(() => {})
+      }).catch((e) => console.error('[vapi-webhook] n8n forward error', e))
     }
 
     return ok()
