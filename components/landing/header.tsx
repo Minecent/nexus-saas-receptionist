@@ -28,7 +28,7 @@ export default async function Header() {
           <Link href="/about" className="text-slate-400 transition-colors hover:text-white">
             About
           </Link>
-          <Link href="mailto:sales@nexusconsultancy.app" className="text-slate-400 transition-colors hover:text-white">
+          <Link href="/contact" className="text-slate-400 transition-colors hover:text-white">
             Contact
           </Link>
         </nav>

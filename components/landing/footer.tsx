@@ -9,7 +9,7 @@ const links = {
   Company: [
     { label: 'About', href: '/about' },
     { label: 'Blog', href: '/blog' },
-    { label: 'Contact', href: 'mailto:sales@nexusconsultancy.app' },
+    { label: 'Contact', href: '/contact' },
   ],
   Legal: [
     { label: 'Privacy Policy', href: '/legal/privacy' },
