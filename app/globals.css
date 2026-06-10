@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import url("https://assets.calendly.com/assets/external/widget.css");
 
 @custom-variant dark (&:is(.dark *));
 

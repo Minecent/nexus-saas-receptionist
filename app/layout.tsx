@@ -79,6 +79,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://assets.calendly.com/assets/external/widget.css"
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         {children}
         <Script
