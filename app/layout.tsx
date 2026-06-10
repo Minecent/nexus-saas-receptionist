@@ -18,7 +18,7 @@ const siteUrl = "https://nexus-saas-receptionist.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "NEXUS — AI Receptionist for Small Businesses | 24/7 Call Answering",
+    default: "AI Receptionist for Businesses of Every Size — 24/7 Call Answering",
     template: "%s | NEXUS AI Receptionist",
   },
   description:
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "AI phone answering service",
     "24/7 call answering",
     "automated receptionist",
-    "small business phone answering",
+    "business phone answering",
     "AI answering service",
   ],
   authors: [{ name: "NEXUS AI", url: siteUrl }],
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     siteName: "NEXUS AI Receptionist",
     title: "NEXUS — AI Receptionist That Never Misses a Call",
     description:
-      "24/7 AI phone answering for small businesses. Books appointments, takes messages, qualifies leads. From $25/month — no contracts.",
+      "24/7 AI phone answering for businesses of every size. Books appointments, takes messages, qualifies leads. From $25/month — no contracts.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "NEXUS AI Receptionist — 24/7 AI phone answering for small businesses",
+        alt: "NEXUS AI Receptionist — 24/7 AI phone answering for businesses of every size",
       },
     ],
   },
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NEXUS — AI Receptionist That Never Misses a Call",
     description:
-      "24/7 AI phone answering for small businesses. Books appointments, takes messages, qualifies leads. From $25/month.",
+      "24/7 AI phone answering for businesses of every size. Books appointments, takes messages, qualifies leads. From $25/month.",
     images: ["/og-image.png"],
   },
   robots: {

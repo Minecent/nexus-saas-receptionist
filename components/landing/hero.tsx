@@ -11,12 +11,16 @@ export default function Hero() {
             AI-powered front desk for modern businesses
           </div>
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-            AI receptionists that{' '}
-            <span className="text-teal-400">never miss a call</span>
+            Every missed call is{' '}
+            <span className="text-teal-400">a customer calling your competitor</span>
           </h1>
           <p className="max-w-md text-base leading-relaxed text-slate-400">
             NEXUS answers every call 24/7, takes perfect messages, books appointments, and handles
             customer inquiries — so your team can focus on what matters most. Set up in minutes.
+          </p>
+          <p className="max-w-md text-sm leading-relaxed text-slate-500">
+            From solo operators to multi-location teams — NEXUS answers every call, so no
+            business ever misses a customer.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link

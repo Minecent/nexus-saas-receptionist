@@ -24,7 +24,7 @@ const industries = [
       'After-hours patients can\'t reach anyone for urgent but non-emergency needs',
     ],
     solution:
-      'NEXUS schedules appointments, routes prescription requests to the right staff, and handles after-hours inquiries — all HIPAA-consciously.',
+      'NEXUS schedules appointments, routes prescription requests to the right staff, and handles after-hours inquiries — with patient privacy and confidentiality in mind.',
   },
   {
     icon: Building2,

@@ -140,6 +140,10 @@ export default function Pricing() {
           <p className="mx-auto mt-4 max-w-xl text-base text-slate-400">
             All plans include 24/7 call answering. Scale up as you grow. No contracts.
           </p>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-slate-500">
+            Whether you&apos;re a one-person shop or running multiple locations, there&apos;s a
+            plan built for how you work.
+          </p>
 
           {/* Annual/Monthly toggle */}
           <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-800 p-1">
