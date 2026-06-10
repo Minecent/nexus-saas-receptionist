@@ -269,6 +269,7 @@ CREATE INDEX IF NOT EXISTS calls_started_at_idx ON public.calls(started_at DESC)
 CREATE TABLE IF NOT EXISTS public.test_call_usage (
   id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id           UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  call_id           TEXT,
   month_year        TEXT NOT NULL,
   started_at        TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   ended_at          TIMESTAMP WITH TIME ZONE,
@@ -280,7 +281,7 @@ CREATE TABLE IF NOT EXISTS public.test_call_usage (
 
 ALTER TABLE public.test_call_usage ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own test call usage"
+CREATE POLICY "Users can read their own test call usage"
   ON public.test_call_usage FOR SELECT USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can insert their own test call usage"
