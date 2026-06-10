@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: "Pricing", href: "#pricing" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "mailto:contact@nexus.ai" },
+  { label: "Contact", href: "mailto:sales@nexusconsultancy.app" },
   { label: "Log in", href: "/login" },
 ];
 

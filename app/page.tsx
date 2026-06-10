@@ -31,13 +31,13 @@ const organizationSchema = {
     {
       "@type": "ContactPoint",
       "contactType": "sales",
-      "email": "sales@nexus.ai",
+      "email": "sales@nexusconsultancy.app",
       "availableLanguage": "English",
     },
     {
       "@type": "ContactPoint",
       "contactType": "customer support",
-      "email": "contact@nexus.ai",
+      "email": "sales@nexusconsultancy.app",
       "availableLanguage": "English",
     },
   ],

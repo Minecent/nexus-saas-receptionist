@@ -32,7 +32,7 @@ export default function PrivacyPage() {
 
         <div className="mb-10 rounded-xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-400 leading-relaxed">
           <p>NEXUS AI Consultancy ("NEXUS," "we," "us," or "our") respects your privacy and is committed to protecting the personal information you entrust to us. This Privacy Policy explains how we collect, use, store, share, and protect your personal information when you access or use our AI-powered virtual receptionist platform (including "AVA"), automation services, websites, and related offerings (collectively, the "Service").</p>
-          <p className="mt-3">By accessing or using the Service, you acknowledge that you have read and understood this Privacy Policy. For questions, contact us at <a href="mailto:privacy@nexus.ai" className="text-teal-400 hover:underline">privacy@nexus.ai</a>.</p>
+          <p className="mt-3">By accessing or using the Service, you acknowledge that you have read and understood this Privacy Policy. For questions, contact us at <a href="mailto:sales@nexusconsultancy.app" className="text-teal-400 hover:underline">sales@nexusconsultancy.app</a>.</p>
         </div>
 
         <div>
@@ -138,7 +138,7 @@ export default function PrivacyPage() {
                 </tbody>
               </table>
             </div>
-            <p>After retention periods expire, data is deleted or anonymized, except where longer retention is required by law. Customers may request earlier deletion by contacting <a href="mailto:privacy@nexus.ai" className="text-teal-400 hover:underline">privacy@nexus.ai</a>.</p>
+            <p>After retention periods expire, data is deleted or anonymized, except where longer retention is required by law. Customers may request earlier deletion by contacting <a href="mailto:sales@nexusconsultancy.app" className="text-teal-400 hover:underline">sales@nexusconsultancy.app</a>.</p>
           </Section>
 
           <Section id="7" title="7. Data Security">
@@ -182,7 +182,7 @@ export default function PrivacyPage() {
               <p>California residents have additional rights, including: the right to know what personal information is collected, used, and shared; the right to delete personal information; the right to correct inaccurate personal information; the right to opt out of the sale or sharing of personal information (NEXUS does not sell personal information); and the right to non-discrimination for exercising privacy rights.</p>
             </Subsection>
             <Subsection title="8.4 How to Exercise Your Rights">
-              <p>Contact us at <a href="mailto:privacy@nexus.ai" className="text-teal-400 hover:underline">privacy@nexus.ai</a>. We may need to verify your identity before fulfilling your request. We will respond within the timeframes required by applicable law (typically 30 days under GDPR; 45 days under CCPA, extendable by 45 additional days).</p>
+              <p>Contact us at <a href="mailto:sales@nexusconsultancy.app" className="text-teal-400 hover:underline">sales@nexusconsultancy.app</a>. We may need to verify your identity before fulfilling your request. We will respond within the timeframes required by applicable law (typically 30 days under GDPR; 45 days under CCPA, extendable by 45 additional days).</p>
               <p>If you are an end user (caller) whose data was processed through a Customer's AVA agent, please contact the Customer directly first, as they are the data controller for that information.</p>
             </Subsection>
           </Section>
@@ -193,12 +193,12 @@ export default function PrivacyPage() {
               <p>NEXUS may use <strong className="text-slate-300">aggregated and anonymized</strong> data to improve the Service's performance and reliability. We do not use identifiable Customer Data or End-User Data to train AI models operated by third parties without explicit consent or contractual permission.</p>
             </Subsection>
             <Subsection title="9.2 Right to Human Review">
-              <p>For decisions that produce significant effects on you and are based solely on automated processing (in jurisdictions where this right applies), you have the right to request human review. Contact <a href="mailto:privacy@nexus.ai" className="text-teal-400 hover:underline">privacy@nexus.ai</a> to request review.</p>
+              <p>For decisions that produce significant effects on you and are based solely on automated processing (in jurisdictions where this right applies), you have the right to request human review. Contact <a href="mailto:sales@nexusconsultancy.app" className="text-teal-400 hover:underline">sales@nexusconsultancy.app</a> to request review.</p>
             </Subsection>
           </Section>
 
           <Section id="10" title="10. Children's Privacy">
-            <p>The Service is not directed at children under the age of 18 (or the applicable age of digital consent in your jurisdiction). We do not knowingly collect personal information from minors. If we become aware that we have collected information from a minor, we will delete it promptly. If you believe a minor has provided us with personal information, contact us at <a href="mailto:privacy@nexus.ai" className="text-teal-400 hover:underline">privacy@nexus.ai</a>.</p>
+            <p>The Service is not directed at children under the age of 18 (or the applicable age of digital consent in your jurisdiction). We do not knowingly collect personal information from minors. If we become aware that we have collected information from a minor, we will delete it promptly. If you believe a minor has provided us with personal information, contact us at <a href="mailto:sales@nexusconsultancy.app" className="text-teal-400 hover:underline">sales@nexusconsultancy.app</a>.</p>
           </Section>
 
           <Section id="11" title="11. Third-Party Links and Services">
@@ -224,7 +224,7 @@ export default function PrivacyPage() {
             <p>For privacy-related questions, requests, or complaints:</p>
             <div className="mt-3 rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm">
               <p className="font-semibold text-white">NEXUS AI Consultancy — Privacy Officer</p>
-              <p className="text-slate-400">Email: <a href="mailto:privacy@nexus.ai" className="text-teal-400 hover:underline">privacy@nexus.ai</a></p>
+              <p className="text-slate-400">Email: <a href="mailto:sales@nexusconsultancy.app" className="text-teal-400 hover:underline">sales@nexusconsultancy.app</a></p>
               <p className="mt-3 text-slate-500 text-xs">
                 <strong className="text-slate-400">EU/EEA users:</strong> You have the right to lodge a complaint with your local supervisory authority. In the Netherlands, this is the{' '}
                 <a href="https://autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline">

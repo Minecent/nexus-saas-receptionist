@@ -100,7 +100,7 @@ const tiers = [
     estimate: null,
     description: 'Scoped and quoted upfront — no surprises',
     cta: 'Book a discovery call',
-    href: 'mailto:sales@nexus.ai',
+    href: 'mailto:sales@nexusconsultancy.app',
     highlight: false,
     overage: null,
     savingsVsReceptionist: undefined as string | undefined,

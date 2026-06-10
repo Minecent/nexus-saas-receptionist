@@ -27,7 +27,7 @@ export default function CtaBanner() {
             Get Started — from $25/mo
           </Link>
           <Link
-            href="mailto:contact@nexus.ai"
+            href="mailto:sales@nexusconsultancy.app"
             className="rounded-lg border border-white/40 bg-transparent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 text-center"
           >
             Talk to us first

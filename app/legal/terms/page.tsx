@@ -229,7 +229,7 @@ export default function TermsPage() {
             <p>For questions, support, or notices regarding these Terms, please contact:</p>
             <div className="mt-3 rounded-xl border border-slate-800 bg-slate-900 p-4 text-sm">
               <p className="font-semibold text-white">NEXUS AI Consultancy</p>
-              <p className="text-slate-400">Email: <a href="mailto:support@nexus.ai" className="text-teal-400 hover:underline">support@nexus.ai</a></p>
+              <p className="text-slate-400">Email: <a href="mailto:sales@nexusconsultancy.app" className="text-teal-400 hover:underline">sales@nexusconsultancy.app</a></p>
             </div>
           </Section>
 

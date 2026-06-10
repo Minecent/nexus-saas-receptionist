@@ -315,7 +315,7 @@ export default function NexusVsRubyPage() {
               Get Started
             </Link>
             <Link
-              href="mailto:sales@nexus.ai"
+              href="mailto:sales@nexusconsultancy.app"
               className="rounded-lg border border-white/40 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
             >
               Schedule a Demo

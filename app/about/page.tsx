@@ -115,16 +115,16 @@ export default function AboutPage() {
             </p>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <Link
-                href="mailto:contact@nexus.ai"
+                href="mailto:sales@nexusconsultancy.app"
                 className="rounded-lg bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-600"
               >
-                contact@nexus.ai
+                sales@nexusconsultancy.app
               </Link>
               <Link
-                href="mailto:sales@nexus.ai"
+                href="mailto:sales@nexusconsultancy.app"
                 className="rounded-lg border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
               >
-                sales@nexus.ai
+                sales@nexusconsultancy.app
               </Link>
             </div>
             <p className="mt-8 text-sm text-slate-600">

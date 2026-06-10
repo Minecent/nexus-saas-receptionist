@@ -366,7 +366,7 @@ export default function AgentSettingsPage() {
           </div>
           <p className="text-xs text-slate-500 pt-1">
             Need Outlook, Salesforce, HubSpot, or a custom CRM?{' '}
-            <a href="mailto:sales@nexus.ai" className="text-slate-400 underline underline-offset-2 hover:text-teal-400 transition-colors">
+            <a href="mailto:sales@nexusconsultancy.app" className="text-slate-400 underline underline-offset-2 hover:text-teal-400 transition-colors">
               Contact our sales team
             </a>{' '}
             — available in the Custom Build tier.

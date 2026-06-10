@@ -1,6 +1,16 @@
-import Link from 'next/link'
+'use client'
+
 import { Calendar } from 'lucide-react'
 import { FadeIn } from './fade-in'
+import { CALENDLY_URL, CONTACT_EMAIL } from '@/lib/config'
+
+declare global {
+  interface Window {
+    Calendly?: {
+      initPopupWidget: (opts: { url: string }) => void
+    }
+  }
+}
 
 export default function CallCta() {
   return (
@@ -18,20 +28,30 @@ export default function CallCta() {
               Watch NEXUS handle a real call
             </h2>
             <p className="mb-8 text-base text-slate-400">
-              Book a 15-minute live demo and we&apos;ll show you NEXUS answering calls, booking
+              Book a 30-minute live demo and we&apos;ll show you NEXUS answering calls, booking
               appointments, and handling customer inquiries for a business just like yours.
             </p>
 
-            <Link
-              href="mailto:sales@nexus.ai?subject=Demo Request&body=Hi, I'd like to book a live NEXUS demo."
+            <button
+              type="button"
+              onClick={() => window.Calendly?.initPopupWidget({ url: CALENDLY_URL })}
               className="inline-flex items-center gap-3 rounded-2xl bg-teal-500 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-teal-600"
             >
               <Calendar className="size-5" />
               Book a free demo
-            </Link>
+            </button>
 
             <p className="mt-6 text-xs text-slate-600">
-              15 minutes · No commitment · See NEXUS live for your industry
+              30 minutes · No commitment · See NEXUS live for your industry
+            </p>
+            <p className="mt-2 text-xs text-slate-600">
+              Prefer email?{' '}
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="underline underline-offset-2 hover:text-slate-400"
+              >
+                {CONTACT_EMAIL}
+              </a>
             </p>
           </div>
         </FadeIn>
