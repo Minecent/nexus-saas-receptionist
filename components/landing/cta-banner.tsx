@@ -1,5 +1,16 @@
+'use client'
+
 import Link from 'next/link'
 import { Check, Shield } from 'lucide-react'
+import { CALENDLY_URL } from '@/lib/config'
+
+declare global {
+  interface Window {
+    Calendly?: {
+      initPopupWidget: (opts: { url: string }) => void
+    }
+  }
+}
 
 const trustItems = [
   { icon: Shield, label: '14-day guarantee on Lite & Pro' },
@@ -26,12 +37,13 @@ export default function CtaBanner() {
           >
             Get Started — from $25/mo
           </Link>
-          <Link
-            href="mailto:sales@nexusconsultancy.app"
+          <button
+            type="button"
+            onClick={() => window.Calendly?.initPopupWidget({ url: CALENDLY_URL })}
             className="rounded-lg border border-white/40 bg-transparent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 text-center"
           >
             Talk to us first
-          </Link>
+          </button>
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
