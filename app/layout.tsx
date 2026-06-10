@@ -43,21 +43,12 @@ export const metadata: Metadata = {
     title: "NEXUS — AI Receptionist That Never Misses a Call",
     description:
       "24/7 AI phone answering for businesses of every size. Books appointments, takes messages, qualifies leads. From $25/month — no contracts.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "NEXUS AI Receptionist — 24/7 AI phone answering for businesses of every size",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "NEXUS — AI Receptionist That Never Misses a Call",
     description:
       "24/7 AI phone answering for businesses of every size. Books appointments, takes messages, qualifies leads. From $25/month.",
-    images: ["/og-image.png"],
   },
   robots: {
     index: true,
