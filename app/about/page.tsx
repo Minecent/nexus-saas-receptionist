@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { Calendar } from 'lucide-react'
 import Header from '@/components/landing/header'
 import Footer from '@/components/landing/footer'
+import { CalendlyButton } from '@/components/landing/calendly-button'
+import { CONTACT_EMAIL } from '@/lib/config'
 
 export const metadata: Metadata = {
   title: 'About NEXUS AI — The Team Behind Your 24/7 AI Receptionist',
@@ -113,19 +115,20 @@ export default function AboutPage() {
               Questions about NEXUS, partnership enquiries, or just want to talk through whether
               it&apos;s the right fit for your business — reach out directly.
             </p>
-            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Link
-                href="mailto:sales@nexusconsultancy.app"
-                className="rounded-lg bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-600"
-              >
-                sales@nexusconsultancy.app
-              </Link>
-              <Link
-                href="mailto:sales@nexusconsultancy.app"
-                className="rounded-lg border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
-              >
-                sales@nexusconsultancy.app
-              </Link>
+            <div className="flex flex-col items-center gap-3">
+              <CalendlyButton className="inline-flex items-center gap-2 rounded-lg bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-600">
+                <Calendar className="size-4" />
+                Book a call
+              </CalendlyButton>
+              <p className="text-sm text-slate-500">
+                Prefer email?{' '}
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="underline underline-offset-2 hover:text-slate-400"
+                >
+                  {CONTACT_EMAIL}
+                </a>
+              </p>
             </div>
             <p className="mt-8 text-sm text-slate-600">
               NEXUS AI · Registered in Delaware, USA

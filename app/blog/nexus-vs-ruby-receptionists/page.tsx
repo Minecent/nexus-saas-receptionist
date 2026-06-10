@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Check, X, Minus } from 'lucide-react'
 import { blogPostingSchema } from '@/lib/schema'
+import { CalendlyButton } from '@/components/landing/calendly-button'
 
 export const metadata: Metadata = {
   title: 'Ruby Receptionists Alternative 2026: NEXUS vs Ruby (Pricing + Features)',
@@ -314,12 +315,9 @@ export default function NexusVsRubyPage() {
             >
               Get Started
             </Link>
-            <Link
-              href="mailto:sales@nexusconsultancy.app"
-              className="rounded-lg border border-white/40 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
-            >
+            <CalendlyButton className="rounded-lg border border-white/40 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
               Schedule a Demo
-            </Link>
+            </CalendlyButton>
           </div>
         </section>
 

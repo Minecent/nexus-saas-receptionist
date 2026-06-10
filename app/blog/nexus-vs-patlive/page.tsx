@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Check, Minus } from 'lucide-react'
 import { blogPostingSchema } from '@/lib/schema'
+import { CalendlyButton } from '@/components/landing/calendly-button'
 
 export const metadata: Metadata = {
   title: 'PATLive Alternative 2026: NEXUS vs PATLive (Pricing + Features)',
@@ -340,12 +341,9 @@ export default function NexusVsPATLivePage() {
             >
               Get Started with NEXUS
             </Link>
-            <Link
-              href="mailto:sales@nexusconsultancy.app"
-              className="rounded-lg border border-white/40 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
-            >
+            <CalendlyButton className="rounded-lg border border-white/40 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
               Schedule a Demo
-            </Link>
+            </CalendlyButton>
           </div>
           <p className="mt-4 text-xs text-teal-100/70">
             See all comparisons in our <Link href="/blog" className="underline">blog</Link>.
