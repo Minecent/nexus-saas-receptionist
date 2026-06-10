@@ -263,3 +263,31 @@ CREATE POLICY "Service role inserts calls"
 
 CREATE INDEX IF NOT EXISTS calls_user_id_idx ON public.calls(user_id);
 CREATE INDEX IF NOT EXISTS calls_started_at_idx ON public.calls(started_at DESC);
+
+-- ─── Test Call Usage (free test-call quota tracking) ───────────────────────────
+
+CREATE TABLE IF NOT EXISTS public.test_call_usage (
+  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id           UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  month_year        TEXT NOT NULL,
+  started_at        TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  ended_at          TIMESTAMP WITH TIME ZONE,
+  duration_seconds  INTEGER DEFAULT 0,
+  transcript        TEXT,
+  summary           TEXT,
+  created_at        TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.test_call_usage ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own test call usage"
+  ON public.test_call_usage FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert their own test call usage"
+  ON public.test_call_usage FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own test call usage"
+  ON public.test_call_usage FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS test_call_usage_user_id_idx ON public.test_call_usage(user_id);
+CREATE INDEX IF NOT EXISTS test_call_usage_month_year_idx ON public.test_call_usage(user_id, month_year);

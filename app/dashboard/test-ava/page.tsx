@@ -3,13 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import VapiWidget from './VapiWidget'
 import RecentTestCalls from './RecentTestCalls'
 import { Mic, AlertTriangle } from 'lucide-react'
-
-const PLAN_LIMITS: Record<string, { calls: number; seconds: number }> = {
-  lite:   { calls: 3,   seconds: 120 },
-  pro:    { calls: 10,  seconds: 180 },
-  scale:  { calls: 25,  seconds: 180 },
-  custom: { calls: 999, seconds: 300 },
-}
+import { TEST_CALL_LIMITS, DEFAULT_TEST_CALL_LIMITS } from '@/lib/config'
 
 export default async function TestAvaPage() {
   const supabase = await createClient()
@@ -24,7 +18,7 @@ export default async function TestAvaPage() {
     .single()
 
   const plan = config?.selected_plan ?? 'lite'
-  const limits = PLAN_LIMITS[plan] ?? PLAN_LIMITS.lite
+  const limits = TEST_CALL_LIMITS[plan] ?? DEFAULT_TEST_CALL_LIMITS
 
   const currentMonth = new Date().toISOString().slice(0, 7)
   const { count: testCallsUsed } = await supabase
@@ -73,7 +67,7 @@ export default async function TestAvaPage() {
           plan={plan}
           testCallsUsed={testCallsUsed ?? 0}
           testCallsLimit={limits.calls}
-          maxSeconds={limits.seconds}
+          maxSeconds={limits.maxDurationSeconds}
         />
       )}
 

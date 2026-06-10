@@ -29,14 +29,6 @@ const TYPE_LABEL: Record<string, string> = {
   callback: 'Callback',
 }
 
-const TEST_LIMITS: Record<string, number | null> = {
-  lite: 5,
-  pro: 25,
-  advanced: null,
-  scale: null,
-  custom: null,
-}
-
 function formatTime(iso: string) {
   try {
     return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
@@ -178,10 +170,6 @@ export default async function DashboardPage() {
   const minSaved = monthlyBookings * 5 + monthlyMessages * 3 + monthlyCallbacks * 3 + monthlyCallsCount * 1
   const timeSavedLabel = minSaved >= 60 ? `${(minSaved / 60).toFixed(1)} hrs` : `${minSaved} min`
 
-  // Test call limits
-  const testLimit   = TEST_LIMITS[plan] ?? null
-  const atTestLimit = testLimit !== null && monthlyCallsCount >= testLimit
-
   // Nudge: show when no activity and AVA has been quiet > 7 days, unless dismissed
   const dismissedNudges = (onboarding?.dismissed_nudges as string[]) ?? []
   const showNudge = !dismissedNudges.includes('setup') && activity.length === 0 && daysSinceCall > 7
@@ -270,35 +258,6 @@ export default async function DashboardPage() {
             <p className="text-xs text-slate-500 mt-0.5">Est. time saved</p>
           </div>
         </div>
-
-        {testLimit !== null && (
-          <div className="mt-4 pt-4 border-t border-slate-800">
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className={cn(
-                atTestLimit ? 'text-red-400' :
-                monthlyCallsCount >= testLimit - 1 ? 'text-amber-400' :
-                'text-slate-400'
-              )}>
-                {monthlyCallsCount} / {testLimit} test calls used this month
-              </span>
-              {atTestLimit && (
-                <Link href="/dashboard/settings" className="text-teal-400 hover:text-teal-300 transition-colors">
-                  Upgrade plan
-                </Link>
-              )}
-            </div>
-            <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
-              <div
-                className={cn('h-full rounded-full transition-all',
-                  atTestLimit ? 'bg-red-500' :
-                  monthlyCallsCount >= testLimit - 1 ? 'bg-amber-500' :
-                  'bg-teal-500'
-                )}
-                style={{ width: `${Math.min((monthlyCallsCount / testLimit) * 100, 100)}%` }}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Main two-column grid */}

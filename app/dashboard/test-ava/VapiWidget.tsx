@@ -4,11 +4,14 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Mic, MicOff, Phone, PhoneOff, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 
+type AssistantOverrides = {
+  maxDurationSeconds?: number
+}
+
 type VapiInstance = {
-  start: (assistantId: string) => void
+  start: (assistantId: string, assistantOverrides?: AssistantOverrides) => void
   stop: () => void
   on: (event: string, cb: (...args: unknown[]) => void) => void
 }
@@ -33,21 +36,25 @@ export default function VapiWidget({
   businessName: string
   plan: string
   testCallsUsed: number
-  testCallsLimit: number
-  maxSeconds: number
+  testCallsLimit: number | null
+  maxSeconds: number | null
 }) {
   const router = useRouter()
-  const supabase = createClient()
   const vapiRef = useRef<VapiInstance | null>(null)
   const startTimeRef = useRef<number | null>(null)
+  const usageIdRef = useRef<string | null>(null)
+  const callMaxSecondsRef = useRef<number | null>(maxSeconds)
+  const transcriptItemsRef = useRef<{ role: string; text: string }[]>([])
   const [isCallActive, setIsCallActive] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null)
   const [transcript, setTranscript] = useState<{ role: string; text: string }[]>([])
+  const [startError, setStartError] = useState<string | null>(null)
   const transcriptRef = useRef<HTMLDivElement>(null)
 
-  const remaining = testCallsLimit - testCallsUsed
-  const isLimitReached = remaining <= 0
+  const remaining = testCallsLimit === null ? null : testCallsLimit - testCallsUsed
+  const isLimitReached = remaining !== null && remaining <= 0
+  const showLimitReached = isLimitReached || startError !== null
 
   // Reset day of next month
   const now = new Date()
@@ -69,12 +76,21 @@ export default function VapiWidget({
           ? Math.round((Date.now() - startTimeRef.current) / 1000)
           : 0
         startTimeRef.current = null
-        const { data: { user } } = await supabase.auth.getUser()
-        if (user) {
-          await supabase.from('test_call_usage').insert({
-            user_id: user.id,
-            duration_seconds: duration,
-            month_year: new Date().toISOString().slice(0, 7),
+
+        const usageId = usageIdRef.current
+        usageIdRef.current = null
+        if (usageId) {
+          const transcriptText = transcriptItemsRef.current
+            .map(line => `${line.role}: ${line.text}`)
+            .join('\n')
+          await fetch('/api/test-calls/end', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              usageId,
+              durationSeconds: duration,
+              transcript: transcriptText || null,
+            }),
           })
         }
         router.refresh()
@@ -82,7 +98,9 @@ export default function VapiWidget({
       v.on('message', (m: unknown) => {
         const msg = m as { type?: string; transcriptType?: string; role?: string; transcript?: string }
         if (msg.type === 'transcript' && msg.transcriptType === 'final' && msg.role && msg.transcript) {
-          setTranscript(t => [...t, { role: msg.role!, text: msg.transcript! }])
+          const line = { role: msg.role!, text: msg.transcript! }
+          transcriptItemsRef.current = [...transcriptItemsRef.current, line]
+          setTranscript(t => [...t, line])
         }
       })
       vapiRef.current = v
@@ -95,7 +113,12 @@ export default function VapiWidget({
       setSecondsLeft(null)
       return
     }
-    setSecondsLeft(maxSeconds)
+    const limit = callMaxSecondsRef.current
+    if (limit === null) {
+      setSecondsLeft(null)
+      return
+    }
+    setSecondsLeft(limit)
     const interval = setInterval(() => {
       setSecondsLeft(prev => {
         if (prev === null || prev <= 1) {
@@ -107,7 +130,7 @@ export default function VapiWidget({
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [isCallActive, maxSeconds])
+  }, [isCallActive])
 
   useEffect(() => {
     if (transcriptRef.current) {
@@ -115,14 +138,40 @@ export default function VapiWidget({
     }
   }, [transcript])
 
-  const toggleCall = () => {
-    if (!vapiRef.current || isLimitReached) return
+  const toggleCall = async () => {
+    if (!vapiRef.current || isLimitReached || isLoading) return
     if (isCallActive) {
       vapiRef.current.stop()
-    } else {
-      setIsLoading(true)
+      return
+    }
+
+    setStartError(null)
+    setIsLoading(true)
+
+    try {
+      const res = await fetch('/api/test-calls/start', { method: 'POST' })
+      const json = await res.json()
+
+      if (!res.ok || !json.allowed) {
+        setIsLoading(false)
+        setStartError('Test call limit reached.')
+        router.refresh()
+        return
+      }
+
+      usageIdRef.current = json.usageId
+      callMaxSecondsRef.current = json.maxDurationSeconds ?? null
+      transcriptItemsRef.current = []
       setTranscript([])
-      vapiRef.current.start(assistantId)
+      vapiRef.current.start(
+        assistantId,
+        callMaxSecondsRef.current !== null
+          ? { maxDurationSeconds: callMaxSecondsRef.current }
+          : undefined
+      )
+    } catch {
+      setIsLoading(false)
+      setStartError('Could not start the test call. Please try again.')
     }
   }
 
@@ -137,27 +186,34 @@ export default function VapiWidget({
             Test calls this month
           </span>
           <span className={cn('text-xs font-semibold', isLimitReached ? 'text-red-400' : 'text-slate-300')}>
-            {testCallsUsed} / {testCallsLimit} used
+            {testCallsLimit === null ? 'Unlimited' : `${testCallsUsed} / ${testCallsLimit} used`}
           </span>
         </div>
-        <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
-          <div
-            className={cn('h-full rounded-full transition-all', isLimitReached ? 'bg-red-500' : 'bg-teal-500')}
-            style={{ width: `${Math.min((testCallsUsed / testCallsLimit) * 100, 100)}%` }}
-          />
-        </div>
-        <p className="text-xs text-slate-600">Each test call max {Math.floor(maxSeconds / 60)} min {maxSeconds % 60 > 0 ? `${maxSeconds % 60}s` : ''} · Resets {resetDate}</p>
+        {testCallsLimit !== null && (
+          <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+            <div
+              className={cn('h-full rounded-full transition-all', isLimitReached ? 'bg-red-500' : 'bg-teal-500')}
+              style={{ width: `${Math.min((testCallsUsed / testCallsLimit) * 100, 100)}%` }}
+            />
+          </div>
+        )}
+        <p className="text-xs text-slate-600">
+          {maxSeconds !== null
+            ? `Each test call max ${Math.floor(maxSeconds / 60)} min${maxSeconds % 60 > 0 ? ` ${maxSeconds % 60}s` : ''}`
+            : 'No per-call time limit on your plan'}
+          {testCallsLimit !== null && ` · Resets ${resetDate}`}
+        </p>
       </div>
 
-      {isLimitReached ? (
+      {showLimitReached ? (
         <div className="rounded-2xl border border-slate-700 bg-slate-900 p-8 text-center space-y-3">
           <AlertTriangle className="size-8 text-amber-400 mx-auto" />
-          <p className="text-sm font-medium text-white">Test call limit reached</p>
+          <p className="text-sm font-medium text-white">You&apos;ve used all your free test calls this month</p>
           <p className="text-xs text-slate-400">Resets on {resetDate}</p>
-          {plan === 'lite' && (
+          {plan !== 'custom' && (
             <Link href="/dashboard/settings#subscription"
               className="inline-block mt-1 text-xs font-semibold text-teal-400 hover:text-teal-300 transition-colors">
-              Upgrade to Pro for more test calls →
+              Upgrade for more test calls →
             </Link>
           )}
         </div>
