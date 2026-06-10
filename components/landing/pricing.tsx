@@ -4,6 +4,15 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Check, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { CALENDLY_URL } from '@/lib/config'
+
+declare global {
+  interface Window {
+    Calendly?: {
+      initPopupWidget: (opts: { url: string }) => void
+    }
+  }
+}
 
 const tiers = [
   {
@@ -19,7 +28,8 @@ const tiers = [
     estimate: null as string | null,
     description: null as string | null,
     cta: 'Start free — no credit card',
-    href: '/signup',
+    href: '/signup' as string | null,
+    calendly: false,
     highlight: false,
     overage: '+$1.10 per extra call*',
     savingsVsReceptionist: '$47,700/yr',
@@ -44,7 +54,8 @@ const tiers = [
     estimate: '~165 calls based on average call length',
     description: null,
     cta: 'Get started today',
-    href: '/signup',
+    href: '/signup' as string | null,
+    calendly: false,
     highlight: true,
     overage: '+$1.00 per extra call*',
     savingsVsReceptionist: '$46,200/yr',
@@ -73,7 +84,8 @@ const tiers = [
     estimate: '~500 calls based on average call length',
     description: null,
     cta: 'Get started',
-    href: '/signup',
+    href: '/signup' as string | null,
+    calendly: false,
     highlight: false,
     overage: '+$0.85 per extra call*',
     savingsVsReceptionist: '$43,800/yr',
@@ -100,7 +112,8 @@ const tiers = [
     estimate: null,
     description: 'Scoped and quoted upfront — no surprises',
     cta: 'Book a discovery call',
-    href: 'mailto:sales@nexusconsultancy.app',
+    href: null as string | null,
+    calendly: true,
     highlight: false,
     overage: null,
     savingsVsReceptionist: undefined as string | undefined,
@@ -275,17 +288,32 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <Link
-                href={tier.href}
-                className={cn(
-                  'block rounded-lg py-2.5 text-center text-sm font-semibold transition-colors',
-                  tier.highlight
-                    ? 'bg-teal-500 text-white hover:bg-teal-600'
-                    : 'border border-slate-700 bg-transparent text-slate-300 hover:border-slate-500 hover:text-white'
-                )}
-              >
-                {tier.cta}
-              </Link>
+              {tier.calendly ? (
+                <button
+                  type="button"
+                  onClick={() => window.Calendly?.initPopupWidget({ url: CALENDLY_URL })}
+                  className={cn(
+                    'block rounded-lg py-2.5 text-center text-sm font-semibold transition-colors',
+                    tier.highlight
+                      ? 'bg-teal-500 text-white hover:bg-teal-600'
+                      : 'border border-slate-700 bg-transparent text-slate-300 hover:border-slate-500 hover:text-white'
+                  )}
+                >
+                  {tier.cta}
+                </button>
+              ) : (
+                <Link
+                  href={tier.href ?? '/signup'}
+                  className={cn(
+                    'block rounded-lg py-2.5 text-center text-sm font-semibold transition-colors',
+                    tier.highlight
+                      ? 'bg-teal-500 text-white hover:bg-teal-600'
+                      : 'border border-slate-700 bg-transparent text-slate-300 hover:border-slate-500 hover:text-white'
+                  )}
+                >
+                  {tier.cta}
+                </Link>
+              )}
             </div>
           ))}
         </div>

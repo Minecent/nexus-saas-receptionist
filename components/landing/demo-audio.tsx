@@ -12,6 +12,7 @@ const WAVEFORM_BARS = Array.from({ length: 40 }, (_, i) => {
 
 export default function DemoAudio() {
   const [playing, setPlaying] = useState(false)
+  const [progress, setProgress] = useState(0)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   function toggle() {
@@ -23,6 +24,17 @@ export default function DemoAudio() {
       audio.play().catch(() => {})
     }
     setPlaying(!playing)
+  }
+
+  function handleTimeUpdate() {
+    const audio = audioRef.current
+    if (!audio || !audio.duration) return
+    setProgress((audio.currentTime / audio.duration) * 100)
+  }
+
+  function handleEnded() {
+    setPlaying(false)
+    setProgress(0)
   }
 
   return (
@@ -58,13 +70,16 @@ export default function DemoAudio() {
 
             {/* Waveform — hide every other bar on mobile to prevent overflow */}
             <div className="mb-5 flex h-14 items-center gap-0.5 overflow-hidden">
-              {WAVEFORM_BARS.map((h, i) => (
-                <div
-                  key={i}
-                  className={`flex-1 rounded-full bg-slate-700 transition-colors${i % 2 === 1 ? ' hidden sm:block' : ''}`}
-                  style={{ height: `${h}%` }}
-                />
-              ))}
+              {WAVEFORM_BARS.map((h, i) => {
+                const isActive = (i / WAVEFORM_BARS.length) * 100 <= progress
+                return (
+                  <div
+                    key={i}
+                    className={`flex-1 rounded-full transition-colors${i % 2 === 1 ? ' hidden sm:block' : ''} ${isActive ? 'bg-teal-500' : 'bg-slate-700'}`}
+                    style={{ height: `${h}%` }}
+                  />
+                )
+              })}
             </div>
 
             {/* Controls */}
@@ -77,12 +92,12 @@ export default function DemoAudio() {
                 {playing ? <Pause className="size-4 fill-white" /> : <Play className="size-4 fill-white" />}
               </button>
               <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-800">
-                <div className="h-full w-0 rounded-full bg-teal-500 transition-all" />
+                <div className="h-full rounded-full bg-teal-500 transition-all" style={{ width: `${progress}%` }} />
               </div>
             </div>
 
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <audio ref={audioRef} src="/audio/Demo.mp3" onEnded={() => setPlaying(false)} />
+            <audio ref={audioRef} src="/audio/Demo.mp3" onTimeUpdate={handleTimeUpdate} onEnded={handleEnded} />
           </div>
         </FadeIn>
       </div>
