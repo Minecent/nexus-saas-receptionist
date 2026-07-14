@@ -14,11 +14,11 @@ export default function Hero() {
             Every missed call is{' '}
             <span className="text-teal-400">a customer calling your competitor</span>
           </h1>
-          <p className="max-w-md text-base leading-relaxed text-slate-400">
-            NEXUS answers every call 24/7, takes perfect messages, books appointments, and handles
+          <p className="max-w-md text-base leading-relaxed text-slate-100">
+            NEXUS answers every call 24/7/365, takes perfect messages, books appointments, and handles
             customer inquiries — so your team can focus on what matters most. Set up in minutes.
           </p>
-          <p className="max-w-md text-sm leading-relaxed text-slate-500">
+          <p className="max-w-md text-sm leading-relaxed text-slate-300">
             From solo operators to multi-location teams — NEXUS answers every call, so no
             business ever misses a customer.
           </p>
@@ -37,7 +37,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <p className="text-xs text-slate-500">No credit card required · Cancel anytime</p>
+          <p className="text-xs text-slate-300">No credit card required · Cancel anytime</p>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
             {[
@@ -45,7 +45,7 @@ export default function Hero() {
               'Live in 24–48 hours',
               'No contracts',
             ].map((item) => (
-              <span key={item} className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span key={item} className="flex items-center gap-1.5 text-xs text-slate-100">
                 <span className="size-1.5 rounded-full bg-teal-400" />
                 {item}
               </span>
@@ -60,9 +60,9 @@ export default function Hero() {
                 <PhoneCall className="size-3.5 text-teal-400" />
               </div>
               <span className="text-sm font-medium text-white">Incoming call — Dr. Patel&apos;s office</span>
-              <span className="ml-auto text-xs text-slate-500">Just now</span>
+              <span className="ml-auto text-xs text-slate-300">Just now</span>
             </div>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-100">
               &ldquo;Hi, I&apos;d like to book an appointment for next Tuesday afternoon.&rdquo;
             </p>
             <p className="mt-1.5 text-sm font-medium text-teal-400">
@@ -76,9 +76,9 @@ export default function Hero() {
                 <CalendarCheck className="size-3.5 text-teal-400" />
               </div>
               <span className="text-sm font-medium text-white">Appointment booked</span>
-              <span className="ml-auto text-xs text-slate-500">2s ago</span>
+              <span className="ml-auto text-xs text-slate-300">2s ago</span>
             </div>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-100">
               Sarah Johnson · Tuesday, May 6 · 2:00 PM · Added to your calendar
             </p>
           </div>
@@ -89,9 +89,9 @@ export default function Hero() {
                 <MessageSquare className="size-3.5 text-teal-400" />
               </div>
               <span className="text-sm font-medium text-white">Confirmation sent</span>
-              <span className="ml-auto text-xs text-slate-500">Just now</span>
+              <span className="ml-auto text-xs text-slate-300">Just now</span>
             </div>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-100">
               SMS confirmation sent to patient · No staff involvement required
             </p>
           </div>
