@@ -52,7 +52,7 @@ export default function Industries() {
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Built for businesses that can&apos;t miss a call
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-slate-400">
+            <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
               NEXUS is purpose-built for service businesses where every call is a potential customer.
             </p>
           </div>
@@ -72,7 +72,7 @@ export default function Industries() {
 
                   <div className="mb-4 flex flex-col gap-2">
                     {industry.painPoints.map((point) => (
-                      <div key={point} className="flex items-start gap-2 text-xs text-slate-400">
+                      <div key={point} className="flex items-start gap-2 text-xs text-slate-100">
                         <span className="mt-0.5 text-slate-600">✗</span>
                         <span>{point}</span>
                       </div>
