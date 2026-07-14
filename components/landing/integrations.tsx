@@ -26,7 +26,7 @@ export default function Integrations() {
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Works with the tools you already use
             </h2>
-            <p className="mx-auto mt-4 max-w-md text-base text-slate-400">
+            <p className="mx-auto mt-4 max-w-md text-base text-slate-100">
               Native integrations available now
             </p>
           </div>
@@ -44,7 +44,7 @@ export default function Integrations() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{name}</p>
-                  <p className="mt-1 text-sm text-slate-400">{description}</p>
+                  <p className="mt-1 text-sm text-slate-100">{description}</p>
                 </div>
               </div>
             ))}
@@ -52,10 +52,10 @@ export default function Integrations() {
         </FadeIn>
 
         <FadeIn delay={180}>
-          <p className="mx-auto mt-8 max-w-xl text-center text-sm text-slate-500">
+          <p className="mx-auto mt-8 max-w-xl text-center text-sm text-slate-300">
             Need Outlook, Salesforce, HubSpot, or custom CRM integration? That&apos;s available in
             our Custom Build tier —{' '}
-            <a href="#pricing" className="text-slate-400 underline underline-offset-2 hover:text-teal-400 transition-colors">
+            <a href="#pricing" className="text-slate-100 underline underline-offset-2 hover:text-teal-400 transition-colors">
               contact our sales team
             </a>
             .
