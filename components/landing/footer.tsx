@@ -26,7 +26,7 @@ export default function Footer() {
             <Link href="/" className="text-lg font-bold tracking-tight text-white">
               NEXUS<span className="text-teal-400">.</span>
             </Link>
-            <p className="mt-3 text-xs leading-relaxed text-slate-500">
+            <p className="mt-3 text-xs leading-relaxed text-slate-300">
               AI receptionists that never miss a call. Answer calls. Take messages. Book
               appointments. Grow faster.
             </p>
@@ -35,7 +35,7 @@ export default function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-slate-500 transition-colors hover:text-white"
+                className="text-xs text-slate-300 transition-colors hover:text-white"
               >
                 Twitter
               </a>
@@ -43,7 +43,7 @@ export default function Footer() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-slate-500 transition-colors hover:text-white"
+                className="text-xs text-slate-300 transition-colors hover:text-white"
               >
                 GitHub
               </a>
@@ -52,7 +52,7 @@ export default function Footer() {
 
           {Object.entries(links).map(([group, items]) => (
             <div key={group}>
-              <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <p className="text-xs font-semibold uppercase tracking-widest text-slate-100">
                 {group}
               </p>
               <ul className="mt-3 flex flex-col gap-1">
@@ -60,7 +60,7 @@ export default function Footer() {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className="inline-block py-1.5 text-sm text-slate-500 transition-colors hover:text-white"
+                      className="inline-block py-1.5 text-sm text-slate-300 transition-colors hover:text-white"
                     >
                       {item.label}
                     </Link>
