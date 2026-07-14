@@ -18,7 +18,7 @@ export default function Detail() {
             <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
               Every missed call is a customer who called your competitor
             </h2>
-            <p className="mb-6 text-base leading-relaxed text-slate-400">
+            <p className="mb-6 text-base leading-relaxed text-slate-100">
               62% of calls to service businesses go unanswered. That&apos;s not a scheduling
               problem — it&apos;s a revenue problem. NEXUS picks up every call, takes messages,
               books appointments, and transfers urgent calls to your team. All without you lifting
