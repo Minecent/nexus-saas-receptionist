@@ -21,7 +21,7 @@ export function MobileNav() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center rounded-lg p-2 text-slate-400 hover:text-white"
+        className="flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-white"
         aria-label="Toggle menu"
       >
         {open ? <X className="size-5" /> : <Menu className="size-5" />}
