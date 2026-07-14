@@ -48,7 +48,7 @@ export default function DemoAudio() {
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Hear NEXUS in action
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-slate-400">
+            <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
               Listen to a real sample call. NEXUS answers, qualifies the caller, and books an
               appointment — start to finish, zero staff involvement.
             </p>
@@ -64,7 +64,7 @@ export default function DemoAudio() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Sample call — NEXUS AI Receptionist demo</p>
-                <p className="text-xs text-slate-500">NEXUS answered in &lt;2s</p>
+                <p className="text-xs text-slate-300">NEXUS answered in &lt;2s</p>
               </div>
             </div>
 
