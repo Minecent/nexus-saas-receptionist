@@ -55,7 +55,7 @@ export default function Testimonials() {
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Businesses that never miss a call
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-slate-400">
+          <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
             From solo tradespeople to multi-location practices — NEXUS works for any business that
             can&apos;t afford to let calls go to voicemail.
           </p>
@@ -77,11 +77,11 @@ export default function Testimonials() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{t.name}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-300">
                     {t.title} · {t.company}
                   </p>
                 </div>
-                <span className="ml-auto rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs text-slate-500">
+                <span className="ml-auto rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-xs text-slate-300">
                   {t.industry}
                 </span>
               </div>
