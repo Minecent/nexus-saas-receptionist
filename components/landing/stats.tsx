@@ -30,7 +30,7 @@ export default function Stats() {
             The Reality
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Your team is great. There just aren&apos;t enough hours in the day.
+            Every missed call is a job that went to someone else.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400">
             Calls come in while your staff is helping customers. You can&apos;t be everywhere at once.
