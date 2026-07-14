@@ -4,7 +4,7 @@ import { PhoneCall, CalendarCheck, MessageSquare } from 'lucide-react'
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-slate-900">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.12),transparent_60%)] " />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.12),transparent_60%)]" />
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-28">
         <div className="flex flex-col gap-6">
           <div className="inline-flex w-fit items-center rounded-full border border-teal-500/30 bg-teal-500/10 px-3 py-1 text-xs font-medium text-teal-400">
@@ -12,7 +12,7 @@ export default function Hero() {
           </div>
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
             Every missed call is{' '}
-            <span className="text-teal-400">a job that went to someone else</span>
+            <span className="text-teal-400">a customer calling your competitor</span>
           </h1>
           <p className="max-w-md text-base leading-relaxed text-slate-400">
             NEXUS answers every call 24/7, takes perfect messages, books appointments, and handles
