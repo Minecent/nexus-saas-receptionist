@@ -13,7 +13,7 @@ const stats = [
       'AI agents handle repetitive work around the clock, so your team can focus on what actually needs a human touch.',
   },
   {
-    number: '24/7',
+    number: '24/7/365',
     title: 'always available',
     description:
       'Nights, weekends, holidays. Your business keeps running even when your team is off the clock.',
@@ -32,7 +32,7 @@ export default function Stats() {
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Every missed call is a job that went to someone else.
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400">
+          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-100">
             Calls come in while your staff is helping customers. You can&apos;t be everywhere at once.
             That capacity gap? That&apos;s where NEXUS comes in.
           </p>
@@ -46,7 +46,7 @@ export default function Stats() {
             >
               <div className="mb-2 text-4xl font-bold text-teal-400">{stat.number}</div>
               <div className="mb-3 text-sm font-semibold text-white">{stat.title}</div>
-              <p className="text-sm leading-relaxed text-slate-400">{stat.description}</p>
+              <p className="text-sm leading-relaxed text-slate-100">{stat.description}</p>
               {stat.source && (
                 <p className="mt-3 text-xs text-slate-600">Source: {stat.source}</p>
               )}
