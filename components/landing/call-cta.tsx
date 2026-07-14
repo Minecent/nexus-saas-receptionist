@@ -27,7 +27,7 @@ export default function CallCta() {
             <h2 className="mb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Watch NEXUS handle a real call
             </h2>
-            <p className="mb-8 text-base text-slate-400">
+            <p className="mb-8 text-base text-slate-100">
               Book a 30-minute live demo and we&apos;ll show you NEXUS answering calls, booking
               appointments, and handling customer inquiries for a business just like yours.
             </p>
@@ -41,14 +41,14 @@ export default function CallCta() {
               Book a free demo
             </button>
 
-            <p className="mt-6 text-xs text-slate-600">
+            <p className="mt-6 text-xs text-slate-300">
               30 minutes · No commitment · See NEXUS live for your industry
             </p>
-            <p className="mt-2 text-xs text-slate-600">
+            <p className="mt-2 text-xs text-slate-300">
               Prefer email?{' '}
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="underline underline-offset-2 hover:text-slate-400"
+                className="underline underline-offset-2 hover:text-slate-100"
               >
                 {CONTACT_EMAIL}
               </a>
