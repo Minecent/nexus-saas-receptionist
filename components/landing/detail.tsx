@@ -11,7 +11,7 @@ const bullets = [
 
 export default function Detail() {
   return (
-    <section className="border-b border-slate-800 bg-slate-950">
+    <section className="border-b border-slate-600 bg-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
           <div>
@@ -40,7 +40,7 @@ export default function Detail() {
             </Link>
           </div>
 
-          <div className="flex items-center justify-center rounded-2xl border border-slate-800 bg-slate-900 py-20">
+          <div className="flex items-center justify-center rounded-2xl border border-slate-600 bg-slate-700 py-20">
             <div className="flex size-20 items-center justify-center rounded-full border border-teal-500/30 bg-teal-500/10">
               <Phone className="size-8 text-teal-400" />
             </div>
