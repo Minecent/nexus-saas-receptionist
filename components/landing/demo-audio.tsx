@@ -38,7 +38,7 @@ export default function DemoAudio() {
   }
 
   return (
-    <section className="border-b border-slate-800 bg-slate-900">
+    <section className="border-b border-slate-700 bg-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mb-12 text-center">
@@ -56,7 +56,7 @@ export default function DemoAudio() {
         </FadeIn>
 
         <FadeIn delay={100}>
-          <div className="mx-auto max-w-2xl rounded-2xl border border-slate-700 bg-slate-950 p-6 sm:p-8">
+          <div className="mx-auto max-w-2xl rounded-2xl border border-slate-600 bg-slate-900 p-6 sm:p-8">
             {/* Call metadata */}
             <div className="mb-5 flex items-center gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-teal-500/15">
@@ -75,7 +75,7 @@ export default function DemoAudio() {
                 return (
                   <div
                     key={i}
-                    className={`flex-1 rounded-full transition-colors${i % 2 === 1 ? ' hidden sm:block' : ''} ${isActive ? 'bg-teal-500' : 'bg-slate-700'}`}
+                    className={`flex-1 rounded-full transition-colors${i % 2 === 1 ? ' hidden sm:block' : ''} ${isActive ? 'bg-teal-500' : 'bg-slate-600'}`}
                     style={{ height: `${h}%` }}
                   />
                 )
@@ -91,7 +91,7 @@ export default function DemoAudio() {
               >
                 {playing ? <Pause className="size-4 fill-white" /> : <Play className="size-4 fill-white" />}
               </button>
-              <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-800">
+              <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-700">
                 <div className="h-full rounded-full bg-teal-500 transition-all" style={{ width: `${progress}%` }} />
               </div>
             </div>
