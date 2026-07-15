@@ -19,14 +19,14 @@ const links = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-700 bg-slate-900">
+    <footer className="border-t border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link href="/" className="text-lg font-bold tracking-tight text-white">
               NEXUS<span className="text-teal-400">.</span>
             </Link>
-            <p className="mt-3 text-xs leading-relaxed text-slate-300">
+            <p className="mt-3 text-xs leading-relaxed text-slate-200">
               AI receptionists that never miss a call. Answer calls. Take messages. Book
               appointments. Grow faster.
             </p>
@@ -35,7 +35,7 @@ export default function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-slate-300 transition-colors hover:text-white"
+                className="text-xs text-slate-200 transition-colors hover:text-white"
               >
                 Twitter
               </a>
@@ -43,7 +43,7 @@ export default function Footer() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-slate-300 transition-colors hover:text-white"
+                className="text-xs text-slate-200 transition-colors hover:text-white"
               >
                 GitHub
               </a>
@@ -60,7 +60,7 @@ export default function Footer() {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className="inline-block py-1.5 text-sm text-slate-300 transition-colors hover:text-white"
+                      className="inline-block py-1.5 text-sm text-slate-200 transition-colors hover:text-white"
                     >
                       {item.label}
                     </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 border-t border-slate-700 pt-6 text-xs text-slate-600">
+        <div className="mt-10 border-t border-slate-500 pt-6 text-xs text-slate-300">
           © {new Date().getFullYear()} NEXUS AI. All rights reserved.
         </div>
       </div>
