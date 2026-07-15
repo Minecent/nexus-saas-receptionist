@@ -35,7 +35,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="border-b border-slate-700 bg-slate-800">
+    <section id="features" className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div className="mb-12 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
@@ -55,7 +55,7 @@ export default function Features() {
             return (
               <div
                 key={feature.title}
-                className="rounded-2xl border border-slate-700 bg-slate-900 p-6 transition-all hover:-translate-y-1 hover:border-teal-500/40 hover:shadow-lg hover:shadow-teal-500/5"
+                className="rounded-2xl border border-slate-500 bg-slate-600 p-6 transition-all hover:-translate-y-1 hover:border-teal-500/40 hover:shadow-lg hover:shadow-teal-500/5"
               >
                 <div className="mb-4 flex size-9 items-center justify-center rounded-lg bg-teal-500/10">
                   <Icon className="size-4 text-teal-400" />
