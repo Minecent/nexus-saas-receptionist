@@ -16,7 +16,7 @@ const supported = [
 
 export default function Integrations() {
   return (
-    <section className="border-b border-slate-800 bg-slate-900">
+    <section className="border-b border-slate-700 bg-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mb-10 text-center">
@@ -37,7 +37,7 @@ export default function Integrations() {
             {supported.map(({ icon: Icon, name, description }) => (
               <div
                 key={name}
-                className="flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-6"
+                className="flex items-start gap-4 rounded-2xl border border-slate-700 bg-slate-900 p-6"
               >
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-teal-500/20 bg-teal-500/10">
                   <Icon className="size-5 text-teal-400" />
