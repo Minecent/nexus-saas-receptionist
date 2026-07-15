@@ -179,7 +179,7 @@ const websiteSchema = {
 
 export default function Home() {
   return (
-    <div className="bg-slate-900">
+    <div className="bg-slate-800">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
