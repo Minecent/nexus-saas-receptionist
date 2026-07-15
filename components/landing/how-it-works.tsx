@@ -21,7 +21,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="border-b border-slate-700 bg-slate-800">
+    <section className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:py-20 sm:px-6">
         <div className="mb-12 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
@@ -61,7 +61,7 @@ export default function HowItWorks() {
           <div className="absolute left-[calc(1/6*100%)] right-[calc(1/6*100%)] top-5 h-px bg-teal-500/20" />
           {steps.map((step) => (
             <div key={step.number} className="relative text-center">
-              <div className="relative z-10 mx-auto mb-5 flex size-10 items-center justify-center rounded-full bg-teal-500 text-sm font-bold text-white ring-4 ring-slate-900">
+              <div className="relative z-10 mx-auto mb-5 flex size-10 items-center justify-center rounded-full bg-teal-500 text-sm font-bold text-white ring-4 ring-slate-700">
                 {step.number}
               </div>
               <h3 className="mb-2 text-sm font-semibold text-white">{step.title}</h3>
