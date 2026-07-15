@@ -21,7 +21,7 @@ const nexusPros = [
 
 export default function CostComparison() {
   return (
-    <section className="border-b border-slate-600 bg-slate-800">
+    <section className="border-b border-slate-700 bg-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mb-12 text-center">
@@ -41,7 +41,7 @@ export default function CostComparison() {
         <FadeIn delay={100}>
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Human receptionist */}
-            <div className="rounded-2xl border border-slate-500 bg-slate-600 p-6">
+            <div className="rounded-2xl border border-slate-600 bg-slate-700 p-6">
               <div className="mb-2 flex items-center gap-2">
                 <div className="size-2 rounded-full bg-rose-500" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-slate-300">
@@ -64,7 +64,7 @@ export default function CostComparison() {
             </div>
 
             {/* NEXUS */}
-            <div className="rounded-2xl border border-teal-500/40 bg-slate-600 p-6 shadow-lg shadow-teal-500/5">
+            <div className="rounded-2xl border border-teal-500/40 bg-slate-700 p-6 shadow-lg shadow-teal-500/5">
               <div className="mb-2 flex items-center gap-2">
                 <div className="size-2 rounded-full bg-teal-400" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-teal-500">
@@ -98,7 +98,7 @@ export default function CostComparison() {
             </p>
           </div>
         </FadeIn>
-        <p className="mt-6 text-center text-xs text-slate-600">
+        <p className="mt-6 text-center text-xs text-slate-700">
           * Based on U.S. Bureau of Labor Statistics median receptionist salary plus employer payroll taxes and benefits.
         </p>
       </div>
