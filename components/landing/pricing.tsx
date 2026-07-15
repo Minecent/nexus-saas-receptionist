@@ -132,7 +132,7 @@ export default function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false)
 
   return (
-    <section id="pricing" className="border-b border-slate-700 bg-slate-800">
+    <section id="pricing" className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -141,9 +141,9 @@ export default function Pricing() {
           </p>
 
           {/* Anchor pill */}
-          <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-slate-600 bg-slate-700/60 px-5 py-2">
+          <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-slate-500 bg-slate-600/60 px-5 py-2">
             <span className="text-sm font-medium text-slate-100 line-through">$4,000/mo receptionist</span>
-            <span className="text-slate-600">→</span>
+            <span className="text-slate-300">→</span>
             <span className="text-sm font-bold text-teal-400">from $25/mo with NEXUS</span>
           </div>
 
@@ -153,13 +153,13 @@ export default function Pricing() {
           <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
             All plans include 24/7/365 call answering. Scale up as you grow. No contracts.
           </p>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-slate-300">
+          <p className="mx-auto mt-2 max-w-xl text-sm text-slate-200">
             Whether you&apos;re a one-person shop or running multiple locations, there&apos;s a
             plan built for how you work.
           </p>
 
           {/* Annual/Monthly toggle */}
-          <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-600 bg-slate-700 p-1">
+          <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-500 bg-slate-600 p-1">
             <button
               onClick={() => setIsAnnual(false)}
               className={cn(
@@ -195,8 +195,8 @@ export default function Pricing() {
               className={cn(
                 'relative flex flex-col rounded-2xl border p-6 transition-all',
                 tier.highlight
-                  ? 'border-teal-500 bg-slate-700 shadow-xl shadow-teal-500/10'
-                  : 'border-slate-600 bg-slate-700 hover:border-slate-500'
+                  ? 'border-teal-500 bg-slate-600 shadow-xl shadow-teal-500/10'
+                  : 'border-slate-500 bg-slate-600 hover:border-slate-500'
               )}
             >
               {/* Badge */}
@@ -207,12 +207,12 @@ export default function Pricing() {
                       'inline-flex w-fit rounded-full border px-3 py-1 text-xs font-semibold',
                       tier.highlight
                         ? 'border-teal-500/40 bg-teal-500/10 text-teal-400'
-                        : 'border-slate-600 bg-slate-800 text-slate-100'
+                        : 'border-slate-500 bg-slate-600 text-slate-100'
                     )}>
                       {tier.badge}
                     </span>
                     {tier.subtext && (
-                      <p className="text-xs text-slate-300">{tier.subtext}</p>
+                      <p className="text-xs text-slate-200">{tier.subtext}</p>
                     )}
                   </>
                 ) : <span />}
@@ -238,7 +238,7 @@ export default function Pricing() {
 
               {/* Crossed-out comparison */}
               {tier.crossOut && (
-                <p className="mb-1 text-xs text-slate-600 line-through">{tier.crossOut}</p>
+                <p className="mb-1 text-xs text-slate-300 line-through">{tier.crossOut}</p>
               )}
 
               {/* Volume + optional estimate */}
@@ -250,11 +250,11 @@ export default function Pricing() {
                 {tier.volume}
               </p>
               {tier.estimate && (
-                <p className="mb-1 text-xs text-slate-600">{tier.estimate}</p>
+                <p className="mb-1 text-xs text-slate-300">{tier.estimate}</p>
               )}
 
               {tier.description && (
-                <p className="mb-2 text-xs text-slate-300">{tier.description}</p>
+                <p className="mb-2 text-xs text-slate-200">{tier.description}</p>
               )}
 
               {/* Savings vs receptionist */}
@@ -268,7 +268,7 @@ export default function Pricing() {
 
               {/* Overage */}
               {tier.overage && (
-                <div className="mb-4 rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-xs text-slate-300">
+                <div className="mb-4 rounded-lg border border-slate-500 bg-slate-600 px-3 py-2 text-xs text-slate-200">
                   {tier.overage}
                 </div>
               )}
@@ -278,7 +278,7 @@ export default function Pricing() {
                 {tier.features.map((feature) => (
                   <li key={feature} className={cn(
                     'flex items-start gap-2 text-sm',
-                    feature.endsWith(':') ? 'text-slate-300 mt-1' : 'text-slate-300'
+                    feature.endsWith(':') ? 'text-slate-200 mt-1' : 'text-slate-200'
                   )}>
                     {!feature.endsWith(':') && (
                       <Check className="mt-0.5 size-3.5 shrink-0 text-teal-400" />
@@ -296,7 +296,7 @@ export default function Pricing() {
                     'block rounded-lg py-2.5 text-center text-sm font-semibold transition-colors',
                     tier.highlight
                       ? 'bg-teal-500 text-white hover:bg-teal-600'
-                      : 'border border-slate-600 bg-transparent text-slate-300 hover:border-slate-500 hover:text-white'
+                      : 'border border-slate-500 bg-transparent text-slate-200 hover:border-slate-500 hover:text-white'
                   )}
                 >
                   {tier.cta}
@@ -308,7 +308,7 @@ export default function Pricing() {
                     'block rounded-lg py-2.5 text-center text-sm font-semibold transition-colors',
                     tier.highlight
                       ? 'bg-teal-500 text-white hover:bg-teal-600'
-                      : 'border border-slate-600 bg-transparent text-slate-300 hover:border-slate-500 hover:text-white'
+                      : 'border border-slate-500 bg-transparent text-slate-200 hover:border-slate-500 hover:text-white'
                   )}
                 >
                   {tier.cta}
@@ -333,10 +333,10 @@ export default function Pricing() {
         </div>
 
         {/* Overage footnote */}
-        <p className="mt-6 text-center text-xs text-slate-600">
+        <p className="mt-6 text-center text-xs text-slate-300">
           * Extra call charges require your approval before being applied. You will always be notified before any overage billing occurs.
         </p>
-        <p className="mt-2 text-center text-xs text-slate-600">Pricing is in USD.</p>
+        <p className="mt-2 text-center text-xs text-slate-300">Pricing is in USD.</p>
       </div>
     </section>
   )
