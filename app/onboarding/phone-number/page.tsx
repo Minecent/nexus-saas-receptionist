@@ -85,11 +85,13 @@ export default function PhoneNumberPage() {
         { onConflict: "user_id" }
       );
 
+      // Fetch config once — used for the admin alert and calendar provisioning below
+      const { data: cfg } = await supabase.from("agent_config")
+        .select("business_name, selected_plan, phone_number, vapi_assistant_id, business_email, notification_email, timezone")
+        .eq("user_id", user.id).single();
+
       // Log new client to admin_alerts (non-fatal)
       try {
-        const { data: cfg } = await supabase.from("agent_config")
-          .select("business_name, selected_plan, phone_number, vapi_assistant_id")
-          .eq("user_id", user.id).single();
         await supabase.from("admin_alerts").insert({
           type: "new_client",
           message: `New client onboarded: ${cfg?.business_name ?? "Unknown"}`,
@@ -112,6 +114,18 @@ export default function PhoneNumberPage() {
         },
         body: JSON.stringify({ user_id: user.id }),
       }).catch(() => { /* provisioning failure is non-blocking */ })
+
+      // Auto-provision the client's booking calendar in the background — don't await, don't block
+      fetch('https://nexusconsultancy.app.n8n.cloud/webhook/nexus-provision-calendar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: user.id,
+          business_name: cfg?.business_name ?? '',
+          client_email: cfg?.notification_email || cfg?.business_email || '',
+          timezone: cfg?.timezone || 'America/New_York',
+        }),
+      }).catch(() => { /* calendar provisioning failure is non-blocking */ })
 
       router.push("/dashboard");
     } catch (e) {
