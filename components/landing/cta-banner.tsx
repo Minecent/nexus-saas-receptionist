@@ -21,7 +21,7 @@ const trustItems = [
 
 export default function CtaBanner() {
   return (
-    <section className="bg-slate-800 px-4 py-12 sm:px-6">
+    <section className="bg-slate-700 px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-4xl rounded-2xl bg-gradient-to-r from-teal-600 to-teal-500 px-8 py-12 text-center">
         <h2 className="mb-3 text-3xl font-bold tracking-tight text-white">
           Ready to put AI to work for your business?
