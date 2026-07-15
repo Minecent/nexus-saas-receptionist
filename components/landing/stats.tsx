@@ -22,7 +22,7 @@ const stats = [
 
 export default function Stats() {
   return (
-    <section className="relative border-b border-slate-800 bg-slate-950">
+    <section className="relative border-b border-slate-600 bg-slate-800">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.08),transparent_60%)]" />
       <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-14 sm:pt-28 sm:pb-20 sm:px-6">
         <div className="mb-12 text-center">
@@ -42,7 +42,7 @@ export default function Stats() {
           {stats.map((stat) => (
             <div
               key={stat.title}
-              className="rounded-2xl border border-slate-800 bg-slate-900 p-6"
+              className="rounded-2xl border border-slate-600 bg-slate-700 p-6"
             >
               <div className="mb-2 text-4xl font-bold text-teal-400">{stat.number}</div>
               <div className="mb-3 text-sm font-semibold text-white">{stat.title}</div>
