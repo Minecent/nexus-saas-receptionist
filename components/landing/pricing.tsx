@@ -132,7 +132,7 @@ export default function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false)
 
   return (
-    <section id="pricing" className="border-b border-slate-600 bg-slate-700">
+    <section id="pricing" className="border-b border-slate-700 bg-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -141,7 +141,7 @@ export default function Pricing() {
           </p>
 
           {/* Anchor pill */}
-          <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-slate-500 bg-slate-600/60 px-5 py-2">
+          <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-slate-600 bg-slate-700/60 px-5 py-2">
             <span className="text-sm font-medium text-slate-100 line-through">$4,000/mo receptionist</span>
             <span className="text-slate-600">→</span>
             <span className="text-sm font-bold text-teal-400">from $25/mo with NEXUS</span>
@@ -159,12 +159,12 @@ export default function Pricing() {
           </p>
 
           {/* Annual/Monthly toggle */}
-          <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-500 bg-slate-600 p-1">
+          <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-600 bg-slate-700 p-1">
             <button
               onClick={() => setIsAnnual(false)}
               className={cn(
                 'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-                !isAnnual ? 'bg-slate-500 text-white' : 'text-slate-100 hover:text-white'
+                !isAnnual ? 'bg-slate-600 text-white' : 'text-slate-100 hover:text-white'
               )}
             >
               Monthly
@@ -179,7 +179,7 @@ export default function Pricing() {
               Annual
               <span className={cn(
                 'rounded-full px-1.5 py-0.5 text-xs font-bold',
-                isAnnual ? 'bg-white/20 text-white' : 'bg-slate-500 text-teal-400'
+                isAnnual ? 'bg-white/20 text-white' : 'bg-slate-600 text-teal-400'
               )}>
                 Save 20%
               </span>
@@ -195,8 +195,8 @@ export default function Pricing() {
               className={cn(
                 'relative flex flex-col rounded-2xl border p-6 transition-all',
                 tier.highlight
-                  ? 'border-teal-500 bg-slate-600 shadow-xl shadow-teal-500/10'
-                  : 'border-slate-500 bg-slate-600 hover:border-slate-400'
+                  ? 'border-teal-500 bg-slate-700 shadow-xl shadow-teal-500/10'
+                  : 'border-slate-600 bg-slate-700 hover:border-slate-500'
               )}
             >
               {/* Badge */}
@@ -207,7 +207,7 @@ export default function Pricing() {
                       'inline-flex w-fit rounded-full border px-3 py-1 text-xs font-semibold',
                       tier.highlight
                         ? 'border-teal-500/40 bg-teal-500/10 text-teal-400'
-                        : 'border-slate-500 bg-slate-700 text-slate-100'
+                        : 'border-slate-600 bg-slate-800 text-slate-100'
                     )}>
                       {tier.badge}
                     </span>
@@ -268,7 +268,7 @@ export default function Pricing() {
 
               {/* Overage */}
               {tier.overage && (
-                <div className="mb-4 rounded-lg border border-slate-500 bg-slate-700 px-3 py-2 text-xs text-slate-300">
+                <div className="mb-4 rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-xs text-slate-300">
                   {tier.overage}
                 </div>
               )}
@@ -296,7 +296,7 @@ export default function Pricing() {
                     'block rounded-lg py-2.5 text-center text-sm font-semibold transition-colors',
                     tier.highlight
                       ? 'bg-teal-500 text-white hover:bg-teal-600'
-                      : 'border border-slate-500 bg-transparent text-slate-300 hover:border-slate-400 hover:text-white'
+                      : 'border border-slate-600 bg-transparent text-slate-300 hover:border-slate-500 hover:text-white'
                   )}
                 >
                   {tier.cta}
@@ -308,7 +308,7 @@ export default function Pricing() {
                     'block rounded-lg py-2.5 text-center text-sm font-semibold transition-colors',
                     tier.highlight
                       ? 'bg-teal-500 text-white hover:bg-teal-600'
-                      : 'border border-slate-500 bg-transparent text-slate-300 hover:border-slate-400 hover:text-white'
+                      : 'border border-slate-600 bg-transparent text-slate-300 hover:border-slate-500 hover:text-white'
                   )}
                 >
                   {tier.cta}
