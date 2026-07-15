@@ -11,7 +11,7 @@ const bullets = [
 
 export default function Detail() {
   return (
-    <section className="border-b border-slate-700 bg-slate-900">
+    <section className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
           <div>
@@ -26,7 +26,7 @@ export default function Detail() {
             </p>
             <ul className="mb-8 flex flex-col gap-3">
               {bullets.map((b) => (
-                <li key={b} className="flex items-start gap-3 text-sm text-slate-300">
+                <li key={b} className="flex items-start gap-3 text-sm text-slate-200">
                   <Check className="mt-0.5 size-4 shrink-0 text-teal-400" />
                   {b}
                 </li>
@@ -40,7 +40,7 @@ export default function Detail() {
             </Link>
           </div>
 
-          <div className="flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-800 py-20">
+          <div className="flex items-center justify-center rounded-2xl border border-slate-500 bg-slate-600 py-20">
             <div className="flex size-20 items-center justify-center rounded-full border border-teal-500/30 bg-teal-500/10">
               <Phone className="size-8 text-teal-400" />
             </div>
