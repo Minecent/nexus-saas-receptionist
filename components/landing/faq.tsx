@@ -52,7 +52,7 @@ export default function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section className="border-b border-slate-700 bg-slate-900">
+    <section className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mb-12 text-center">
@@ -65,7 +65,7 @@ export default function Faq() {
           </div>
         </FadeIn>
 
-        <div className="flex flex-col divide-y divide-slate-800">
+        <div className="flex flex-col divide-y divide-slate-500">
           {faqs.map((faq, i) => (
             <FadeIn key={i} delay={i * 40}>
               <button
