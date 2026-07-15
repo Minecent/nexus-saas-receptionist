@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-800">
+    <div className="min-h-screen bg-slate-700">
       <Header />
       <main>
         {/* Hero */}
-        <section className="border-b border-slate-700 bg-slate-900 px-4 py-24 sm:px-6">
+        <section className="border-b border-slate-500 bg-slate-700 px-4 py-24 sm:px-6">
           <div className="mx-auto max-w-3xl text-center">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-teal-400">
               Our story
@@ -34,7 +34,7 @@ export default function AboutPage() {
         </section>
 
         {/* Mission */}
-        <section className="border-b border-slate-700 bg-slate-800 px-4 py-20 sm:px-6">
+        <section className="border-b border-slate-500 bg-slate-700 px-4 py-20 sm:px-6">
           <div className="mx-auto max-w-4xl">
             <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
               <div>
@@ -68,7 +68,7 @@ export default function AboutPage() {
         </section>
 
         {/* Values */}
-        <section className="border-b border-slate-700 bg-slate-900 px-4 py-20 sm:px-6">
+        <section className="border-b border-slate-500 bg-slate-700 px-4 py-20 sm:px-6">
           <div className="mx-auto max-w-4xl">
             <div className="mb-12 text-center">
               <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
@@ -93,7 +93,7 @@ export default function AboutPage() {
                   body: 'Every feature exists because it helps you answer more calls and win more business.',
                 },
               ].map(({ title, body }) => (
-                <div key={title} className="rounded-2xl border border-slate-700 bg-slate-800 p-6">
+                <div key={title} className="rounded-2xl border border-slate-500 bg-slate-600 p-6">
                   <h3 className="mb-3 text-sm font-semibold text-white">{title}</h3>
                   <p className="text-sm text-slate-100 leading-relaxed">{body}</p>
                 </div>
@@ -103,7 +103,7 @@ export default function AboutPage() {
         </section>
 
         {/* Contact */}
-        <section className="bg-slate-800 px-4 py-20 sm:px-6">
+        <section className="bg-slate-700 px-4 py-20 sm:px-6">
           <div className="mx-auto max-w-2xl text-center">
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
               Get in touch
@@ -120,7 +120,7 @@ export default function AboutPage() {
                 <Calendar className="size-4" />
                 Book a call
               </CalendlyButton>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-slate-200">
                 Prefer email?{' '}
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
@@ -130,7 +130,7 @@ export default function AboutPage() {
                 </a>
               </p>
             </div>
-            <p className="mt-8 text-sm text-slate-600">
+            <p className="mt-8 text-sm text-slate-300">
               NEXUS AI · Registered in Delaware, USA
             </p>
           </div>
