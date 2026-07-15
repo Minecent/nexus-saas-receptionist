@@ -9,26 +9,26 @@ export default async function Header() {
   const user = data?.claims
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-700 bg-slate-900/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-500 bg-slate-700/90 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="text-lg font-bold tracking-tight text-white">
           NEXUS<span className="text-teal-400">.</span>
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm sm:flex">
-          <Link href="#features" className="text-slate-300 transition-colors hover:text-white">
+          <Link href="#features" className="text-slate-200 transition-colors hover:text-white">
             Features
           </Link>
-          <Link href="#pricing" className="text-slate-300 transition-colors hover:text-white">
+          <Link href="#pricing" className="text-slate-200 transition-colors hover:text-white">
             Pricing
           </Link>
-          <Link href="/blog" className="text-slate-300 transition-colors hover:text-white">
+          <Link href="/blog" className="text-slate-200 transition-colors hover:text-white">
             Blog
           </Link>
-          <Link href="/about" className="text-slate-300 transition-colors hover:text-white">
+          <Link href="/about" className="text-slate-200 transition-colors hover:text-white">
             About
           </Link>
-          <Link href="/contact" className="text-slate-300 transition-colors hover:text-white">
+          <Link href="/contact" className="text-slate-200 transition-colors hover:text-white">
             Contact
           </Link>
         </nav>
@@ -41,7 +41,7 @@ export default async function Header() {
             <>
               <Link
                 href="/login"
-                className="rounded-lg border border-slate-600 bg-transparent px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
+                className="rounded-lg border border-slate-500 bg-transparent px-4 py-2 text-sm font-medium text-slate-200 transition-colors hover:border-slate-500 hover:text-white"
               >
                 Log in
               </Link>
