@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://nexus-saas-receptionist.vercel.app";
+const siteUrl = "https://nexusconsultancy.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
