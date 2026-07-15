@@ -1,52 +1,72 @@
-import { FadeIn } from '@/components/landing/fade-in'
-
 const steps = [
   {
-    number: '01',
-    title: 'Tell us about your business',
+    number: '1',
+    title: 'Tell NEXUS about your business',
     description:
-      'Answer a few questions about your services, hours, and how you want calls handled. Takes about five minutes.',
+      'Services, hours, FAQs, preferences. Five minutes of setup gives your agent everything it needs to represent your brand.',
   },
   {
-    number: '02',
-    title: 'Choose your voice',
+    number: '2',
+    title: 'It goes to work immediately',
     description:
-      'Pick from a range of natural, professional voices. Your AI receptionist introduces itself however you want.',
+      'Calls get answered. Messages get delivered. Appointments get booked. All without you lifting a finger.',
   },
   {
-    number: '03',
-    title: 'Forward your calls',
+    number: '3',
+    title: 'You see measurable results',
     description:
-      'Point your existing number at NEXUS. No porting, no hardware, no downtime — your customers notice nothing except better service.',
+      'Fewer missed calls, more booked appointments, higher revenue. Measurable impact from week one.',
   },
 ]
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="border-b border-slate-800 bg-slate-950">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
-        <FadeIn>
-          <div className="mb-12 text-center">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
-              How it works
-            </p>
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Live in three simple steps
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-100">
-              Five minutes of setup gives your agent everything it needs. Then it goes to work 24/7/365.
-            </p>
-          </div>
-        </FadeIn>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          {steps.map((step) => (
-            <FadeIn key={step.number}>
-              <div className="h-full rounded-2xl border border-slate-800 bg-slate-900 p-6">
-                <div className="mb-4 text-sm font-bold text-teal-400">{step.number}</div>
-                <h3 className="mb-2 text-base font-semibold text-white">{step.title}</h3>
+    <section className="border-b border-slate-800 bg-slate-900">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:py-20 sm:px-6">
+        <div className="mb-12 text-center">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
+            How It Works
+          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Set up once. Get results every day.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
+            Five minutes of setup gives your agent everything it needs. Then it goes to work 24/7/365.
+          </p>
+        </div>
+
+        {/* Mobile: vertical stack with connecting line */}
+        <div className="flex flex-col gap-0 sm:hidden">
+          {steps.map((step, i) => (
+            <div key={step.number} className="flex gap-5">
+              <div className="flex flex-col items-center">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-teal-500 text-sm font-bold text-white">
+                  {step.number}
+                </div>
+                {i < steps.length - 1 && (
+                  <div className="mt-1 w-px flex-1 bg-teal-500/20" style={{ minHeight: '2.5rem' }} />
+                )}
+              </div>
+              <div className={i < steps.length - 1 ? 'pb-8' : 'pb-0'}>
+                <h3 className="mb-1.5 text-base font-semibold text-white">{step.title}</h3>
                 <p className="text-sm leading-relaxed text-slate-100">{step.description}</p>
               </div>
-            </FadeIn>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: horizontal 3-column with connector */}
+        <div className="relative hidden sm:grid sm:grid-cols-3 sm:gap-10">
+          {/* Connector line */}
+          <div className="absolute left-[calc(1/6*100%)] right-[calc(1/6*100%)] top-5 h-px bg-teal-500/20" />
+          {steps.map((step) => (
+            <div key={step.number} className="relative text-center">
+              <div className="relative z-10 mx-auto mb-5 flex size-10 items-center justify-center rounded-full bg-teal-500 text-sm font-bold text-white ring-4 ring-slate-900">
+                {step.number}
+              </div>
+              <h3 className="mb-2 text-sm font-semibold text-white">{step.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-100">{step.description}</p>
+            </div>
           ))}
         </div>
       </div>
