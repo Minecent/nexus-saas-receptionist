@@ -42,7 +42,7 @@ const industries = [
 
 export default function Industries() {
   return (
-    <section className="border-b border-slate-800 bg-slate-950">
+    <section className="border-b border-slate-600 bg-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mb-12 text-center">
@@ -63,7 +63,7 @@ export default function Industries() {
             const Icon = industry.icon
             return (
               <FadeIn key={industry.name} delay={i * 80}>
-                <div className="flex h-full flex-col rounded-2xl border border-slate-800 bg-slate-900 p-6 transition-all hover:border-teal-500/30">
+                <div className="flex h-full flex-col rounded-2xl border border-slate-600 bg-slate-700 p-6 transition-all hover:border-teal-500/30">
                   <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-teal-500/10">
                     <Icon className="size-5 text-teal-400" />
                   </div>
@@ -73,7 +73,7 @@ export default function Industries() {
                   <div className="mb-4 flex flex-col gap-2">
                     {industry.painPoints.map((point) => (
                       <div key={point} className="flex items-start gap-2 text-xs text-slate-100">
-                        <span className="mt-0.5 text-slate-600">✗</span>
+                        <span className="mt-0.5 text-slate-500">✗</span>
                         <span>{point}</span>
                       </div>
                     ))}
