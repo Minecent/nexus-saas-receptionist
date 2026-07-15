@@ -14,7 +14,7 @@ import CtaBanner from '@/components/landing/cta-banner'
 import Footer from '@/components/landing/footer'
 import { FadeIn } from '@/components/landing/fade-in'
 
-const siteUrl = "https://nexus-saas-receptionist.vercel.app";
+const siteUrl = "https://nexusconsultancy.app";
 
 const organizationSchema = {
   "@context": "https://schema.org",
