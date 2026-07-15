@@ -21,7 +21,7 @@ const nexusPros = [
 
 export default function CostComparison() {
   return (
-    <section className="border-b border-slate-700 bg-slate-900">
+    <section className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mb-12 text-center">
@@ -33,7 +33,7 @@ export default function CostComparison() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
               The average small business spends $48,000 per year on a full-time receptionist.{' '}
-              <sup className="text-slate-300 text-xs">*</sup> NEXUS starts at $25/month — and works around the clock.
+              <sup className="text-slate-200 text-xs">*</sup> NEXUS starts at $25/month — and works around the clock.
             </p>
           </div>
         </FadeIn>
@@ -41,18 +41,18 @@ export default function CostComparison() {
         <FadeIn delay={100}>
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Human receptionist */}
-            <div className="rounded-2xl border border-slate-600 bg-slate-700 p-6">
+            <div className="rounded-2xl border border-slate-500 bg-slate-600 p-6">
               <div className="mb-2 flex items-center gap-2">
                 <div className="size-2 rounded-full bg-rose-500" />
-                <span className="text-xs font-semibold uppercase tracking-widest text-slate-300">
+                <span className="text-xs font-semibold uppercase tracking-widest text-slate-200">
                   Human Receptionist
                 </span>
               </div>
               <div className="mb-1">
                 <span className="text-4xl font-bold text-rose-400">$4,000</span>
-                <span className="ml-1 text-sm text-slate-300">/ month</span>
+                <span className="ml-1 text-sm text-slate-200">/ month</span>
               </div>
-              <p className="mb-6 text-xs text-slate-300">Salary + benefits + payroll tax = $48,000/yr</p>
+              <p className="mb-6 text-xs text-slate-200">Salary + benefits + payroll tax = $48,000/yr</p>
               <ul className="flex flex-col gap-3">
                 {humanCons.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-slate-100">
@@ -64,7 +64,7 @@ export default function CostComparison() {
             </div>
 
             {/* NEXUS */}
-            <div className="rounded-2xl border border-teal-500/40 bg-slate-700 p-6 shadow-lg shadow-teal-500/5">
+            <div className="rounded-2xl border border-teal-500/40 bg-slate-600 p-6 shadow-lg shadow-teal-500/5">
               <div className="mb-2 flex items-center gap-2">
                 <div className="size-2 rounded-full bg-teal-400" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-teal-500">
@@ -73,12 +73,12 @@ export default function CostComparison() {
               </div>
               <div className="mb-1">
                 <span className="text-4xl font-bold text-teal-400">from $25</span>
-                <span className="ml-1 text-sm text-slate-300">/ month</span>
+                <span className="ml-1 text-sm text-slate-200">/ month</span>
               </div>
-              <p className="mb-6 text-xs text-slate-300">Pay only for what you need. No contracts.</p>
+              <p className="mb-6 text-xs text-slate-200">Pay only for what you need. No contracts.</p>
               <ul className="flex flex-col gap-3">
                 {nexusPros.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-slate-200">
                     <Check className="mt-0.5 size-4 shrink-0 text-teal-400" />
                     {item}
                   </li>
@@ -98,7 +98,7 @@ export default function CostComparison() {
             </p>
           </div>
         </FadeIn>
-        <p className="mt-6 text-center text-xs text-slate-700">
+        <p className="mt-6 text-center text-xs text-slate-300">
           * Based on U.S. Bureau of Labor Statistics median receptionist salary plus employer payroll taxes and benefits.
         </p>
       </div>
