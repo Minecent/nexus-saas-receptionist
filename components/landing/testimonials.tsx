@@ -46,7 +46,7 @@ function Stars({ count }: { count: number }) {
 
 export default function Testimonials() {
   return (
-    <section className="border-b border-slate-700 bg-slate-900 px-4 py-20 sm:px-6">
+    <section className="border-b border-slate-500 bg-slate-700 px-4 py-20 sm:px-6">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
@@ -65,10 +65,10 @@ export default function Testimonials() {
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="flex flex-col rounded-2xl border border-slate-700 bg-slate-800 p-6"
+              className="flex flex-col rounded-2xl border border-slate-500 bg-slate-600 p-6"
             >
               <Stars count={t.rating} />
-              <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-300">
+              <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-200">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
               <div className="mt-6 flex items-center gap-3">
@@ -77,11 +77,11 @@ export default function Testimonials() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{t.name}</p>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-slate-200">
                     {t.title} · {t.company}
                   </p>
                 </div>
-                <span className="ml-auto rounded-full border border-slate-600 bg-slate-700 px-2 py-0.5 text-xs text-slate-300">
+                <span className="ml-auto rounded-full border border-slate-500 bg-slate-600 px-2 py-0.5 text-xs text-slate-200">
                   {t.industry}
                 </span>
               </div>
