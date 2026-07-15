@@ -14,7 +14,7 @@ declare global {
 
 export default function CallCta() {
   return (
-    <section className="border-b border-slate-700 bg-slate-800">
+    <section className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mx-auto max-w-2xl text-center">
@@ -41,10 +41,10 @@ export default function CallCta() {
               Book a free demo
             </button>
 
-            <p className="mt-6 text-xs text-slate-300">
+            <p className="mt-6 text-xs text-slate-200">
               30 minutes · No commitment · See NEXUS live for your industry
             </p>
-            <p className="mt-2 text-xs text-slate-300">
+            <p className="mt-2 text-xs text-slate-200">
               Prefer email?{' '}
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
