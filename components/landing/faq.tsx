@@ -2,75 +2,96 @@
 
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { FadeIn } from './fade-in'
 
 const faqs = [
   {
-    q: 'What does NEXUS actually do when someone calls?',
+    q: 'What can NEXUS actually do?',
     a: 'NEXUS answers calls in 1 ring, 24/7/365. It collects caller information, answers questions about your business, books appointments, qualifies leads, and sends you instant summaries after every call. It can also transfer urgent calls to you or your team when needed — so nothing falls through the cracks.',
   },
   {
-    q: 'Will callers know they are talking to an AI?',
-    a: 'NEXUS sounds natural and conversational — most callers have smooth, quick conversations without friction. We believe in transparency: NEXUS can introduce itself as an AI assistant if you prefer, or simply as your receptionist.',
+    q: 'How fast does NEXUS answer calls?',
+    a: 'NEXUS answers in 1 ring — faster than most call centers. Callers never wait on hold or hear a busy signal. Every call is answered instantly, even during your busiest hours.',
   },
   {
-    q: 'Does NEXUS work outside business hours?',
+    q: 'Can NEXUS handle multiple calls at once?',
+    a: 'Yes. NEXUS handles unlimited parallel calls simultaneously. No busy signals, no hold times — every caller gets answered instantly, even during peak hours or when your team is already on other calls.',
+  },
+  {
+    q: 'Does NEXUS work after business hours?',
     a: 'Yes. NEXUS answers calls 24/7/365, including nights, weekends, and public holidays. Every lead that calls outside your office hours gets answered, qualified, and logged — so you never miss an opportunity.',
   },
   {
+    q: 'How does NEXUS learn about my business?',
+    a: "During onboarding, we train NEXUS on your website, services, pricing, and booking policies. You customise the greeting, responses, and transfer rules to match how your business operates. NEXUS gets smarter over time based on your feedback — the more you use it, the better it gets.",
+  },
+  {
+    q: 'Will callers know they are talking to AI?',
+    a: "Most don't realise it. Those who do typically prefer getting help immediately over navigating phone trees or leaving voicemail. You can choose to disclose upfront that callers are speaking with an AI assistant — many businesses do, and it doesn't hurt satisfaction at all.",
+  },
+  {
     q: 'Can I keep my existing phone number?',
-    a: 'Absolutely. You simply forward your existing number to NEXUS — no porting, no new number needed unless you want one. Setup takes minutes and your customers keep calling the same number they always have.',
+    a: 'Yes. You keep your current business number and set up call forwarding to NEXUS — a 5-minute change with your phone provider. No number porting required. We send you step-by-step instructions for your specific carrier after signup.',
   },
   {
-    q: 'What happens if NEXUS can\u2019t answer a question?',
-    a: 'NEXUS gracefully takes a message and flags the call for follow-up, or transfers the caller to you if it\u2019s urgent. You define the rules — NEXUS follows them. Every interaction is logged so you always have full context.',
+    q: 'What integrations does NEXUS support?',
+    a: 'Pro and above includes a Zapier webhook that connects AVA to 7,000+ apps — CRMs, spreadsheets, email tools, project management platforms, and more. Scale customers also get direct connections to Outlook, Salesforce, and HubSpot. Custom Build customers get hands-on integration setup with our team for fully custom workflows.',
   },
   {
-    q: 'How long does setup take?',
-    a: 'Most businesses are live within 24–48 hours. You tell us about your business, choose a voice, and forward your calls. NEXUS handles the rest — no hardware, no downloads, no IT department required.',
+    q: 'How does the Zapier integration work — do I need technical knowledge?',
+    a: "No technical knowledge needed. When you sign up for the Pro plan, you receive a unique webhook URL, a 5-minute setup guide, and a set of pre-built templates for common tools (HubSpot, Google Sheets, Slack, Gmail, and more). You paste your webhook URL into Zapier, pick a template, connect your app, and you are done. NEXUS delivers your call data — you decide where it goes. Zapier's own support team handles any questions about your specific workflow. If you would rather have our team build and manage your integrations end-to-end, that is available on the Scale plan.",
   },
   {
-    q: 'Can NEXUS book appointments into my calendar?',
-    a: 'Yes. NEXUS integrates with Google Calendar out of the box and can check availability, book, and confirm appointments in real time while the caller is still on the phone.',
-  },
-  {
-    q: 'What if I get more calls than my plan includes?',
-    a: 'You can upgrade anytime, and we\u2019ll notify you before you hit your limit. Extra calls are billed at a simple per-call rate — no surprise fees, no cut-off calls.',
+    q: 'What happens if NEXUS cannot answer a question?',
+    a: "NEXUS is trained on your business information, but when a caller asks something outside its knowledge, it doesn't guess. It takes a detailed message, captures the caller's contact info, and immediately notifies you via SMS or email so you can follow up. No caller is ever left without a response.",
   },
 ]
 
 export default function Faq() {
-  const [open, setOpen] = useState<number | null>(0)
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="border-b border-slate-800 bg-slate-950">
-      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mb-12 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">FAQ</p>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Frequently asked questions
-          </h2>
-        </div>
-        <div className="flex flex-col gap-3">
+    <section className="border-b border-slate-800 bg-slate-950">
+      <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+        <FadeIn>
+          <div className="mb-12 text-center">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-teal-400">
+              FAQ
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Common questions
+            </h2>
+          </div>
+        </FadeIn>
+
+        <div className="flex flex-col divide-y divide-slate-800">
           {faqs.map((faq, i) => (
-            <div
-              key={faq.q}
-              className="rounded-2xl border border-slate-800 bg-slate-900"
-            >
+            <FadeIn key={i} delay={i * 40}>
               <button
-                onClick={() => setOpen(open === i ? null : i)}
-                className="flex w-full items-center justify-between gap-4 p-5 text-left"
+                className="flex w-full items-start gap-4 py-5 text-left min-h-[56px]"
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                aria-expanded={openIndex === i}
               >
-                <span className="text-sm font-semibold text-white sm:text-base">{faq.q}</span>
                 <ChevronDown
-                  className={`size-4 shrink-0 text-teal-400 transition-transform ${
-                    open === i ? 'rotate-180' : ''
-                  }`}
+                  className={cn(
+                    'mt-0.5 size-4 shrink-0 text-teal-400 transition-transform duration-200',
+                    openIndex === i && 'rotate-180'
+                  )}
                 />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-white">{faq.q}</p>
+                  <div
+                    className={cn(
+                      'overflow-hidden transition-all duration-300',
+                      openIndex === i ? 'mt-3 max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    )}
+                  >
+                    <p className="text-sm leading-relaxed text-slate-100">{faq.a}</p>
+                  </div>
+                </div>
               </button>
-              {open === i && (
-                <p className="px-5 pb-5 text-sm leading-relaxed text-slate-100">{faq.a}</p>
-              )}
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>
