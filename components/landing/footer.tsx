@@ -19,7 +19,7 @@ const links = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-800 bg-slate-950">
+    <footer className="border-t border-slate-600 bg-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
@@ -71,7 +71,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 border-t border-slate-800 pt-6 text-xs text-slate-600">
+        <div className="mt-10 border-t border-slate-600 pt-6 text-xs text-slate-500">
           © {new Date().getFullYear()} NEXUS AI. All rights reserved.
         </div>
       </div>
