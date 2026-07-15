@@ -3,7 +3,7 @@ import { PhoneCall, CalendarCheck, MessageSquare } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-slate-800">
+    <section className="relative overflow-hidden bg-slate-700">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.12),transparent_60%)]" />
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-28">
         <div className="flex flex-col gap-6">
@@ -18,7 +18,7 @@ export default function Hero() {
             NEXUS answers every call 24/7/365, takes perfect messages, books appointments, and handles
             customer inquiries — so your team can focus on what matters most. Set up in minutes.
           </p>
-          <p className="max-w-md text-sm leading-relaxed text-slate-300">
+          <p className="max-w-md text-sm leading-relaxed text-slate-200">
             From solo operators to multi-location teams — NEXUS answers every call, so no
             business ever misses a customer.
           </p>
@@ -31,13 +31,13 @@ export default function Hero() {
             </Link>
             <Link
               href="#pricing"
-              className="rounded-lg border border-slate-600 bg-transparent px-6 py-3.5 text-base font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white text-center sm:text-left"
+              className="rounded-lg border border-slate-500 bg-transparent px-6 py-3.5 text-base font-semibold text-slate-200 transition-colors hover:border-slate-500 hover:text-white text-center sm:text-left"
             >
               See pricing
             </Link>
           </div>
 
-          <p className="text-xs text-slate-300">No credit card required · Cancel anytime</p>
+          <p className="text-xs text-slate-200">No credit card required · Cancel anytime</p>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
             {[
@@ -54,13 +54,13 @@ export default function Hero() {
         </div>
 
         <div className="flex flex-col gap-3 lg:pl-8">
-          <div className="rounded-2xl border border-slate-600 bg-slate-700 p-4">
+          <div className="rounded-2xl border border-slate-500 bg-slate-600 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <PhoneCall className="size-3.5 text-teal-400" />
               </div>
               <span className="text-sm font-medium text-white">Incoming call — Dr. Patel&apos;s office</span>
-              <span className="ml-auto text-xs text-slate-300">Just now</span>
+              <span className="ml-auto text-xs text-slate-200">Just now</span>
             </div>
             <p className="text-sm text-slate-100">
               &ldquo;Hi, I&apos;d like to book an appointment for next Tuesday afternoon.&rdquo;
@@ -70,26 +70,26 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-600 bg-slate-700 p-4">
+          <div className="rounded-2xl border border-slate-500 bg-slate-600 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <CalendarCheck className="size-3.5 text-teal-400" />
               </div>
               <span className="text-sm font-medium text-white">Appointment booked</span>
-              <span className="ml-auto text-xs text-slate-300">2s ago</span>
+              <span className="ml-auto text-xs text-slate-200">2s ago</span>
             </div>
             <p className="text-sm text-slate-100">
               Sarah Johnson · Tuesday, May 6 · 2:00 PM · Added to your calendar
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-600 bg-slate-700 p-4">
+          <div className="rounded-2xl border border-slate-500 bg-slate-600 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <MessageSquare className="size-3.5 text-teal-400" />
               </div>
               <span className="text-sm font-medium text-white">Confirmation sent</span>
-              <span className="ml-auto text-xs text-slate-300">Just now</span>
+              <span className="ml-auto text-xs text-slate-200">Just now</span>
             </div>
             <p className="text-sm text-slate-100">
               SMS confirmation sent to patient · No staff involvement required
