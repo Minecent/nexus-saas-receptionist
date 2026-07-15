@@ -9,7 +9,7 @@ export default async function Header() {
   const user = data?.claims
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-slate-700 bg-slate-900/90 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="text-lg font-bold tracking-tight text-white">
           NEXUS<span className="text-teal-400">.</span>
@@ -41,7 +41,7 @@ export default async function Header() {
             <>
               <Link
                 href="/login"
-                className="rounded-lg border border-slate-700 bg-transparent px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
+                className="rounded-lg border border-slate-600 bg-transparent px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:border-slate-500 hover:text-white"
               >
                 Log in
               </Link>
