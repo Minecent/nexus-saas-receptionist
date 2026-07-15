@@ -14,7 +14,7 @@ declare global {
 
 export default function CallCta() {
   return (
-    <section className="border-b border-slate-800 bg-slate-900">
+    <section className="border-b border-slate-600 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <FadeIn>
           <div className="mx-auto max-w-2xl text-center">
