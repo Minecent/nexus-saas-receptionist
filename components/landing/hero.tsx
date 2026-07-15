@@ -3,7 +3,7 @@ import { PhoneCall, CalendarCheck, MessageSquare } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-slate-900">
+    <section className="relative overflow-hidden bg-slate-700">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(13,148,136,0.12),transparent_60%)]" />
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-28">
         <div className="flex flex-col gap-6">
@@ -31,7 +31,7 @@ export default function Hero() {
             </Link>
             <Link
               href="#pricing"
-              className="rounded-lg border border-slate-700 bg-transparent px-6 py-3.5 text-base font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white text-center sm:text-left"
+              className="rounded-lg border border-slate-500 bg-transparent px-6 py-3.5 text-base font-semibold text-slate-300 transition-colors hover:border-slate-500 hover:text-white text-center sm:text-left"
             >
               See pricing
             </Link>
@@ -54,7 +54,7 @@ export default function Hero() {
         </div>
 
         <div className="flex flex-col gap-3 lg:pl-8">
-          <div className="rounded-2xl border border-slate-700 bg-slate-800 p-4">
+          <div className="rounded-2xl border border-slate-500 bg-slate-600 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <PhoneCall className="size-3.5 text-teal-400" />
@@ -70,7 +70,7 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-700 bg-slate-800 p-4">
+          <div className="rounded-2xl border border-slate-500 bg-slate-600 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <CalendarCheck className="size-3.5 text-teal-400" />
@@ -83,7 +83,7 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-700 bg-slate-800 p-4">
+          <div className="rounded-2xl border border-slate-500 bg-slate-600 p-4">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-full bg-teal-500/20">
                 <MessageSquare className="size-3.5 text-teal-400" />
