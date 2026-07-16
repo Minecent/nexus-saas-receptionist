@@ -33,7 +33,7 @@ export default function Stats() {
             Every missed call is a job that went to someone else.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-slate-100">
-            Calls come in while your staff is helping customers. You can&apos;t be everywhere at once.
+            Calls come in while you or your staff are helping customers. You can&apos;t be everywhere at once.
             That capacity gap? That&apos;s where NEXUS comes in.
           </p>
         </div>
