@@ -35,7 +35,7 @@ export default function CtaBanner() {
             href="/signup"
             className="rounded-lg bg-white px-6 py-3.5 text-sm font-semibold text-teal-600 transition-colors hover:bg-teal-50 text-center"
           >
-            Get Started — from $25/mo
+            Start free 7-day trial
           </Link>
           <button
             type="button"
