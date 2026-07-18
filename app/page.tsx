@@ -26,7 +26,7 @@ const organizationSchema = {
     "@type": "ImageObject",
     "url": `${siteUrl}/opengraph-image`,
   },
-  "description": "AI receptionist service that answers calls 24/7/365, books appointments, takes messages, and handles customer inquiries for businesses of all sizes. Starts at $25/month.",
+  "description": "AI receptionist service that answers calls 24/7/365, books appointments, takes messages, and handles customer inquiries for businesses of all sizes.",
   "contactPoint": [
     {
       "@type": "ContactPoint",
