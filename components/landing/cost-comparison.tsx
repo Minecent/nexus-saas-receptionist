@@ -11,7 +11,7 @@ const humanCons = [
 ]
 
 const nexusPros = [
-  'Plans starting from $25/month',
+  'One simple monthly plan — quoted for your business',
   'No benefits, payroll, or HR costs',
   'Available 24/7/365 — nights, weekends, holidays',
   'Never calls in sick or goes on vacation',
