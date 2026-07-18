@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { Check, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -19,20 +18,14 @@ const tiers = [
     name: 'Lite',
     badge: null as string | null,
     subtext: undefined as string | undefined,
-    monthlyPrice: '$25',
-    annualPrice: '$20',
-    annualTotal: '$240/yr',
-    period: 'per month',
-    crossOut: 'Full-time receptionist: $3,200/mo',
+    valueLine: 'For solo businesses',
     volume: '30 calls/month',
     estimate: null as string | null,
     description: null as string | null,
-    cta: 'Start free — no credit card',
+    cta: 'Start free trial',
     href: '/signup' as string | null,
     calendly: false,
     highlight: false,
-    overage: '+$1.10 per extra call*',
-    savingsVsReceptionist: '$47,700/yr',
     features: [
       '30 calls/month',
       '24/7/365 AI answering',
@@ -45,20 +38,14 @@ const tiers = [
     name: 'Pro',
     badge: 'Most Popular' as string | null,
     subtext: 'Recommended for service businesses',
-    monthlyPrice: '$149',
-    annualPrice: '$119',
-    annualTotal: '$1,430/yr',
-    period: 'per month',
-    crossOut: null,
+    valueLine: 'For growing service businesses',
     volume: '500 minutes/month',
     estimate: '~165 calls based on average call length',
     description: null,
-    cta: 'Get started today',
+    cta: 'Start free trial',
     href: '/signup' as string | null,
     calendly: false,
     highlight: true,
-    overage: '+$1.00 per extra call*',
-    savingsVsReceptionist: '$46,200/yr',
     features: [
       'Everything in Lite, plus:',
       '500 minutes/month',
@@ -75,20 +62,14 @@ const tiers = [
     name: 'Scale',
     badge: 'For Larger Teams' as string | null,
     subtext: undefined as string | undefined,
-    monthlyPrice: '$349',
-    annualPrice: '$279',
-    annualTotal: '$3,350/yr',
-    period: 'per month',
-    crossOut: null,
+    valueLine: 'For high call volumes & multiple locations',
     volume: '1,500 minutes/month',
     estimate: '~500 calls based on average call length',
     description: null,
-    cta: 'Get started',
+    cta: 'Start free trial',
     href: '/signup' as string | null,
     calendly: false,
     highlight: false,
-    overage: '+$0.85 per extra call*',
-    savingsVsReceptionist: '$43,800/yr',
     features: [
       'Everything in Pro, plus:',
       '1,500 minutes/month',
@@ -103,11 +84,7 @@ const tiers = [
     name: 'Custom Build',
     badge: 'Enterprise' as string | null,
     subtext: undefined as string | undefined,
-    monthlyPrice: 'Custom',
-    annualPrice: undefined as string | undefined,
-    annualTotal: undefined as string | undefined,
-    period: null,
-    crossOut: null,
+    valueLine: 'Built around your workflows',
     volume: 'Unlimited minutes',
     estimate: null,
     description: 'Scoped and quoted upfront — no surprises',
@@ -115,8 +92,6 @@ const tiers = [
     href: null as string | null,
     calendly: true,
     highlight: false,
-    overage: null,
-    savingsVsReceptionist: undefined as string | undefined,
     features: [
       'Everything in Scale, plus:',
       'Unlimited minutes (no overages)',
@@ -129,8 +104,6 @@ const tiers = [
 ]
 
 export default function Pricing() {
-  const [isAnnual, setIsAnnual] = useState(false)
-
   return (
     <section id="pricing" className="border-b border-slate-500 bg-slate-700">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
@@ -143,8 +116,8 @@ export default function Pricing() {
           {/* Anchor pill */}
           <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-slate-500 bg-slate-600/60 px-5 py-2">
             <span className="text-sm font-medium text-slate-100 line-through">$4,000/mo receptionist</span>
-            <span className="text-slate-300">→</span>
-            <span className="text-sm font-bold text-teal-400">from $25/mo with NEXUS</span>
+            <span className="text-slate-300">&rarr;</span>
+            <span className="text-sm font-bold text-teal-400">a fraction of the cost with NEXUS</span>
           </div>
 
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
@@ -157,34 +130,6 @@ export default function Pricing() {
             Whether you&apos;re a one-person shop or running multiple locations, there&apos;s a
             plan built for how you work.
           </p>
-
-          {/* Annual/Monthly toggle */}
-          <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-500 bg-slate-600 p-1">
-            <button
-              onClick={() => setIsAnnual(false)}
-              className={cn(
-                'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-                !isAnnual ? 'bg-slate-600 text-white' : 'text-slate-100 hover:text-white'
-              )}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setIsAnnual(true)}
-              className={cn(
-                'flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-                isAnnual ? 'bg-teal-500 text-white' : 'text-slate-100 hover:text-white'
-              )}
-            >
-              Annual
-              <span className={cn(
-                'rounded-full px-1.5 py-0.5 text-xs font-bold',
-                isAnnual ? 'bg-white/20 text-white' : 'bg-slate-600 text-teal-400'
-              )}>
-                Save 20%
-              </span>
-            </button>
-          </div>
         </div>
 
         {/* Tiers */}
@@ -221,25 +166,8 @@ export default function Pricing() {
               {/* Name */}
               <p className="mb-2 text-lg font-bold text-white">{tier.name}</p>
 
-              {/* Price */}
-              <div className="mb-1 flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-white">
-                  {tier.monthlyPrice === 'Custom'
-                    ? 'Custom'
-                    : (isAnnual && tier.annualPrice ? tier.annualPrice : tier.monthlyPrice)}
-                </span>
-                {tier.period && <span className="text-sm text-slate-100">/ mo</span>}
-              </div>
-
-              {/* Annual billing note */}
-              {isAnnual && tier.annualTotal && (
-                <p className="mb-1 text-xs text-teal-400/80">billed as {tier.annualTotal}</p>
-              )}
-
-              {/* Crossed-out comparison */}
-              {tier.crossOut && (
-                <p className="mb-1 text-xs text-slate-300 line-through">{tier.crossOut}</p>
-              )}
+              {/* Value line (replaces price) */}
+              <p className="mb-1 text-xl font-bold text-white">{tier.valueLine}</p>
 
               {/* Volume + optional estimate */}
               <p className={cn(
@@ -257,24 +185,8 @@ export default function Pricing() {
                 <p className="mb-2 text-xs text-slate-200">{tier.description}</p>
               )}
 
-              {/* Savings vs receptionist */}
-              {tier.savingsVsReceptionist && (
-                <div className="mb-3 rounded-lg border border-teal-500/20 bg-teal-500/5 px-3 py-2 text-center">
-                  <span className="text-xs text-slate-100">You save </span>
-                  <span className="text-xs font-bold text-teal-400">{tier.savingsVsReceptionist}</span>
-                  <span className="text-xs text-slate-100"> vs. a receptionist</span>
-                </div>
-              )}
-
-              {/* Overage */}
-              {tier.overage && (
-                <div className="mb-4 rounded-lg border border-slate-500 bg-slate-600 px-3 py-2 text-xs text-slate-200">
-                  {tier.overage}
-                </div>
-              )}
-
               {/* Features */}
-              <ul className="mb-6 flex flex-grow flex-col gap-2">
+              <ul className="mb-6 mt-2 flex flex-grow flex-col gap-2">
                 {tier.features.map((feature) => (
                   <li key={feature} className={cn(
                     'flex items-start gap-2 text-sm',
@@ -318,25 +230,41 @@ export default function Pricing() {
           ))}
         </div>
 
+        {/* Quote-first transparency line */}
+        <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-teal-500/20 bg-teal-500/5 px-6 py-5 text-center">
+          <p className="text-sm text-slate-100">
+            Plans are tailored to your call volume and setup. <span className="font-semibold text-white">One clear quote before you pay anything</span> — no hidden fees, no surprise overages, no contracts.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/signup"
+              className="rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-600"
+            >
+              Start free 7-day trial
+            </Link>
+            <button
+              type="button"
+              onClick={() => window.Calendly?.initPopupWidget({ url: CALENDLY_URL })}
+              className="rounded-lg border border-slate-500 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-colors hover:border-slate-400 hover:text-white"
+            >
+              Book a demo
+            </button>
+          </div>
+        </div>
+
         {/* Risk reversal + trust badges */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <div className="flex items-center gap-1.5">
             <Shield className="size-3.5 shrink-0 text-teal-400" />
-            <span className="text-xs text-slate-100">14-day money-back on Lite &amp; Pro</span>
+            <span className="text-xs text-slate-100">Free 7-day trial — no credit card</span>
           </div>
-          {['Cancel anytime', 'No setup fees', 'No contracts', 'Transparent billing'].map((label) => (
+          {['Cancel anytime', 'One clear quote upfront', 'No contracts', 'Transparent billing'].map((label) => (
             <div key={label} className="flex items-center gap-1.5">
               <Check className="size-3.5 shrink-0 text-teal-400" />
               <span className="text-xs text-slate-100">{label}</span>
             </div>
           ))}
         </div>
-
-        {/* Overage footnote */}
-        <p className="mt-6 text-center text-xs text-slate-300">
-          * Extra call charges require your approval before being applied. You will always be notified before any overage billing occurs.
-        </p>
-        <p className="mt-2 text-center text-xs text-slate-300">Pricing is in USD.</p>
       </div>
     </section>
   )
