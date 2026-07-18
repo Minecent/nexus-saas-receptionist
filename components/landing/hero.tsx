@@ -27,7 +27,7 @@ export default function Hero() {
               href="/signup"
               className="rounded-lg bg-teal-500 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-teal-600 text-center sm:text-left"
             >
-              Start free — from $25/mo
+              Start free 7-day trial
             </Link>
             <Link
               href="#pricing"
