@@ -127,7 +127,7 @@ export default function Pricing() {
             All plans include 24/7/365 call answering. Scale up as you grow. No contracts.
           </p>
           <p className="mx-auto mt-2 max-w-xl text-sm text-slate-200">
-            Whether you&apos;re a one-person shop or running multiple locations, there&apos;s a
+            Whether you are a one-person shop or running multiple locations, there is a
             plan built for how you work.
           </p>
         </div>
