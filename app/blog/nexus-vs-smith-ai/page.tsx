@@ -5,12 +5,12 @@ import { blogPostingSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   title: 'NEXUS vs Smith.ai (2026): AI Receptionist Pricing & Features Compared',
-  description: 'Smith.ai starts at $292.50/month for 30 calls. NEXUS Pro is $149/month for 500 minutes with 24/7 coverage and no per-call fees. Full comparison.',
+  description: 'Smith.ai blends AI with human agents and bills per call. NEXUS is a flat monthly plan with 24/7 coverage and no per-call fees. Full comparison.',
 }
 
 const schema = blogPostingSchema({
   headline: 'NEXUS vs Smith.ai (2026): AI Receptionist Pricing & Features Compared',
-  description: 'Smith.ai starts at $292.50/month for 30 calls. NEXUS Pro is $149/month for 500 minutes with 24/7 coverage and no per-call fees. Full comparison.',
+  description: 'Smith.ai blends AI with human agents and bills per call. NEXUS is a flat monthly plan with 24/7 coverage and no per-call fees. Full comparison.',
   slug: 'nexus-vs-smith-ai',
   keywords: ['Smith.ai alternative', 'AI receptionist', 'virtual receptionist comparison', 'NEXUS vs Smith.ai'],
 })
@@ -41,7 +41,7 @@ export default function NexusVsSmithAiPage() {
             NEXUS vs Smith.ai (2026)
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-400">
-            Smith.ai starts at $292.50/month for just 30 calls. NEXUS Pro is $149/month for 500 minutes of 24/7 AI answering. Here is the full comparison.
+            Smith.ai bills per call with a limited call allowance. NEXUS is a flat monthly plan covering 24/7 AI answering. Here is the full comparison.
           </p>
           <Link href="/signup" className="inline-flex items-center rounded-lg bg-teal-500 px-6 py-3 text-base font-semibold text-white hover:bg-teal-600 transition-colors">
             Try NEXUS Today &rarr;
@@ -53,7 +53,7 @@ export default function NexusVsSmithAiPage() {
         <section className="mb-16 rounded-2xl border border-slate-700 bg-slate-900 p-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-teal-400">TL;DR</p>
           <p className="text-slate-300 leading-relaxed">
-            Smith.ai is an AI-assisted answering service that blends automated AI with human agents. It starts at $292.50/month for 30 outbound calls — roughly $9.75 per call. NEXUS is a pure AI receptionist starting at $25/month, with the Pro plan at $149/month covering 500 minutes of calls around the clock. If you want 24/7 coverage at a predictable flat rate, NEXUS costs roughly half as much and never closes.
+            Smith.ai is an AI-assisted answering service that blends automated AI with human agents. Their plans allow a set number of calls per month, billed per call beyond that. NEXUS is a pure AI receptionist on a flat monthly plan, covering far more call volume around the clock. If you want 24/7 coverage at a predictable flat rate, NEXUS never closes and never bills by the call.
           </p>
           <p className="mt-3 text-xs text-slate-500 italic">
             Disclaimer: Smith.ai pricing is based on publicly available information. Pricing may change. Verify directly at smith.ai before making purchasing decisions.
@@ -74,7 +74,7 @@ export default function NexusVsSmithAiPage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-950">
                 {[
-                  ['Starting price', '$25/month', '$292.50/month'],
+                  ['Pricing model', 'Flat monthly plan, quoted per business', 'Per-call billing with allowances'],
                   ['Answering method', 'Pure AI, 24/7', 'AI + human hybrid'],
                   ['Availability', '24/7/365', '24/7 (AI) / business hours (human)'],
                   ['Included calls', '30 calls on Lite / 500 min on Pro', '30 outbound calls on Starter'],
@@ -109,9 +109,9 @@ export default function NexusVsSmithAiPage() {
                 <span className="text-xs font-semibold uppercase tracking-widest text-teal-400">NEXUS</span>
               </div>
               {[
-                { plan: 'Lite', price: '$25/mo', detail: '30 calls / 90 minutes' },
-                { plan: 'Pro', price: '$149/mo', detail: '500 minutes (~165 calls)' },
-                { plan: 'Scale', price: '$349/mo', detail: '1,500 minutes (~500 calls)' },
+                { plan: 'Lite', price: 'Solo businesses', detail: '30 calls / 90 minutes' },
+                { plan: 'Pro', price: 'Growing teams', detail: '500 minutes (~165 calls)' },
+                { plan: 'Scale', price: 'High volume', detail: '1,500 minutes (~500 calls)' },
               ].map(({ plan, price, detail }) => (
                 <div key={plan} className="mb-3 flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950 px-3 py-2">
                   <div>
@@ -131,9 +131,9 @@ export default function NexusVsSmithAiPage() {
                 <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Smith.ai</span>
               </div>
               {[
-                { plan: 'Starter', price: '$292.50/mo', detail: '30 calls' },
-                { plan: 'Basic', price: '$562.50/mo', detail: '60 calls' },
-                { plan: 'Growing', price: '$1,312.50/mo', detail: '150 calls' },
+                { plan: 'Starter', price: 'Per-call billing', detail: '30 calls included' },
+                { plan: 'Basic', price: 'Per-call billing', detail: '60 calls included' },
+                { plan: 'Growing', price: 'Per-call billing', detail: '150 calls included' },
               ].map(({ plan, price, detail }) => (
                 <div key={plan} className="mb-3 flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950 px-3 py-2">
                   <div>
@@ -149,7 +149,7 @@ export default function NexusVsSmithAiPage() {
 
           <div className="rounded-xl border border-teal-500/20 bg-teal-500/5 px-6 py-4">
             <p className="text-sm font-medium text-teal-300">
-              At 100 calls per month, Smith.ai costs roughly <span className="font-bold text-white">$975/month</span>. NEXUS Pro handles 165+ calls for <span className="font-bold text-white">$149/month</span> — a saving of over $9,900 per year.
+              At 100 calls per month, per-call billing means <span className="font-bold text-white">your invoice scales with every call answered</span>. A NEXUS plan covering 165+ calls stays at <span className="font-bold text-white">one flat monthly figure</span> — the same whether it is a quiet month or your busiest.
             </p>
           </div>
         </section>
@@ -168,7 +168,7 @@ export default function NexusVsSmithAiPage() {
               {
                 title: 'Pricing model',
                 nexus: 'NEXUS charges a flat monthly rate per plan. You know your exact cost every month. No per-call fees, no overage surprises beyond the clear overage rate shown on the pricing page — and you must approve any overage charges before they apply.',
-                smith: 'Smith.ai charges per call. Their Starter plan is $292.50/month for 30 calls — roughly $9.75 per call. As call volume grows, costs scale steeply.',
+                smith: 'Smith.ai charges per call, with a limited number of calls included in each plan. As call volume grows, costs scale steeply.',
               },
               {
                 title: 'AI vs human hybrid',
@@ -224,7 +224,7 @@ export default function NexusVsSmithAiPage() {
             <h2 className="mb-4 text-lg font-bold text-white">Where NEXUS is stronger</h2>
             <ul className="flex flex-col gap-3">
               {[
-                'Starts at $25/mo — Smith.ai starts at $292.50/mo',
+                'Flat monthly rate instead of per-call billing',
                 '24/7/365 with no after-hours gaps',
                 'Transparent pricing, no per-call fees',
                 'Unlimited simultaneous calls',
@@ -246,7 +246,7 @@ export default function NexusVsSmithAiPage() {
             {[
               {
                 q: 'Is NEXUS cheaper than Smith.ai?',
-                a: 'Yes. NEXUS Lite starts at $25/month. Smith.ai starts at $292.50/month for 30 calls. NEXUS Pro at $149/month covers 500 minutes — more calls than Smith.ai\'s $562.50 Basic plan.',
+                a: 'They are billed differently. Smith.ai charges per call with a limited allowance per plan. NEXUS is a flat monthly plan quoted for your business, covering far more call volume. Book a demo for a quote on your setup.',
               },
               {
                 q: 'Does Smith.ai offer 24/7 coverage?',
@@ -274,10 +274,10 @@ export default function NexusVsSmithAiPage() {
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-teal-400">Final Verdict</p>
           <h2 className="mb-4 text-2xl font-bold">NEXUS vs Smith.ai: Which should you choose?</h2>
           <p className="mb-4 text-slate-300 leading-relaxed">
-            Choose Smith.ai if you handle complex, high-stakes calls — legal intake, medical triage, situations where a human agent\'s judgment adds real value and you can afford $9.75+ per call.
+            Choose Smith.ai if you handle complex, high-stakes calls &mdash; legal intake, medical triage, situations where a human agent&rsquo;s judgment adds real value and per-call pricing is worth it.
           </p>
           <p className="text-slate-300 leading-relaxed">
-            Choose NEXUS if you need reliable 24/7 answering at a predictable cost. At $149/month for 500 minutes versus $292.50/month for 30 calls, NEXUS delivers more coverage for less than half the price. For service businesses that receive consistent call volume and want their receptionist to never miss a call — day or night — NEXUS is the clear choice.
+            Choose NEXUS if you need reliable 24/7 answering at a predictable cost. On one flat monthly plan instead of per-call billing, NEXUS delivers considerably more coverage for a predictable figure. For service businesses that receive consistent call volume and want their receptionist to never miss a call — day or night — NEXUS is the clear choice.
           </p>
         </section>
 
