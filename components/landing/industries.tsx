@@ -50,7 +50,7 @@ export default function Industries() {
               Industry Fit
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Built for businesses that can&apos;t miss a call
+              Built for businesses that cannot miss a call
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
               NEXUS is purpose-built for service businesses where every call is a potential customer.
