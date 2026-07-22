@@ -45,7 +45,7 @@ export default function Features() {
             Everything your front desk needs
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
-            Built for businesses that can&apos;t afford to miss a customer.
+            Built for businesses that cannot afford to miss a customer.
           </p>
         </div>
 
