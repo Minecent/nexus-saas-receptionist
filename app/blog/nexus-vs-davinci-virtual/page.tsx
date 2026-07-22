@@ -5,12 +5,12 @@ import { blogPostingSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   title: 'NEXUS vs Davinci Virtual (2026): AI Receptionist vs Live Service',
-  description: 'Davinci Virtual charges $129/month for 50 live minutes during business hours only. NEXUS starts at $25/month with 24/7 AI answering. Full 2026 comparison.',
+  description: 'Davinci Virtual provides live receptionist minutes during business hours. NEXUS answers 24/7/365 on a flat monthly plan. Full 2026 comparison.',
 }
 
 const schema = blogPostingSchema({
   headline: 'NEXUS vs Davinci Virtual (2026): AI Receptionist vs Live Service',
-  description: 'Davinci Virtual charges $129/month for 50 live minutes during business hours only. NEXUS starts at $25/month with 24/7 AI answering. Full 2026 comparison.',
+  description: 'Davinci Virtual provides live receptionist minutes during business hours. NEXUS answers 24/7/365 on a flat monthly plan. Full 2026 comparison.',
   slug: 'nexus-vs-davinci-virtual',
   keywords: ['Davinci Virtual alternative', 'AI receptionist', 'virtual receptionist comparison', 'NEXUS vs Davinci Virtual'],
 })
@@ -41,7 +41,7 @@ export default function NexusVsDavinciPage() {
             NEXUS vs Davinci Virtual (2026)
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-400">
-            Davinci Virtual charges $129/month for 50 live receptionist minutes during business hours only. NEXUS starts at $25/month with 24/7 AI answering and no per-minute fees.
+            Davinci Virtual provides live receptionist minutes during business hours only. NEXUS answers 24/7/365 on a flat monthly plan with no per-minute fees.
           </p>
           <Link href="/signup" className="inline-flex items-center rounded-lg bg-teal-500 px-6 py-3 text-base font-semibold text-white hover:bg-teal-600 transition-colors">
             Try NEXUS Today &rarr;
@@ -53,7 +53,7 @@ export default function NexusVsDavinciPage() {
         <section className="mb-16 rounded-2xl border border-slate-700 bg-slate-900 p-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-teal-400">TL;DR</p>
           <p className="text-slate-300 leading-relaxed">
-            Davinci Virtual charges $129/month for 50 live receptionist minutes during business hours only. NEXUS starts at $25/month with 24/7 AI answering, appointment booking, and call recordings on every plan — no per-minute billing. Davinci Virtual adds virtual office addresses and mail handling, which NEXUS does not offer. For phone answering alone, NEXUS delivers more coverage at 80% lower cost. Choose Davinci Virtual if you need a physical business address bundled with receptionist services. Choose NEXUS if reliable, round-the-clock call answering is your primary need.
+            Davinci Virtual sells bundles of live receptionist minutes during business hours only. NEXUS answers 24/7/365 with appointment booking and call recordings on every plan — no per-minute billing. Davinci Virtual adds virtual office addresses and mail handling, which NEXUS does not offer. For phone answering alone, NEXUS delivers considerably more coverage. Choose Davinci Virtual if you need a physical business address bundled with receptionist services. Choose NEXUS if reliable, round-the-clock call answering is your primary need.
           </p>
           <p className="mt-3 text-xs text-slate-500 italic">
             Disclaimer: Davinci Virtual pricing is based on publicly available information. Pricing may change. Verify at davincivirtual.com before making purchasing decisions.
@@ -74,7 +74,7 @@ export default function NexusVsDavinciPage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-950">
                 {[
-                  ['Starting price', '$25/month', '$129/month (50 minutes)'],
+                  ['Pricing model', 'Flat monthly plan, quoted per business', 'Per-minute bundles with overage'],
                   ['Answering method', 'AI-powered, conversational', 'Live human receptionists'],
                   ['Availability', '24/7/365', 'Business hours (Mon–Fri)'],
                   ['Billing model', 'Flat monthly — no per-minute fees', 'Per minute + overage charges'],
@@ -107,9 +107,9 @@ export default function NexusVsDavinciPage() {
                 <span className="text-xs font-semibold uppercase tracking-widest text-teal-400">NEXUS</span>
               </div>
               {[
-                { plan: 'Lite', price: '$25/mo', detail: '30 calls / 90 minutes' },
-                { plan: 'Pro', price: '$149/mo', detail: '500 minutes (~165 calls)' },
-                { plan: 'Scale', price: '$349/mo', detail: '1,500 minutes (~500 calls)' },
+                { plan: 'Lite', price: 'Solo businesses', detail: '30 calls / 90 minutes' },
+                { plan: 'Pro', price: 'Growing teams', detail: '500 minutes (~165 calls)' },
+                { plan: 'Scale', price: 'High volume', detail: '1,500 minutes (~500 calls)' },
               ].map(({ plan, price, detail }) => (
                 <div key={plan} className="mb-3 flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950 px-3 py-2">
                   <div>
@@ -127,9 +127,9 @@ export default function NexusVsDavinciPage() {
                 <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Davinci Virtual</span>
               </div>
               {[
-                { plan: 'Business 50', price: '$129/mo', detail: '50 minutes' },
-                { plan: 'Business 100', price: '$239/mo', detail: '100 minutes' },
-                { plan: 'Premium 150', price: '$319/mo', detail: '150 minutes' },
+                { plan: 'Business 50', price: 'Business hours', detail: '50 live minutes' },
+                { plan: 'Business 100', price: 'Business hours', detail: '100 live minutes' },
+                { plan: 'Premium 150', price: 'Business hours', detail: '150 live minutes' },
               ].map(({ plan, price, detail }) => (
                 <div key={plan} className="mb-3 flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950 px-3 py-2">
                   <div>
@@ -144,7 +144,7 @@ export default function NexusVsDavinciPage() {
           </div>
           <div className="rounded-xl border border-teal-500/20 bg-teal-500/5 px-6 py-4">
             <p className="text-sm font-medium text-teal-300">
-              For 100 calls averaging 3 minutes each, you need 300 minutes. Davinci Virtual charges <span className="font-bold text-white">$319+/month</span> with overages on top. NEXUS Pro handles 165 calls for <span className="font-bold text-white">$149/month</span> — total.
+              For 100 calls averaging 3 minutes each, you need 300 minutes. On a bundled live-minute plan that means <span className="font-bold text-white">overage on top of the base plan</span>. A NEXUS plan covering that volume is <span className="font-bold text-white">one flat monthly figure</span> — total.
             </p>
           </div>
         </section>
@@ -161,7 +161,7 @@ export default function NexusVsDavinciPage() {
               },
               {
                 title: 'Cost and billing',
-                nexus: 'Flat monthly rate. NEXUS Pro is $149/month for 500 minutes. All features included. You approve any overage charges before they are applied — no surprise bills.',
+                nexus: 'Flat monthly rate, quoted for your business. All features included on every plan. You approve any overage charges before they are applied — no surprise bills.',
                 davinci: 'Per-minute billing. A 5-minute call uses 5 minutes of your monthly allotment. Overage charges apply automatically once your minutes are exhausted.',
               },
               {
@@ -218,7 +218,7 @@ export default function NexusVsDavinciPage() {
             <h2 className="mb-4 text-lg font-bold text-white">Where NEXUS is stronger</h2>
             <ul className="flex flex-col gap-3">
               {[
-                '$25/mo to start vs $129/mo for 50 minutes',
+                'One flat monthly plan instead of bundled live minutes',
                 '24/7/365 — no after-hours gaps',
                 'Flat rate — no per-minute billing',
                 'Unlimited simultaneous calls',
@@ -260,7 +260,7 @@ export default function NexusVsDavinciPage() {
               {
                 useCase: 'Business that only needs a few calls handled per month',
                 winner: 'Either',
-                reason: 'NEXUS Lite at $25/month handles 30 calls. Davinci Virtual at $129/month may offer a human touch for lower volume.',
+                reason: 'The NEXUS entry plan handles low call volumes comfortably. Davinci Virtual may still suit you if a human voice during business hours matters more than round-the-clock coverage.',
                 teal: false,
               },
             ].map(({ useCase, winner, reason, teal }) => (
@@ -286,7 +286,7 @@ export default function NexusVsDavinciPage() {
             {[
               {
                 q: 'Is NEXUS cheaper than Davinci Virtual?',
-                a: 'Yes. NEXUS starts at $25/month for 30 calls. Davinci Virtual starts at $129/month for 50 live minutes with per-minute overage charges. For comparable call volume, NEXUS costs roughly 80% less.',
+                a: 'They are billed differently. Davinci Virtual sells bundles of live minutes with per-minute overage charges. NEXUS is a flat monthly plan quoted for your business, covering considerably more call volume around the clock. Book a demo for a quote on your setup.',
               },
               {
                 q: 'Does Davinci Virtual offer 24/7 coverage?',
@@ -321,7 +321,7 @@ export default function NexusVsDavinciPage() {
             Choose Davinci Virtual if you need a virtual office address bundled with phone answering. Their business address services in 5,000+ locations are genuinely useful for solopreneurs, remote businesses, and startups that need professional credibility without leasing office space.
           </p>
           <p className="text-slate-300 leading-relaxed">
-            Choose NEXUS if phone answering is your primary need. NEXUS starts at $25/month versus $129/month for 50 live minutes. It works 24/7, handles unlimited simultaneous calls, books appointments, records every call, and never charges a surprise bill. For service businesses that need a reliable AI receptionist without the overhead of a live service, NEXUS delivers more for less.
+            Choose NEXUS if phone answering is your primary need. It works 24/7/365, handles unlimited simultaneous calls, books appointments, records every call, and never charges a surprise bill. For service businesses that need a reliable AI receptionist without the overhead of a live service, NEXUS delivers more coverage on one predictable plan.
           </p>
         </section>
 
