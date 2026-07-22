@@ -16,7 +16,7 @@ export default function Hero() {
           </h1>
           <p className="max-w-md text-base leading-relaxed text-slate-100">
             NEXUS answers every call 24/7/365, takes perfect messages, books appointments, and handles
-            customer inquiries — so your team can focus on what matters most. Set up in minutes.
+            customer inquiries — so your team can focus on what matters most. Onboarding takes about fifteen minutes.
           </p>
           <p className="max-w-md text-sm leading-relaxed text-slate-200">
             From solo operators to multi-location teams — NEXUS answers every call, so no
@@ -33,7 +33,7 @@ export default function Hero() {
               href="#pricing"
               className="rounded-lg border border-slate-500 bg-transparent px-6 py-3.5 text-base font-semibold text-slate-200 transition-colors hover:border-slate-500 hover:text-white text-center sm:text-left"
             >
-              See pricing
+              See plans
             </Link>
           </div>
 
