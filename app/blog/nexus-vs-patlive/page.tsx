@@ -7,12 +7,12 @@ import { CalendlyButton } from '@/components/landing/calendly-button'
 export const metadata: Metadata = {
   title: 'PATLive Alternative 2026: NEXUS vs PATLive (Pricing + Features)',
   description:
-    'PATLive starts at $235/month for 75 minutes of live answering. NEXUS starts at $25/month with 24/7 AI coverage. Full comparison for 2026.',
+    'How PATLive and NEXUS differ on coverage, billing model, and setup. Full comparison for 2026.',
 }
 
 const schema = blogPostingSchema({
   headline: 'PATLive Alternative 2026: NEXUS vs PATLive (Pricing + Features)',
-  description: 'PATLive starts at $235/month for 75 minutes of live answering. NEXUS starts at $25/month with 24/7 AI coverage. Full comparison for 2026.',
+  description: 'How PATLive and NEXUS differ on coverage, billing model, and setup. Full comparison for 2026.',
   slug: 'nexus-vs-patlive',
   keywords: ['PATLive alternative', 'AI receptionist', 'virtual receptionist comparison', 'NEXUS vs PATLive'],
 })
@@ -73,7 +73,7 @@ export default function NexusVsPATLivePage() {
         <section className="mb-16 rounded-2xl border border-slate-700 bg-slate-900 p-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-teal-400">TL;DR</p>
           <p className="text-slate-300 leading-relaxed">
-            PATLive is a US-based live receptionist service. Their Starter plan is around $235/month for 75 minutes of live answering — billed per minute, with overage fees once you go over. NEXUS starts at $25/month with 24/7 AI answering, flat-rate billing, and no surprise invoices. For most service businesses, NEXUS delivers better coverage at a fraction of the price.
+            PATLive is a US-based live receptionist service. Their entry plan bundles a limited number of live minutes, billed per minute with overage fees once you go over. NEXUS is a flat monthly plan with 24/7 answering and no surprise invoices. For most service businesses, NEXUS delivers considerably more coverage on one predictable plan.
           </p>
           <Disclaimer>PATLive pricing based on publicly available information as of April 2026. Verify at patlive.com before making purchasing decisions.</Disclaimer>
         </section>
@@ -93,7 +93,7 @@ export default function NexusVsPATLivePage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-900/50">
                 {[
-                  ['Starting price', '$25/month', '~$235/month (75 minutes)*'],
+                  ['Pricing model', 'Flat monthly plan, quoted per business', 'Per-minute bundles with overage*'],
                   ['Billing model', 'Flat monthly — no per-minute fees', 'Per minute + overage charges'],
                   ['Availability', '24/7/365', '24/7 (all plans, additional cost)'],
                   ['Answering method', 'AI-powered', 'US-based live receptionists'],
@@ -120,17 +120,17 @@ export default function NexusVsPATLivePage() {
           <SectionLabel>Cost breakdown</SectionLabel>
           <h2 className="mb-4 text-2xl font-bold sm:text-3xl">The per-minute billing problem</h2>
           <p className="mb-4 text-slate-400 leading-relaxed">
-            PATLive&rsquo;s Starter plan gives you 75 minutes per month of live answering. At an average call length of 3 minutes, that&rsquo;s roughly 25 calls before you hit overage fees. For most active service businesses, 25 calls is a slow week — not a full month.
+            PATLive&rsquo;s Starter plan gives you 75 minutes per month of live answering. At an average call length of 3 minutes, that is roughly 25 calls before you hit overage fees. For most active service businesses, 25 calls is a slow week — not a full month.
           </p>
           <p className="mb-4 text-slate-400 leading-relaxed">
-            Once you exceed your minute allotment, overage charges kick in automatically. A busy month can easily push your invoice $100–$300 above your base plan price with no warning.
+            Once you exceed your minute allotment, overage charges kick in automatically. A busy month can easily push your invoice well above your base plan with no warning.
           </p>
           <p className="text-slate-400 leading-relaxed">
-            NEXUS charges a flat monthly rate. No per-minute tracking. No surprise bills. You know exactly what you&rsquo;re paying before the month starts.
+            NEXUS charges a flat monthly rate. No per-minute tracking. No surprise bills. You know exactly what you are paying before the month starts.
           </p>
           <div className="mt-6 rounded-xl border border-rose-500/20 bg-rose-500/5 px-6 py-4">
             <p className="text-sm text-rose-300">
-              <strong className="text-white">Example:</strong> 80 calls at 3 min average = 240 minutes. PATLive Starter covers 75 minutes. That&rsquo;s 165 minutes of overage on top of the $235 base. NEXUS Pro covers 500 minutes for $149/month. Total.
+              <strong className="text-white">Example:</strong> 80 calls at 3 min average = 240 minutes. PATLive Starter covers 75 minutes. That is 165 minutes of overage on top of the base plan. A NEXUS plan covering 500 minutes is one flat monthly figure. Total.
             </p>
           </div>
         </section>
@@ -151,9 +151,9 @@ export default function NexusVsPATLivePage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-900/50">
                 {[
-                  ['30 calls/month', '$25', '~$235+', '~$210/mo saved'],
-                  ['100 calls/month', '$99', '~$450+', '~$350/mo saved'],
-                  ['300+ calls/month', '$349', '~$1,100+', '~$750/mo saved'],
+                  ['30 calls/month', 'Flat rate, every feature', 'Within entry bundle', 'Comparable coverage'],
+                  ['100 calls/month', 'Flat rate, every feature', 'Overage begins', 'NEXUS stays predictable'],
+                  ['300+ calls/month', 'Flat rate, every feature', 'Substantial overage', 'NEXUS stays predictable'],
                 ].map(([vol, nexus, pat, diff]) => (
                   <tr key={vol}>
                     <td className="px-5 py-4 font-medium text-slate-300">{vol}</td>
@@ -243,7 +243,7 @@ export default function NexusVsPATLivePage() {
             <h2 className="mb-4 text-lg font-bold text-white">When NEXUS is stronger</h2>
             <ul className="flex flex-col gap-3">
               {[
-                'Starts at $25/mo vs ~$235/mo',
+                'Flat monthly rate instead of per-minute billing',
                 'Flat rate — no surprise overage bills',
                 'Unlimited simultaneous calls',
                 '24/7/365 on every plan, no add-ons',
@@ -291,7 +291,7 @@ export default function NexusVsPATLivePage() {
             {[
               {
                 q: 'Is NEXUS cheaper than PATLive?',
-                a: 'Yes, significantly. PATLive\'s entry plan starts around $235/month for just 75 minutes. NEXUS starts at $25/month for 30 calls — and the Pro plan is $149/month for 500 minutes, all inclusive. At most call volumes, NEXUS costs 3–10× less.',
+                a: 'They are billed differently. PATLive bundles a limited number of live minutes and charges overage beyond them. NEXUS is a flat monthly plan quoted for your business, with every feature included and any overage approved by you first. Book a demo for a quote on your setup.',
               },
               {
                 q: 'Does PATLive offer 24/7 coverage?',
