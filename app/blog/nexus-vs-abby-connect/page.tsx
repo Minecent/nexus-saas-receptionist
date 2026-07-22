@@ -7,12 +7,12 @@ import { CalendlyButton } from '@/components/landing/calendly-button'
 export const metadata: Metadata = {
   title: 'Abby Connect Alternative 2026: NEXUS vs Abby Connect (Pricing + Features)',
   description:
-    'Abby Connect starts at $299/month for 100 minutes of live answering. NEXUS starts at $25/month with 24/7 AI coverage. Full comparison for 2026.',
+    'How Abby Connect and NEXUS differ on coverage, billing model, appointment booking, and setup. Full comparison for 2026.',
 }
 
 const schema = blogPostingSchema({
   headline: 'Abby Connect Alternative 2026: NEXUS vs Abby Connect (Pricing + Features)',
-  description: 'Abby Connect starts at $299/month for 100 minutes of live answering. NEXUS starts at $25/month with 24/7 AI coverage. Full comparison for 2026.',
+  description: 'How Abby Connect and NEXUS differ on coverage, billing model, appointment booking, and setup. Full comparison for 2026.',
   slug: 'nexus-vs-abby-connect',
   keywords: ['Abby Connect alternative', 'AI receptionist', 'virtual receptionist comparison', 'NEXUS vs Abby Connect'],
 })
@@ -58,7 +58,7 @@ export default function NexusVsAbbyConnectPage() {
             Abby Connect Alternative 2026:<br className="hidden sm:block" /> NEXUS vs Abby Connect
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-400">
-            Abby Connect is known for a personal, friendly touch — but starts at $299/month for just 100 minutes. NEXUS delivers professional AI answering 24/7 starting at $25/month with no per-minute billing.
+            Abby Connect is known for a personal, friendly touch during staffed hours. NEXUS answers every call 24/7/365 on a flat monthly plan, with no per-minute billing.
           </p>
           <Link
             href="/signup"
@@ -73,7 +73,7 @@ export default function NexusVsAbbyConnectPage() {
         <section className="mb-16 rounded-2xl border border-slate-700 bg-slate-900 p-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-teal-400">TL;DR</p>
           <p className="text-slate-300 leading-relaxed">
-            Abby Connect is a boutique live receptionist service focused on small businesses and law firms. Their entry plan is around $299/month for 100 minutes — billed per minute, with overage fees on top. NEXUS starts at $25/month with 24/7 AI answering, flat-rate billing, and unlimited simultaneous calls. For businesses where cost predictability and round-the-clock coverage matter, NEXUS is the stronger choice.
+            Abby Connect is a boutique live receptionist service focused on small businesses and law firms. Their plans are built around a bundle of live minutes, billed per minute with overage fees once the bundle runs out. NEXUS is a flat monthly plan with 24/7 answering and unlimited simultaneous calls. For businesses where cost predictability and round-the-clock coverage matter, NEXUS is the stronger choice.
           </p>
           <Disclaimer>Abby Connect pricing based on publicly available information as of April 2026. Verify at abby.com before making purchasing decisions.</Disclaimer>
         </section>
@@ -93,7 +93,7 @@ export default function NexusVsAbbyConnectPage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-900/50">
                 {[
-                  ['Starting price', '$25/month', '~$299/month (100 minutes)*'],
+                  ['Pricing model', 'Flat monthly plan, quoted per business', 'Per-minute bundles with overage*'],
                   ['Billing model', 'Flat monthly — no per-minute fees', 'Per minute + overage charges'],
                   ['Availability', '24/7/365', 'Business hours + after-hours option'],
                   ['Answering method', 'AI-powered', 'US-based live receptionists'],
@@ -123,7 +123,7 @@ export default function NexusVsAbbyConnectPage() {
           <ul className="space-y-4">
             {[
               'Per-minute billing means unpredictable invoices — a busy month or a few long calls can blow past the base plan price.',
-              'At $299+/month for 100 minutes, the cost per call is high for businesses with moderate or growing call volumes.',
+              'Bundled live minutes make the cost per call hard to predict once volume grows beyond the entry plan.',
               'Live receptionist capacity is limited. Multiple simultaneous calls mean some callers wait — or get voicemail.',
               'After-hours coverage is typically an add-on or limited, leaving gaps on nights, weekends, and holidays.',
               'Scaling up requires moving to a more expensive plan — volume discounts are modest compared to AI pricing.',
@@ -158,9 +158,9 @@ export default function NexusVsAbbyConnectPage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-900/50">
                 {[
-                  ['30 calls/month', '$25', '~$299+', '~$274/mo saved'],
-                  ['100 calls/month', '$99', '~$500+', '~$400/mo saved'],
-                  ['300+ calls/month', '$349', '~$1,200+', '~$850/mo saved'],
+                  ['30 calls/month', 'Flat rate, every feature', 'Within entry bundle', 'Comparable coverage'],
+                  ['100 calls/month', 'Flat rate, every feature', 'Overage begins', 'NEXUS stays predictable'],
+                  ['300+ calls/month', 'Flat rate, every feature', 'Substantial overage', 'NEXUS stays predictable'],
                 ].map(([vol, nexus, abby, diff]) => (
                   <tr key={vol}>
                     <td className="px-5 py-4 font-medium text-slate-300">{vol}</td>
@@ -245,7 +245,7 @@ export default function NexusVsAbbyConnectPage() {
             <h2 className="mb-4 text-lg font-bold text-white">When NEXUS is stronger</h2>
             <ul className="flex flex-col gap-3">
               {[
-                'Starts at $25/mo vs ~$299/mo',
+                'Flat monthly rate instead of per-minute billing',
                 'Flat rate — no surprise overage bills',
                 '24/7/365 included on every plan',
                 'Unlimited simultaneous calls',
@@ -338,7 +338,7 @@ export default function NexusVsAbbyConnectPage() {
             {[
               {
                 q: 'Is NEXUS cheaper than Abby Connect?',
-                a: 'Yes, significantly. Abby Connect\'s entry plan starts around $299/month for 100 minutes with overage charges on top. NEXUS starts at $25/month, and the Pro plan is $149/month for 500 minutes — all inclusive. At almost every call volume, NEXUS costs 2–10× less.',
+                a: 'They are billed differently. Abby Connect sells bundles of live minutes with overage charges on top, so your invoice moves with your call volume. NEXUS is a flat monthly plan quoted for your business, with every feature included and any overage approved by you first. Book a demo and we will quote your setup directly.',
               },
               {
                 q: 'Does Abby Connect offer 24/7 coverage?',
@@ -379,7 +379,7 @@ export default function NexusVsAbbyConnectPage() {
 
         {/* ── 12. CTA ── */}
         <section className="rounded-2xl bg-gradient-to-r from-teal-600 to-teal-500 px-8 py-12 text-center">
-          <h2 className="mb-2 text-3xl font-bold tracking-tight text-white">Professional AI answering from $25/month</h2>
+          <h2 className="mb-2 text-3xl font-bold tracking-tight text-white">Professional AI answering, around the clock</h2>
           <p className="mb-8 text-base text-teal-100">Keep your existing number. Live in 24–48 hours. No contracts.</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
