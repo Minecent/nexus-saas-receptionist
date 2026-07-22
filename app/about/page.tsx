@@ -23,12 +23,12 @@ export default function AboutPage() {
               Our story
             </p>
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Built for businesses that can&apos;t afford to miss a call
+              Built for businesses that cannot afford to miss a call
             </h1>
             <p className="text-lg leading-relaxed text-slate-100">
               NEXUS started with a simple observation: businesses of every size lose thousands of dollars
-              every month to missed calls — not because they don&apos;t care, but because
-              they&apos;re busy running their business. We built the solution we wished existed.
+              every month to missed calls — not because they do not care, but because
+              they are busy running their business. We built the solution we wished existed.
             </p>
           </div>
         </section>
@@ -46,7 +46,7 @@ export default function AboutPage() {
                 </h2>
                 <p className="text-slate-100 leading-relaxed">
                   A Fortune 500 company can afford a full reception team. A local plumbing company,
-                  a two-person law firm, or a solo physiotherapist can&apos;t. NEXUS closes that gap
+                  a two-person law firm, or a solo physiotherapist cannot. NEXUS closes that gap
                   — giving every business the same quality of first impression, 24 hours a day.
                 </p>
               </div>
@@ -109,11 +109,11 @@ export default function AboutPage() {
               Get in touch
             </p>
             <h2 className="mb-4 text-3xl font-bold tracking-tight text-white">
-              We&apos;d love to hear from you
+              We would love to hear from you
             </h2>
             <p className="mb-8 text-slate-100">
               Questions about NEXUS, partnership enquiries, or just want to talk through whether
-              it&apos;s the right fit for your business — reach out directly.
+              it is the right fit for your business — reach out directly.
             </p>
             <div className="flex flex-col items-center gap-3">
               <CalendlyButton className="inline-flex items-center gap-2 rounded-lg bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-600">
