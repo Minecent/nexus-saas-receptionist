@@ -53,7 +53,7 @@ export default function NexusVsAnswerConnectPage() {
         <section className="mb-16 rounded-2xl border border-slate-700 bg-slate-900 p-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-teal-400">TL;DR</p>
           <p className="text-slate-300 leading-relaxed">
-            AnswerConnect is a live receptionist service with per-minute billing and overage charges. Their entry plan starts around $325/month for 200 minutes of live answering during business hours. NEXUS starts at $25/month with 24/7 AI answering and transparent flat-rate pricing — no per-minute fees, no overage surprises. For businesses that want predictable costs and round-the-clock coverage, NEXUS is the stronger choice at a fraction of the price.
+            AnswerConnect is a live receptionist service with per-minute billing and overage charges. Their plans bundle a set number of live minutes during business hours, billed per minute with overage charges beyond the bundle. NEXUS is a flat monthly plan with 24/7 answering — no per-minute fees and no overage surprises. For businesses that want predictable costs and round-the-clock coverage, NEXUS is the stronger choice.
           </p>
           <p className="mt-3 text-xs text-slate-500 italic">
             Disclaimer: AnswerConnect pricing is based on publicly available information and may change. Verify at answerconnect.com before making purchasing decisions.
@@ -74,7 +74,7 @@ export default function NexusVsAnswerConnectPage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-950">
                 {[
-                  ['Starting price', '$25/month', '~$325/month (200 minutes)'],
+                  ['Pricing model', 'Flat monthly plan, quoted per business', 'Per-minute bundles with overage'],
                   ['Billing model', 'Flat monthly — no per-minute fees', 'Per minute + overage charges'],
                   ['Availability', '24/7/365', 'Business hours + limited after-hours'],
                   ['Answering method', 'AI-powered, 24/7', 'Live human receptionists'],
@@ -103,7 +103,7 @@ export default function NexusVsAnswerConnectPage() {
             AnswerConnect, like most live receptionist services, bills by the minute. Their entry plan includes 200 minutes — roughly 67 calls averaging 3 minutes each. Once you exceed those 200 minutes, overage charges apply automatically.
           </p>
           <p className="mb-4 text-slate-400 leading-relaxed">
-            The math works against you quickly. A busy month with 150 calls averaging 4 minutes each is 600 minutes. At $325/month for 200 minutes, you are paying overage on 400 extra minutes before you know it.
+            The math works against you quickly. A busy month with 150 calls averaging 4 minutes each is 600 minutes. On a 200-minute bundle, you are paying overage on 400 extra minutes before you know it.
           </p>
           <p className="text-slate-400 leading-relaxed">
             NEXUS charges a flat monthly rate. You see the cost before you sign up, overages require your explicit approval, and you will never receive a bill you did not expect.
@@ -111,7 +111,7 @@ export default function NexusVsAnswerConnectPage() {
 
           <div className="mt-6 rounded-xl border border-rose-500/20 bg-rose-500/5 px-6 py-4">
             <p className="text-sm text-rose-300">
-              <strong className="text-white">Real example:</strong> 150 calls at 4 min average = 600 minutes. AnswerConnect entry plan covers 200 minutes. That is 400 minutes of overage — on top of the $325 base. NEXUS Pro covers 500 minutes for $149/month. Total.
+              <strong className="text-white">Real example:</strong> 150 calls at 4 min average = 600 minutes. AnswerConnect entry plan covers 200 minutes. That is 400 minutes of overage — on top of the base plan. A NEXUS plan covering 500 minutes is one flat monthly figure. Total.
             </p>
           </div>
         </section>
@@ -184,7 +184,7 @@ export default function NexusVsAnswerConnectPage() {
             <h2 className="mb-4 text-lg font-bold text-white">Where NEXUS is stronger</h2>
             <ul className="flex flex-col gap-3">
               {[
-                'Starts at $25/mo vs ~$325/mo',
+                'Flat monthly rate instead of per-minute billing',
                 '24/7/365 — no after-hours gaps',
                 'Flat rate — zero surprise overage bills',
                 'Unlimited simultaneous calls',
@@ -206,7 +206,7 @@ export default function NexusVsAnswerConnectPage() {
             {[
               {
                 q: 'Is NEXUS cheaper than AnswerConnect?',
-                a: 'Yes, significantly. AnswerConnect starts around $325/month for 200 minutes with overage fees on top. NEXUS starts at $25/month and the Pro plan is $149/month for 500 minutes — all inclusive.',
+                a: 'They are billed differently. AnswerConnect sells bundles of live minutes with overage fees on top, so the invoice moves with your call volume. NEXUS is a flat monthly plan quoted for your business, with every feature included. Book a demo for a quote on your setup.',
               },
               {
                 q: 'Does AnswerConnect offer 24/7 coverage?',
