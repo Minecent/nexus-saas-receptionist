@@ -33,7 +33,7 @@ export default function CostComparison() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
               The average small business spends $48,000 per year on a full-time receptionist.{' '}
-              <sup className="text-slate-200 text-xs">*</sup> NEXUS starts at $25/month — and works around the clock.
+              <sup className="text-slate-200 text-xs">*</sup> NEXUS costs a small fraction of that — and works around the clock.
             </p>
           </div>
         </FadeIn>
@@ -72,10 +72,10 @@ export default function CostComparison() {
                 </span>
               </div>
               <div className="mb-1">
-                <span className="text-4xl font-bold text-teal-400">from $25</span>
+                <span className="text-4xl font-bold text-teal-400">One flat plan</span>
                 <span className="ml-1 text-sm text-slate-200">/ month</span>
               </div>
-              <p className="mb-6 text-xs text-slate-200">Pay only for what you need. No contracts.</p>
+              <p className="mb-6 text-xs text-slate-200">Quoted for your business. No contracts.</p>
               <ul className="flex flex-col gap-3">
                 {nexusPros.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-slate-200">
@@ -90,8 +90,8 @@ export default function CostComparison() {
           {/* Savings callout — large and impactful */}
           <div className="mx-auto mt-6 max-w-4xl rounded-2xl border border-teal-500/30 bg-teal-500/5 px-6 py-8 text-center">
             <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-teal-400">Your annual saving</p>
-            <p className="text-5xl sm:text-6xl font-extrabold text-white mb-3">
-              $47,700<span className="text-teal-400">/year</span>
+            <p className="text-4xl sm:text-5xl font-extrabold text-white mb-3">
+              Tens of thousands<span className="text-teal-400"> a year</span>
             </p>
             <p className="text-base text-slate-100 max-w-md mx-auto">
               Switch to NEXUS and put that money back into growing your business — while answering more calls than any human ever could.
