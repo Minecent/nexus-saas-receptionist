@@ -86,7 +86,7 @@ export default function NexusVsRubyPage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-900/50">
                 {[
-                  ['Starting price', '$25/mo', '$235/mo*'],
+                  ['Pricing model', 'Flat monthly plan, quoted per business', 'Per-minute bundles with overage*'],
                   ['Billing model', 'Per call', 'Per minute'],
                   ['Setup time', '24–48 hours with white-glove setup', '1–3 business days'],
                   ['Contract', 'Month-to-month', 'Month-to-month with notice period'],
@@ -146,9 +146,9 @@ export default function NexusVsRubyPage() {
               </thead>
               <tbody className="divide-y divide-slate-800 bg-slate-900/50">
                 {[
-                  ['30 calls/month', '$25', '~$235+', '~$210/mo saved'],
-                  ['100 calls/month', '$99', '~$700+', '~$600/mo saved'],
-                  ['300+ calls/month', '$450', '~$1,500+', '~$1,050/mo saved'],
+                  ['30 calls/month', 'Flat rate, every feature', 'Within entry bundle', 'Comparable coverage'],
+                  ['100 calls/month', 'Flat rate, every feature', 'Overage begins', 'NEXUS stays predictable'],
+                  ['300+ calls/month', 'Flat rate, every feature', 'Substantial overage', 'NEXUS stays predictable'],
                 ].map(([vol, nexus, ruby, diff]) => (
                   <tr key={vol}>
                     <td className="px-5 py-4 font-medium text-slate-300">{vol}</td>
@@ -229,7 +229,7 @@ export default function NexusVsRubyPage() {
               'Medical and dental offices needing 24/7 appointment scheduling without holding staff after hours.',
               'Property management companies handling tenant requests at all hours.',
               'Any business where call cost matters — NEXUS costs a fraction of live answering services.',
-              'Small businesses that can\'t justify $250+/mo for a receptionist service but need professional coverage.',
+              'Small businesses that cannot justify a full live answering service but still need professional coverage.',
             ].map((point) => (
               <li key={point} className="flex items-start gap-3 rounded-xl border border-teal-500/20 bg-teal-500/5 px-5 py-4">
                 <Check className="mt-0.5 size-4 shrink-0 text-teal-400" />
@@ -277,7 +277,7 @@ export default function NexusVsRubyPage() {
               },
               {
                 q: 'Is NEXUS cheaper than Ruby Receptionists?',
-                a: 'In most cases, yes significantly. NEXUS starts at $25/month compared to Ruby\'s publicly listed starting price of around $235/month. For higher call volumes the difference grows considerably. That said, pricing depends on your actual usage — compare both at your expected call volume.',
+                a: 'They are billed differently. Ruby bundles live receptionist minutes and charges per minute beyond them, so the invoice moves with your call volume. NEXUS is a flat monthly plan quoted for your business. Book a demo and we will quote your setup against your expected call volume.',
               },
               {
                 q: 'Can NEXUS handle the same workflows as Ruby?',
@@ -293,7 +293,7 @@ export default function NexusVsRubyPage() {
               },
               {
                 q: 'Does NEXUS work for law firms?',
-                a: 'NEXUS works well for law firms handling high call volumes — intake scheduling, after-hours coverage, message taking. For very sensitive intake calls (e.g. personal injury, criminal defense) where emotional tone is critical, we recommend evaluating a recorded sample first. Contact us and we\'ll walk you through it.',
+                a: 'NEXUS works well for law firms handling high call volumes — intake scheduling, after-hours coverage, message taking. For very sensitive intake calls (e.g. personal injury, criminal defense) where emotional tone is critical, we recommend evaluating a recorded sample first. Contact us and we will walk you through it.',
               },
             ].map(({ q, a }) => (
               <div key={q} className="rounded-2xl border border-slate-800 bg-slate-900 px-6 py-5">
