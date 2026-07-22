@@ -28,7 +28,7 @@ export default function CallCta() {
               Watch NEXUS handle a real call
             </h2>
             <p className="mb-8 text-base text-slate-100">
-              Book a 30-minute live demo and we&apos;ll show you NEXUS answering calls, booking
+              Book a 30-minute live demo and we will show you NEXUS answering calls, booking
               appointments, and handling customer inquiries for a business just like yours.
             </p>
 
