@@ -53,7 +53,7 @@ export default function Integrations() {
 
         <FadeIn delay={180}>
           <p className="mx-auto mt-8 max-w-xl text-center text-sm text-slate-200">
-            Need Outlook, Salesforce, HubSpot, or custom CRM integration? That&apos;s available in
+            Need Outlook, Salesforce, HubSpot, or custom CRM integration? That is available in
             our Custom Build tier —{' '}
             <a href="#pricing" className="text-slate-100 underline underline-offset-2 hover:text-teal-400 transition-colors">
               contact our sales team
