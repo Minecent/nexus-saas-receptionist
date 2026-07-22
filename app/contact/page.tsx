@@ -22,11 +22,11 @@ export default function ContactPage() {
               Contact
             </p>
             <h1 className="mb-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              We&apos;d love to hear from you
+              We would love to hear from you
             </h1>
             <p className="mb-10 text-lg text-slate-400">
               Questions about NEXUS, partnership enquiries, or just want to talk through whether
-              it&apos;s the right fit for your business — reach out directly.
+              it is the right fit for your business — reach out directly.
             </p>
 
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
