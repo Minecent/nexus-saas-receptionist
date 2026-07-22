@@ -19,8 +19,8 @@ export default function Detail() {
               Every missed call is a customer who called your competitor
             </h2>
             <p className="mb-6 text-base leading-relaxed text-slate-100">
-              62% of calls to service businesses go unanswered. That&apos;s not a scheduling
-              problem — it&apos;s a revenue problem. NEXUS picks up every call, takes messages,
+              62% of calls to service businesses go unanswered. That is not a scheduling
+              problem — it is a revenue problem. NEXUS picks up every call, takes messages,
               books appointments, and transfers urgent calls to your team. All without you lifting
               a finger.
             </p>
