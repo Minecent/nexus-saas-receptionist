@@ -155,7 +155,7 @@ const faqSchema = {
       "name": "Will callers know they are talking to AI?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Most don't realise it. Those who do typically prefer getting help immediately over navigating phone trees or leaving voicemail. You can choose to disclose upfront that callers are speaking with an AI assistant.",
+        "text": "Most do not realise it. Those who do typically prefer getting help immediately over navigating phone trees or leaving voicemail. You can choose to disclose upfront that callers are speaking with an AI assistant.",
       },
     },
     {
