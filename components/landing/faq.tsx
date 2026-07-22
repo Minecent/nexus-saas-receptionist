@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: 'Will callers know they are talking to AI?',
-    a: "Most don't realise it. Those who do typically prefer getting help immediately over navigating phone trees or leaving voicemail. You can choose to disclose upfront that callers are speaking with an AI assistant — many businesses do, and it doesn't hurt satisfaction at all.",
+    a: "Most do not realise it. Those who do typically prefer getting help immediately over navigating phone trees or leaving voicemail. You can choose to disclose upfront that callers are speaking with an AI assistant — many businesses do, and it does not hurt satisfaction at all.",
   },
   {
     q: 'Can I keep my existing phone number?',
@@ -44,7 +44,7 @@ const faqs = [
   },
   {
     q: 'What happens if NEXUS cannot answer a question?',
-    a: "NEXUS is trained on your business information, but when a caller asks something outside its knowledge, it doesn't guess. It takes a detailed message, captures the caller's contact info, and immediately notifies you via SMS or email so you can follow up. No caller is ever left without a response.",
+    a: "NEXUS is trained on your business information, but when a caller asks something outside its knowledge, it does not guess. It takes a detailed message, captures the caller's contact info, and immediately notifies you via SMS or email so you can follow up. No caller is ever left without a response.",
   },
 ]
 
