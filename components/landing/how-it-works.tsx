@@ -3,19 +3,19 @@ const steps = [
     number: '1',
     title: 'Tell NEXUS about your business',
     description:
-      'Services, hours, FAQs, preferences. Five minutes of setup gives your agent everything it needs to represent your brand.',
+      'Services, hours, FAQs, preferences. Onboarding takes about fifteen minutes and gives your agent what it needs to represent your brand.',
   },
   {
     number: '2',
-    title: 'It goes to work immediately',
+    title: 'We configure and test it with you',
     description:
-      'Calls get answered. Messages get delivered. Appointments get booked. All without you lifting a finger.',
+      'Your agent is created straight away. We review the greeting, services and booking rules with you, connect your number, and test it on a live call. You are live within 24 to 48 hours.',
   },
   {
     number: '3',
-    title: 'You see measurable results',
+    title: 'It answers every call, day and night',
     description:
-      'Fewer missed calls, more booked appointments, higher revenue. Measurable impact from week one.',
+      'Calls get answered, messages get delivered, appointments get booked. Fewer missed calls and more booked work, from the first week.',
   },
 ]
 
@@ -31,7 +31,7 @@ export default function HowItWorks() {
             Set up once. Get results every day.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-slate-100">
-            Five minutes of setup gives your agent everything it needs. Then it goes to work 24/7/365.
+            About fifteen minutes of setup on your side. We configure and test the rest with you, then NEXUS works 24/7/365.
           </p>
         </div>
 
